@@ -1,0 +1,2011 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OpenBveApi</name>
+    </assembly>
+    <members>
+        <member name="T:OpenBveApi.Archives.ArchiveInterface">
+            <summary>Represents the interface for loading archives. Plugins must implement this interface if they wish to expose archives.</summary>
+        </member>
+        <member name="M:OpenBveApi.Archives.ArchiveInterface.Load(OpenBveApi.Hosts.HostInterface)">
+            <summary>Called when the plugin is loaded.</summary>
+            <param name="host">The host that loaded the plugin.</param>
+        </member>
+        <member name="M:OpenBveApi.Archives.ArchiveInterface.Unload">
+            <summary>Called when the plugin is unloaded.</summary>
+        </member>
+        <member name="M:OpenBveApi.Archives.ArchiveInterface.CanLoadElement(System.String,System.String)">
+            <summary>Checks whether the plugin can load the specified element.</summary>
+            <param name="path">The path to the file or folder that contains the archive.</param>
+            <param name="element">The path to the element.</param>
+            <returns>Whether the plugin can load the specified element.</returns>
+        </member>
+        <member name="M:OpenBveApi.Archives.ArchiveInterface.LoadElement(System.String,System.String,System.Byte[]@)">
+            <summary>Loads an item from the specified archive.</summary>
+            <param name="path">The path to the file or folder that contains the archive.</param>
+            <param name="element">The path to the element.</param>
+            <param name="data">Receives the element data.</param>
+            <returns>Whether loading the element was successful.</returns>
+        </member>
+        <member name="T:OpenBveApi.Objects.BasicMaterial">
+            <summary>Represents a material with basic properties such as colors and textures.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.AbstractMaterial">
+            <summary>Represents an abstract material. This is the base class from which all materials must inherit.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BasicMaterial.ReflectiveColor">
+            <summary>The reflective color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BasicMaterial.EmissiveColor">
+            <summary>The emissive color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BasicMaterial.DaytimeTexture">
+            <summary>The daytime texture, or a null reference.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BasicMaterial.NighttimeTexture">
+            <summary>The nighttime texture, or a null reference.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BasicMaterial.BlendMode">
+            <summary>The blend mode.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BasicMaterial.Glow">
+            <summary>The glow, or a null reference.</summary>
+        </member>
+        <member name="T:OpenBveApi.Colors.Color24">
+            <summary>Represents a 24-bit color with red, green and blue channels at 8 bits each.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.R">
+            <summary>The red component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.G">
+            <summary>The green component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.B">
+            <summary>The blue component.</summary>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color24.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>Creates a new color.</summary>
+            <param name="r">The red component.</param>
+            <param name="g">The green component.</param>
+            <param name="b">The blue component.</param>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color24.op_Equality(OpenBveApi.Colors.Color24,OpenBveApi.Colors.Color24)">
+            <summary>Checks whether two colors are equal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color24.op_Inequality(OpenBveApi.Colors.Color24,OpenBveApi.Colors.Color24)">
+            <summary>Checks whether two colors are unequal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are unequal.</returns>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Black">
+            <summary>Represents a black color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Red">
+            <summary>Represents a red color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Green">
+            <summary>Represents a green color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Blue">
+            <summary>Represents a blue color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Cyan">
+            <summary>Represents a cyan color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Magenta">
+            <summary>Represents a magenta color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.Yellow">
+            <summary>Represents a yellow color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color24.White">
+            <summary>Represents a white color.</summary>
+        </member>
+        <member name="T:OpenBveApi.Colors.Color32">
+            <summary>Represents a 32-bit color with red, green, blue and alpha channels at 8 bits each.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.R">
+            <summary>The red component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.G">
+            <summary>The green component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.B">
+            <summary>The blue component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.A">
+            <summary>The alpha component.</summary>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>Creates a new color.</summary>
+            <param name="r">The red component.</param>
+            <param name="g">The green component.</param>
+            <param name="b">The blue component.</param>
+            <param name="a">The alpha component.</param>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>Creates a new color.</summary>
+            <param name="r">The red component.</param>
+            <param name="g">The green component.</param>
+            <param name="b">The blue component.</param>
+            <remarks>The alpha component is set to full opacity.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.#ctor(OpenBveApi.Colors.Color24,System.Byte)">
+            <summary>Creates a new color.</summary>
+            <param name="color">The solid color.</param>
+            <param name="a">The alpha component.</param>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.#ctor(OpenBveApi.Colors.Color24)">
+            <summary>Creates a new color.</summary>
+            <param name="color">The solid color.</param>
+            <remarks>The alpha component is set to full opacity.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.op_Equality(OpenBveApi.Colors.Color32,OpenBveApi.Colors.Color32)">
+            <summary>Checks whether two colors are equal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.op_Inequality(OpenBveApi.Colors.Color32,OpenBveApi.Colors.Color32)">
+            <summary>Checks whether two colors are unequal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are unequal.</returns>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Black">
+            <summary>Represents a black color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Red">
+            <summary>Represents a red color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Green">
+            <summary>Represents a green color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Blue">
+            <summary>Represents a blue color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Cyan">
+            <summary>Represents a cyan color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Magenta">
+            <summary>Represents a magenta color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Yellow">
+            <summary>Represents a yellow color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.White">
+            <summary>Represents a white color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color32.Transparent">
+            <summary>Represents a transparent black color.</summary>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.op_Implicit(OpenBveApi.Colors.Color24)~OpenBveApi.Colors.Color32">
+            <summary>Performs a widening conversion from Color24 to Color32.</summary>
+            <param name="value">The Color24 value.</param>
+            <returns>The Color32 value.</returns>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color32.op_Explicit(OpenBveApi.Colors.Color32)~OpenBveApi.Colors.Color24">
+            <summary>Performs a narrowing conversion from Color32 to Color24.</summary>
+            <param name="value">The Color32 value.</param>
+            <returns>The Color24 value.</returns>
+        </member>
+        <member name="T:OpenBveApi.Colors.Color96">
+            <summary>Represents a 96-bit color with red, green and blue channels at 32 bits each.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.R">
+            <summary>The red component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.G">
+            <summary>The green component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.B">
+            <summary>The blue component.</summary>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color96.#ctor(System.Single,System.Single,System.Single)">
+            <summary>Creates a new color.</summary>
+            <param name="r">The red component.</param>
+            <param name="g">The green component.</param>
+            <param name="b">The blue component.</param>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color96.op_Equality(OpenBveApi.Colors.Color96,OpenBveApi.Colors.Color96)">
+            <summary>Checks whether two colors are equal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color96.op_Inequality(OpenBveApi.Colors.Color96,OpenBveApi.Colors.Color96)">
+            <summary>Checks whether two colors are unequal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are unequal.</returns>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Black">
+            <summary>Represents a black color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Red">
+            <summary>Represents a red color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Green">
+            <summary>Represents a green color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Blue">
+            <summary>Represents a blue color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Cyan">
+            <summary>Represents a cyan color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Magenta">
+            <summary>Represents a magenta color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.Yellow">
+            <summary>Represents a yellow color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color96.White">
+            <summary>Represents a white color.</summary>
+        </member>
+        <member name="T:OpenBveApi.Colors.Color128">
+            <summary>Represents a 128-bit color with red, green, blue and alpha channels at 32 bits each.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.R">
+            <summary>The red component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.G">
+            <summary>The green component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.B">
+            <summary>The blue component.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.A">
+            <summary>The alpha component.</summary>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>Creates a new color.</summary>
+            <param name="r">The red component.</param>
+            <param name="g">The green component.</param>
+            <param name="b">The blue component.</param>
+            <param name="a">The alpha component.</param>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.#ctor(System.Single,System.Single,System.Single)">
+            <summary>Creates a new color.</summary>
+            <param name="r">The red component.</param>
+            <param name="g">The green component.</param>
+            <param name="b">The blue component.</param>
+            <remarks>The alpha component is set to full opacity.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.#ctor(OpenBveApi.Colors.Color24,System.Single)">
+            <summary>Creates a new color.</summary>
+            <param name="color">The solid color.</param>
+            <param name="a">The alpha component.</param>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.#ctor(OpenBveApi.Colors.Color24)">
+            <summary>Creates a new color.</summary>
+            <param name="color">The solid color.</param>
+            <remarks>The alpha component is set to full opacity.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.op_Equality(OpenBveApi.Colors.Color128,OpenBveApi.Colors.Color128)">
+            <summary>Checks whether two colors are equal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.op_Inequality(OpenBveApi.Colors.Color128,OpenBveApi.Colors.Color128)">
+            <summary>Checks whether two colors are unequal.</summary>
+            <param name="a">The first color.</param>
+            <param name="b">The second color.</param>
+            <returns>Whether the two colors are unequal.</returns>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Black">
+            <summary>Represents a black color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Red">
+            <summary>Represents a red color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Green">
+            <summary>Represents a green color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Blue">
+            <summary>Represents a blue color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Cyan">
+            <summary>Represents a cyan color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Magenta">
+            <summary>Represents a magenta color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Yellow">
+            <summary>Represents a yellow color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.White">
+            <summary>Represents a white color.</summary>
+        </member>
+        <member name="F:OpenBveApi.Colors.Color128.Transparent">
+            <summary>Represents a transparent black color.</summary>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.op_Implicit(OpenBveApi.Colors.Color24)~OpenBveApi.Colors.Color128">
+            <summary>Performs a widening conversion from Color96 to Color128.</summary>
+            <param name="value">The Color96 value.</param>
+            <returns>The Color128 value.</returns>
+        </member>
+        <member name="M:OpenBveApi.Colors.Color128.op_Explicit(OpenBveApi.Colors.Color128)~OpenBveApi.Colors.Color96">
+            <summary>Performs a narrowing conversion from Color128 to Color96.</summary>
+            <param name="value">The Color128 value.</param>
+            <returns>The Color96 value.</returns>
+        </member>
+        <member name="T:OpenBveApi.Hosts.ProblemType">
+            <summary>Represents the type of problem that is reported to the host.</summary>
+        </member>
+        <member name="F:OpenBveApi.Hosts.ProblemType.FileNotFound">
+            <summary>Indicates that a file could not be found.</summary>
+        </member>
+        <member name="F:OpenBveApi.Hosts.ProblemType.DirectoryNotFound">
+            <summary>Indicates that a directory could not be found.</summary>
+        </member>
+        <member name="F:OpenBveApi.Hosts.ProblemType.PathNotFound">
+            <summary>Indicates that a file or directory could not be found.</summary>
+        </member>
+        <member name="F:OpenBveApi.Hosts.ProblemType.InvalidData">
+            <summary>Indicates invalid data in a file or directory.</summary>
+        </member>
+        <member name="F:OpenBveApi.Hosts.ProblemType.InvalidOperation">
+            <summary>Indicates an invalid operation.</summary>
+        </member>
+        <member name="F:OpenBveApi.Hosts.ProblemType.UnexpectedException">
+            <summary>Indicates an unexpected exception.</summary>
+        </member>
+        <member name="T:OpenBveApi.Hosts.HostInterface">
+            <summary>Represents the host application and functionality it exposes.</summary>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.ReportProblem(OpenBveApi.Hosts.ProblemType,System.String)">
+            <summary>Reports a problem to the host application.</summary>
+            <param name="type">The type of problem that is reported.</param>
+            <param name="text">The textual message that describes the problem.</param>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.QueryTextureDimensions(System.String,System.Int32@,System.Int32@)">
+            <summary>Queries the dimensions of a texture.</summary>
+            <param name="path">The path to the file or folder that contains the texture.</param>
+            <param name="width">Receives the width of the texture.</param>
+            <param name="height">Receives the height of the texture.</param>
+            <returns>Whether querying the dimensions was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.LoadTexture(System.String,OpenBveApi.Textures.TextureParameters,OpenBveApi.Textures.Texture@)">
+            <summary>Loads a texture and returns the texture data.</summary>
+            <param name="path">The path to the file or folder that contains the texture.</param>
+            <param name="parameters">The parameters that specify how to process the texture.</param>
+            <param name="texture">Receives the texture.</param>
+            <returns>Whether loading the texture was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.RegisterTexture(System.String,OpenBveApi.Textures.TextureParameters,OpenBveApi.Textures.TextureHandle@)">
+            <summary>Registers a texture and returns a handle to the texture.</summary>
+            <param name="path">The path to the file or folder that contains the texture.</param>
+            <param name="parameters">The parameters that specify how to process the texture.</param>
+            <param name="handle">Receives the handle to the texture.</param>
+            <returns>Whether loading the texture was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.RegisterTexture(OpenBveApi.Textures.Texture,OpenBveApi.Textures.TextureParameters,OpenBveApi.Textures.TextureHandle@)">
+            <summary>Registers a texture and returns a handle to the texture.</summary>
+            <param name="texture">The texture data.</param>
+            <param name="parameters">The parameters that specify how to process the texture.</param>
+            <param name="handle">Receives the handle to the texture.</param>
+            <returns>Whether loading the texture was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.LoadSound(System.String,OpenBveApi.Sounds.Sound@)">
+            <summary>Loads a sound and returns the sound data.</summary>
+            <param name="path">The path to the file or folder that contains the sound.</param>
+            <param name="sound">Receives the sound.</param>
+            <returns>Whether loading the sound was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.RegisterSound(System.String,OpenBveApi.Sounds.SoundHandle@)">
+            <summary>Registers a sound and returns a handle to the sound.</summary>
+            <param name="path">The path to the file or folder that contains the sound.</param>
+            <param name="handle">Receives a handle to the sound.</param>
+            <returns>Whether loading the sound was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.RegisterSound(OpenBveApi.Sounds.Sound,OpenBveApi.Sounds.SoundHandle@)">
+            <summary>Registers a sound and returns a handle to the sound.</summary>
+            <param name="sound">The sound data.</param>
+            <param name="handle">Receives a handle to the sound.</param>
+            <returns>Whether loading the sound was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Hosts.HostInterface.LoadObject(System.String,OpenBveApi.Objects.AbstractObject@)">
+            <summary>Loads an object and returns the object data.</summary>
+            <param name="path">The path to the file or folder that contains the object.</param>
+            <param name="obj">Receives the object.</param>
+            <returns>Whether loading the object was successful.</returns>
+        </member>
+        <member name="T:OpenBveApi.Objects.AbstractObject">
+            <summary>Represents an abstract object. This is the base class from which all objects must inherit.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.AbstractObject.Translate(OpenBveApi.Math.Vector3)">
+            <summary>Translates the object by the specified offset.</summary>
+            <param name="offset">The offset by which to translate.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.AbstractObject.Translate(OpenBveApi.Math.Orientation3,OpenBveApi.Math.Vector3)">
+            <summary>Translates the object by the specified offset that is measured in the specified orientation.</summary>
+            <param name="orientation">The orientation along which to translate.</param>
+            <param name="offset">The offset measured in the specified orientation.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.AbstractObject.Rotate(OpenBveApi.Math.Vector3,System.Double,System.Double)">
+            <summary>Rotates the object around the specified axis.</summary>
+            <param name="direction">The axis along which to rotate.</param>
+            <param name="cosineOfAngle">The cosine of the angle by which to rotate.</param>
+            <param name="sineOfAngle">The sine of the angle by which to rotate.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.AbstractObject.Rotate(OpenBveApi.Math.Orientation3)">
+            <summary>Rotates the object from the default orientation into the specified orientation.</summary>
+            <param name="orientation">The target orientation.</param>
+            <remarks>The default orientation is X = {1, 0, 0), Y = {0, 1, 0} and Z = {0, 0, 1}.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Objects.AbstractObject.Scale(OpenBveApi.Math.Vector3)">
+            <summary>Scales the object by the specified factor.</summary>
+            <param name="factor">The factor by which to scale.</param>
+        </member>
+        <member name="T:OpenBveApi.Objects.StaticObject">
+            <summary>Represents an abstract static object. This is the base class from which all static objects must inherit.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.AnimatedObject">
+            <summary>Represents an abstract animated object. This is the base class from which all animated objects must inherit.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.BlendModes">
+            <summary>Represents blend modes.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BlendModes.Normal">
+            <summary>Represents normal blend mode.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.BlendModes.Additive">
+            <summary>Represents additive blend mode.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.AbstractGlow">
+            <summary>Represents an abstract glow. This is the base class from which all glows must inherit.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.OrientationalGlow">
+            <summary>Represents an abstract orientational glow. This is the base class from which all orientational glows must inherit.</summary>
+            <remarks>This type of glow computes the intensity as a function of the camera and object's position and orientation.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Objects.OrientationalGlow.GetIntensity(OpenBveApi.Math.Vector3,OpenBveApi.Math.Orientation3,OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Gets the intensity of the glow.</summary>
+            <param name="cameraPosition">The position of the camera.</param>
+            <param name="cameraOrientation">The orientation of the camera.</param>
+            <param name="objectPosition">The position of the object.</param>
+            <param name="objectOrientation">The orientation of the object.</param>
+            <returns>The intensity of the glow expressed as a value between 0 and 1.</returns>
+        </member>
+        <member name="T:OpenBveApi.Objects.DistanceGlow">
+            <summary>Represents a glow where the intensity is inversely proportional to the distance between the object and the camera.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.DistanceGlow.HalfDistanceSquared">
+            <summary>The square of the distance at which the intensity is exactly 50%.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.DistanceGlow.#ctor(System.Double)">
+            <summary>Creates a new distance glow.</summary>
+            <param name="halfDistance">The distance at which the intensity is exactly 50%.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.DistanceGlow.GetIntensity(OpenBveApi.Math.Vector3,OpenBveApi.Math.Orientation3,OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Gets the intensity of the glow.</summary>
+            <param name="cameraPosition">The position of the camera.</param>
+            <param name="cameraOrientation">The orientation of the camera.</param>
+            <param name="objectPosition">The position of the object.</param>
+            <param name="objectOrientation">The orientation of the object.</param>
+            <returns>The intensity of the glow expressed as a value between 0 and 1.</returns>
+        </member>
+        <member name="T:OpenBveApi.Objects.ObjectHandle">
+            <summary>Represents a handle to an object.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.ObjectInterface">
+            <summary>Represents the interface for loading objects. Plugins must implement this interface if they wish to expose objects.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.ObjectInterface.Load(OpenBveApi.Hosts.HostInterface)">
+            <summary>Called when the plugin is loaded.</summary>
+            <param name="host">The host that loaded the plugin.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.ObjectInterface.Unload">
+            <summary>Called when the plugin is unloaded.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.ObjectInterface.CanLoadObject(System.String)">
+            <summary>Checks whether the plugin can load the specified object.</summary>
+            <param name="path">The path to the file or folder that contains the object.</param>
+            <returns>Whether the plugin can load the specified object.</returns>
+        </member>
+        <member name="M:OpenBveApi.Objects.ObjectInterface.LoadObject(System.String,System.Object@)">
+            <summary>Loads the specified object.</summary>
+            <param name="path">The path to the file or folder that contains the object.</param>
+            <param name="obj">Receives the object.</param>
+            <returns>Whether loading the object was successful.</returns>
+        </member>
+        <member name="T:OpenBveApi.Math.Orientation3">
+            <summary>Represents an orientation in three-dimensional space.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Orientation3.X">
+            <summary>The vector pointing right.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Orientation3.Y">
+            <summary>The vector pointing up.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Orientation3.Z">
+            <summary>The vector pointing forward.</summary>
+        </member>
+        <member name="M:OpenBveApi.Math.Orientation3.#ctor(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Creates a new orientation in three-dimensional space.</summary>
+            <param name="x">The vector pointing right.</param>
+            <param name="y">The vector pointing up.</param>
+            <param name="z">The vector pointing forward.</param>
+        </member>
+        <member name="F:OpenBveApi.Math.Orientation3.Null">
+            <summary>Represents a null orientation.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Orientation3.Default">
+            <summary>Represents the default orientation with X = {1, 0, 0}, Y = {0, 1, 0} and Z = {0, 0, 1}.</summary>
+        </member>
+        <member name="T:OpenBveApi.Path">
+            <summary>Provides path-related functions for accessing files and directories in a cross-platform manner.</summary>
+        </member>
+        <member name="F:OpenBveApi.Path.InvalidPathChars">
+            <summary>The list of characters that are invalid in platform-independent relative paths.</summary>
+        </member>
+        <member name="F:OpenBveApi.Path.PathSeparationChars">
+            <summary>The list of characters at which relative paths are separated into parts.</summary>
+        </member>
+        <member name="F:OpenBveApi.Path.PackageNames">
+            <summary>The list of package names.</summary>
+        </member>
+        <member name="F:OpenBveApi.Path.PackageDirectories">
+            <summary>The list of package directories.</summary>
+        </member>
+        <member name="F:OpenBveApi.Path.SetPackageLookupDirectoriesAuthentication">
+            <summary>The object that serves as an authentication for the SetPackageLookupDirectories call.</summary>
+        </member>
+        <member name="M:OpenBveApi.Path.SetPackageLookupDirectories(System.String[],System.String[],System.Object)">
+            <summary>Provides a list of package names and associated directories.</summary>
+            <param name="names">The list of names.</param>
+            <param name="directories">The list of fully qualified directories.</param>
+            <param name="authentication">A null reference on the first process-wide call to this function, otherwise the object returned by this function in the previous call.</param>
+            <exception cref="T:System.Security.SecurityException">Raised when the authentication failed.</exception>
+        </member>
+        <member name="M:OpenBveApi.Path.CombineDirectory(System.String,System.String)">
+            <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a directory.</summary>
+            <param name="absolute">The platform-specific absolute path.</param>
+            <param name="relative">The platform-independent relative path.</param>
+            <returns>A platform-specific absolute path to the specified directory.</returns>
+            <exception cref="T:System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
+        </member>
+        <member name="M:OpenBveApi.Path.CombineFile(System.String,System.String)">
+            <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a file.</summary>
+            <param name="absolute">The platform-specific absolute path.</param>
+            <param name="relative">The platform-independent relative path.</param>
+            <returns>Whether the operation succeeded and the specified file was found.</returns>
+            <exception cref="T:System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
+        </member>
+        <member name="M:OpenBveApi.Path.IsAllPeriods(System.String)">
+            <summary>Checks whether the specified string consists only of periods.</summary>
+            <param name="text">The string to check.</param>
+            <returns>Whether the string consists only of periods.</returns>
+        </member>
+        <member name="M:OpenBveApi.Path.ResolvePackageReference(System.String@,System.String@)">
+            <summary>Resolves a package reference in the relative path and adjusts the absolute path if found.</summary>
+            <param name="absolute">The absolute path.</param>
+            <param name="relative">The relative path.</param>
+        </member>
+        <member name="T:OpenBveApi.Runtime.SoundHandle">
+            <summary>Represents the handle to a sound.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.SoundHandle.MyValid">
+            <summary>Whether the handle to the sound is valid.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.SoundHandle.MyVolume">
+            <summary>The volume. A value of 1.0 represents nominal volume.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.SoundHandle.MyPitch">
+            <summary>The pitch. A value of 1.0 represents nominal pitch.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.SoundHandle.Stop">
+            <summary>Stops the sound and invalidates the handle.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.SoundHandle.Playing">
+            <summary>Gets whether the sound is still playing. Once this returns false, the sound handle is invalid.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.SoundHandle.Stopped">
+            <summary>Gets whether the sound has stopped. Once this returns true, the sound handle is invalid.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.SoundHandle.Volume">
+            <summary>Gets or sets the volume. A value of 1.0 represents nominal volume.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.SoundHandle.Pitch">
+            <summary>Gets or sets the pitch. A value of 1.0 represents nominal pitch.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.PlaySoundDelegate">
+            <summary>Plays a sound.</summary>
+            <param name="index">The index to the sound to be played.</param>
+            <param name="volume">The initial volume of the sound. A value of 1.0 represents nominal volume.</param>
+            <param name="pitch">The initial pitch of the sound. A value of 1.0 represents nominal pitch.</param>
+            <param name="looped">Whether the sound should be played in an indefinate loop.</param>
+            <returns>The handle to the sound, or a null reference if the sound could not be played.</returns>
+            <exception cref="T:System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+        </member>
+        <member name="T:OpenBveApi.Runtime.AISupport">
+            <summary>Represents to which extent the plugin supports the AI.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AISupport.None">
+            <summary>The plugin does not support the AI. Calls to PerformAI will not be made. Non-player trains will not use the plugin.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AISupport.Basic">
+            <summary>The plugin complements the built-in AI by performing only functions specific to the plugin.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.LoadProperties">
+            <summary>Represents properties supplied to the plugin on loading.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.LoadProperties.MyPluginFolder">
+            <summary>The absolute path to the plugin folder.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.LoadProperties.MyTrainFolder">
+            <summary>The absolute path to the train folder.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.LoadProperties.MyPanel">
+            <summary>The array of panel variables.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.LoadProperties.MyPlaySound">
+            <summary>The callback function for playing sounds.</summary>
+            <exception cref="T:System.InvalidOperationException">Raised when the host application does not allow the function to be called.</exception>
+        </member>
+        <member name="F:OpenBveApi.Runtime.LoadProperties.MyAISupport">
+            <summary>The extent to which the plugin supports the AI.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.LoadProperties.MyFailureReason">
+            <summary>The reason why the plugin failed loading.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.LoadProperties.#ctor(System.String,System.String,OpenBveApi.Runtime.PlaySoundDelegate)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="pluginFolder">The absolute path to the plugin folder.</param>
+            <param name="trainFolder">The absolute path to the train folder.</param>
+            <param name="playSound">The callback function for playing sounds.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.LoadProperties.PluginFolder">
+            <summary>Gets the absolute path to the plugin folder.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.LoadProperties.TrainFolder">
+            <summary>Gets the absolute path to the train folder.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.LoadProperties.Panel">
+            <summary>Gets or sets the array of panel variables.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.LoadProperties.PlaySound">
+            <summary>Gets the callback function for playing sounds.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.LoadProperties.AISupport">
+            <summary>Gets or sets the extent to which the plugin supports the AI.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.LoadProperties.FailureReason">
+            <summary>Gets or sets the reason why the plugin failed loading.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.BrakeTypes">
+            <summary>Represents the type of brake the train uses.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.BrakeTypes.ElectromagneticStraightAirBrake">
+            <summary>The train uses the electromagnetic straight air brake. The numerical value of this constant is 0.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.BrakeTypes.ElectricCommandBrake">
+            <summary>The train uses the analog/digital electro-pneumatic air brake without a brake pipe (electric command brake). The numerical value of this constant is 1.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.BrakeTypes.AutomaticAirBrake">
+            <summary>The train uses the automatic air brake with partial release. The numerical value of this constant is 2.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.VehicleSpecs">
+            <summary>Represents the specification of the train.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleSpecs.MyPowerNotches">
+            <summary>The number of power notches the train has.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleSpecs.MyBrakeType">
+            <summary>The type of brake the train uses.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleSpecs.MyHasHoldBrake">
+            <summary>Whether the train has a hold brake.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleSpecs.MyBrakeNotches">
+            <summary>The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleSpecs.MyCars">
+            <summary>The number of cars the train has.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.VehicleSpecs.#ctor(System.Int32,OpenBveApi.Runtime.BrakeTypes,System.Int32,System.Boolean,System.Int32)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="powerNotches">The number of power notches the train has.</param>
+            <param name="brakeType">The type of brake the train uses.</param>
+            <param name="brakeNotches">The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</param>
+            <param name="hasHoldBrake">Whether the train has a hold brake.</param>
+            <param name="cars">The number of cars the train has.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.PowerNotches">
+            <summary>Gets the number of power notches the train has.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.BrakeType">
+            <summary>Gets the type of brake the train uses.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.BrakeNotches">
+            <summary>Gets the number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.HasHoldBrake">
+            <summary>Gets whether the train has a hold brake.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.AtsNotch">
+            <summary>Gets the index of the brake notch that corresponds to B1 or LAP.</summary>
+            <remarks>For trains without a hold brake, this returns 1. For trains with a hold brake, this returns 2.</remarks>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.B67Notch">
+            <summary>Gets the index of the brake notch that corresponds to 70% of the available brake notches.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleSpecs.Cars">
+            <summary>Gets the number of cars the train has.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.InitializationModes">
+            <summary>Represents the mode in which the plugin should initialize.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.InitializationModes.OnService">
+            <summary>The safety system should be enabled. The train has its service brakes applied. The numerical value of this constant is -1.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.InitializationModes.OnEmergency">
+            <summary>The safety system should be enabled. The train has its emergency brakes applied. The numerical value of this constant is 0.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.InitializationModes.OffEmergency">
+            <summary>The safety system should be disabled. The train has its emergency brakes applied. The numerical value of this constant is 1.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.Speed">
+            <summary>Represents a speed.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.Speed.MyValue">
+            <summary>The speed in meters per second.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.Speed.#ctor(System.Double)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="value">The speed in meters per second.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Speed.MetersPerSecond">
+            <summary>Gets the speed in meters per second.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Speed.KilometersPerHour">
+            <summary>Gets the speed in kilometes per hour.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Speed.MilesPerHour">
+            <summary>Gets the speed in miles per hour.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.Time">
+            <summary>Represents a time.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.Time.MyValue">
+            <summary>The time in seconds.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.Time.#ctor(System.Double)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="value">The time in seconds.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Time.Seconds">
+            <summary>Gets the time in seconds.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Time.Milliseconds">
+            <summary>Gets the time in milliseconds.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.VehicleState">
+            <summary>Represents the current state of the train.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MyLocation">
+            <summary>The location of the front of the train, in meters.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MySpeed">
+            <summary>The speed of the train.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MyBcPressure">
+            <summary>The pressure in the brake cylinder, in pascal.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MyMrPressure">
+            <summary>The pressure in the main reservoir, in pascal.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MyErPressure">
+            <summary>The pressure in the emergency reservoir, in pascal.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MyBpPressure">
+            <summary>The pressure in the brake pipe, in pascal.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VehicleState.MySapPressure">
+            <summary>The pressure in the straight air pipe, in pascal.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.VehicleState.#ctor(System.Double,OpenBveApi.Runtime.Speed,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="location">The location of the front of the train, in meters.</param>
+            <param name="speed">The speed of the train.</param>
+            <param name="bcPressure">The pressure in the brake cylinder, in pascal.</param>
+            <param name="mrPressure">The pressure in the main reservoir, in pascal.</param>
+            <param name="erPressure">The pressure in the emergency reservoir, in pascal.</param>
+            <param name="bpPressure">The pressure in the brake pipe, in pascal.</param>
+            <param name="sapPressure">The pressure in the straight air pipe, in pascal.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.Location">
+            <summary>Gets the location of the front of the train, in meters.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.Speed">
+            <summary>Gets the speed of the train.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.BcPressure">
+            <summary>Gets the pressure in the brake cylinder, in pascal.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.MrPressure">
+            <summary>Gets the pressure in the main reservoir, in pascal.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.ErPressure">
+            <summary>Gets the pressure in the emergency reservoir, in pascal.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.BpPressure">
+            <summary>Gets the pressure in the brake pipe, in pascal.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.VehicleState.SapPressure">
+            <summary>Gets the pressure in the straight air pipe, in pascal.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.PrecedingVehicleState">
+            <summary>Represents the current state of the preceding train.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.PrecedingVehicleState.MyLocation">
+            <summary>The location of the back of the preceding train, in meters.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.PrecedingVehicleState.MyDistance">
+            <summary>The distance from the front of the current train to the back of the preceding train, in meters.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.PrecedingVehicleState.MySpeed">
+            <summary>The current speed of the preceding train.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.PrecedingVehicleState.#ctor(System.Double,System.Double,OpenBveApi.Runtime.Speed)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="location">Gets the location of the back of the preceding train, in meters.</param>
+            <param name="distance">The distance from the front of the current train to the back of the preceding train, in meters.</param>
+            <param name="speed">Gets the speed of the preceding train.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.PrecedingVehicleState.Location">
+            <summary>Gets the location of the back of the preceding train, in meters.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.PrecedingVehicleState.Distance">
+            <summary>Gets the distance from the front of the current train to the back of the preceding train, in meters.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.PrecedingVehicleState.Speed">
+            <summary>Gets the speed of the preceding train.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.Handles">
+            <summary>Represents the handles of the cab.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.Handles.MyReverser">
+            <summary>The reverser position.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.Handles.MyPowerNotch">
+            <summary>The power notch.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.Handles.MyBrakeNotch">
+            <summary>The brake notch.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.Handles.MyConstSpeed">
+            <summary>Whether the const speed system is enabled.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.Handles.#ctor(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="reverser">The current reverser position.</param>
+            <param name="powerNotch">The current power notch.</param>
+            <param name="brakeNotch">The current brake notch.</param>
+            <param name="constSpeed">Whether the const speed system is enabled.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Handles.Reverser">
+            <summary>Gets or sets the reverser position.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Handles.PowerNotch">
+            <summary>Gets or sets the power notch.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Handles.BrakeNotch">
+            <summary>Gets or sets the brake notch.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.Handles.ConstSpeed">
+            <summary>Gets or sets whether the const speed system is enabled.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.ElapseData">
+            <summary>Represents data given to the plugin in the Elapse call.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.ElapseData.MyVehicle">
+            <summary>The state of the train.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.ElapseData.MyPrecedingVehicle">
+            <summary>The state of the preceding train, or a null reference if there is no preceding train.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.ElapseData.MyHandles">
+            <summary>The virtual handles.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.ElapseData.MyTotalTime">
+            <summary>The current absolute time.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.ElapseData.MyElapsedTime">
+            <summary>The elapsed time since the last call to Elapse.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.ElapseData.MyDebugMessage">
+            <summary>The debug message the plugin wants the host application to display.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.ElapseData.#ctor(OpenBveApi.Runtime.VehicleState,OpenBveApi.Runtime.PrecedingVehicleState,OpenBveApi.Runtime.Handles,OpenBveApi.Runtime.Time,OpenBveApi.Runtime.Time)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="vehicle">The state of the train.</param>
+            <param name="precedingVehicle">The state of the preceding train, or a null reference if there is no preceding train.</param>
+            <param name="handles">The virtual handles.</param>
+            <param name="totalTime">The current absolute time.</param>
+            <param name="elapsedTime">The elapsed time since the last call to Elapse.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.ElapseData.Vehicle">
+            <summary>Gets the state of the train.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.ElapseData.PrecedingVehicle">
+            <summary>Gets the state of the preceding train, or a null reference if there is no preceding train.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.ElapseData.Handles">
+            <summary>Gets or sets the virtual handles.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.ElapseData.TotalTime">
+            <summary>Gets the absolute in-game time.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.ElapseData.ElapsedTime">
+            <summary>Gets the time that elapsed since the last call to Elapse.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.ElapseData.DebugMessage">
+            <summary>Gets or sets the debug message the plugin wants the host application to display.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.VirtualKeys">
+            <summary>Represents a virtual key.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.S">
+            <summary>The virtual S key. The default assignment is [Space]. The numerical value of this constant is 0.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.A1">
+            <summary>The virtual A1 key. The default assignment is [Insert]. The numerical value of this constant is 1.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.A2">
+            <summary>The virtual A2 key. The default assignment is [Delete]. The numerical value of this constant is 2.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.B1">
+            <summary>The virtual B1 key. The default assignment is [Home]. The numerical value of this constant is 3.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.B2">
+            <summary>The virtual B2 key. The default assignment is [End]. The numerical value of this constant is 4.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.C1">
+            <summary>The virtual C1 key. The default assignment is [PageUp]. The numerical value of this constant is 5.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.C2">
+            <summary>The virtual C2 key. The default assignment is [PageDown]. The numerical value of this constant is 6.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.D">
+            <summary>The virtual D key. The default assignment is [2]. The numerical value of this constant is 7.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.E">
+            <summary>The virtual E key. The default assignment is [3]. The numerical value of this constant is 8.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.F">
+            <summary>The virtual F key. The default assignment is [4]. The numerical value of this constant is 9.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.G">
+            <summary>The virtual G key. The default assignment is [5]. The numerical value of this constant is 10.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.H">
+            <summary>The virtual H key. The default assignment is [6]. The numerical value of this constant is 11.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.I">
+            <summary>The virtual I key. The default assignment is [7]. The numerical value of this constant is 12.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.J">
+            <summary>The virtual J key. The default assignment is [8]. The numerical value of this constant is 13.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.K">
+            <summary>The virtual K key. The default assignment is [9]. The numerical value of this constant is 14.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.VirtualKeys.L">
+            <summary>The virtual L key. The default assignment is [0]. The numerical value of this constant is 15.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.HornTypes">
+            <summary>Represents the type of horn.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.HornTypes.Primary">
+            <summary>The primary horn. The numerical value of this constant is 0.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.HornTypes.Secondary">
+            <summary>The secondary horn. The numerical value of this constant is 1.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.HornTypes.Music">
+            <summary>The music horn. The numerical value of this constant is 2.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.DoorStates">
+            <summary>Represents the state of the doors.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.DoorStates.None">
+            <summary>No door is open.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.DoorStates.Left">
+            <summary>The left doors are open.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.DoorStates.Right">
+            <summary>The right doors are open.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.DoorStates.Both">
+            <summary>All doors are open.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.SignalData">
+            <summary>Represents information about a signal or section.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.SignalData.MyAspect">
+            <summary>The aspect of the signal or section.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.SignalData.MyDistance">
+            <summary>The underlying section. Possible values are 0 for the current section, 1 for the upcoming section, or higher values for sections further ahead.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.SignalData.#ctor(System.Int32,System.Double)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="aspect">The aspect of the signal or section.</param>
+            <param name="distance">The distance to the signal or section.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.SignalData.Aspect">
+            <summary>Gets the aspect of the signal or section.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.SignalData.Distance">
+            <summary>Gets the distance to the signal or section.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.BeaconData">
+            <summary>Represents data trasmitted by a beacon.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.BeaconData.MyType">
+            <summary>The type of beacon.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.BeaconData.MyOptional">
+            <summary>Optional data the beacon transmits.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.BeaconData.MySignal">
+            <summary>The section the beacon is attached to.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.BeaconData.#ctor(System.Int32,System.Int32,OpenBveApi.Runtime.SignalData)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="type">The type of beacon.</param>
+            <param name="optional">Optional data the beacon transmits.</param>
+            <param name="signal">The section the beacon is attached to.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.BeaconData.Type">
+            <summary>Gets the type of beacon.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.BeaconData.Optional">
+            <summary>Gets optional data the beacon transmits.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.BeaconData.Signal">
+            <summary>Gets the section the beacon is attached to.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.AIResponse">
+            <summary>Represents responses by the AI.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AIResponse.None">
+            <summary>No action was performed by the plugin.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AIResponse.Short">
+            <summary>The action performed took a short time.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AIResponse.Medium">
+            <summary>The action performed took an average amount of time.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AIResponse.Long">
+            <summary>The action performed took a long time.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.AIData">
+            <summary>Represents AI data.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AIData.MyHandles">
+            <summary>The driver handles.</summary>
+        </member>
+        <member name="F:OpenBveApi.Runtime.AIData.MyResponse">
+            <summary>The AI response.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.AIData.#ctor(OpenBveApi.Runtime.Handles)">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="handles">The driver handles.</param>
+        </member>
+        <member name="P:OpenBveApi.Runtime.AIData.Handles">
+            <summary>Gets or sets the driver handles.</summary>
+        </member>
+        <member name="P:OpenBveApi.Runtime.AIData.Response">
+            <summary>Gets or sets the AI response.</summary>
+        </member>
+        <member name="T:OpenBveApi.Runtime.IRuntime">
+            <summary>Represents the interface for performing runtime train services.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.Load(OpenBveApi.Runtime.LoadProperties)">
+            <summary>Is called when the plugin is loaded.</summary>
+            <param name="properties">The properties supplied to the plugin on loading.</param>
+            <returns>Whether the plugin was loaded successfully.</returns>
+            <remarks>If the plugin was not loaded successfully, the plugin should set the Reason property to supply the reason of failure.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.Unload">
+            <summary>Is called when the plugin is unloaded.</summary>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.SetVehicleSpecs(OpenBveApi.Runtime.VehicleSpecs)">
+            <summary>Is called after loading to inform the plugin about the specifications of the train.</summary>
+            <param name="specs">The specifications of the train.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.Initialize(OpenBveApi.Runtime.InitializationModes)">
+            <summary>Is called when the plugin should initialize or reinitialize.</summary>
+            <param name="mode">The mode of initialization.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.Elapse(OpenBveApi.Runtime.ElapseData)">
+            <summary>Is called every frame.</summary>
+            <param name="data">The data passed to the plugin.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.SetReverser(System.Int32)">
+            <summary>Is called when the driver changes the reverser.</summary>
+            <param name="reverser">The new reverser position.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.SetPower(System.Int32)">
+            <summary>Is called when the driver changes the power notch.</summary>
+            <param name="powerNotch">The new power notch.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.SetBrake(System.Int32)">
+            <summary>Is called when the driver changes the brake notch.</summary>
+            <param name="brakeNotch">The new brake notch.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.KeyDown(OpenBveApi.Runtime.VirtualKeys)">
+            <summary>Is called when a virtual key is pressed.</summary>
+            <param name="key">The virtual key that was pressed.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.KeyUp(OpenBveApi.Runtime.VirtualKeys)">
+            <summary>Is called when a virtual key is released.</summary>
+            <param name="key">The virtual key that was released.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.HornBlow(OpenBveApi.Runtime.HornTypes)">
+            <summary>Is called when a horn is played or when the music horn is stopped.</summary>
+            <param name="type">The type of horn.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.DoorChange(OpenBveApi.Runtime.DoorStates,OpenBveApi.Runtime.DoorStates)">
+            <summary>Is called when the state of the doors changes.</summary>
+            <param name="oldState">The old state of the doors.</param>
+            <param name="newState">The new state of the doors.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.SetSignal(OpenBveApi.Runtime.SignalData[])">
+            <summary>Is called when the aspect in the current or in any of the upcoming sections changes, or when passing section boundaries.</summary>
+            <param name="data">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
+            <remarks>The signal array is guaranteed to have at least one element. When accessing elements other than index 0, you must check the bounds of the array first.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.SetBeacon(OpenBveApi.Runtime.BeaconData)">
+            <summary>Is called when the train passes a beacon.</summary>
+            <param name="data">The beacon data.</param>
+        </member>
+        <member name="M:OpenBveApi.Runtime.IRuntime.PerformAI(OpenBveApi.Runtime.AIData)">
+            <summary>Is called when the plugin should perform the AI.</summary>
+            <param name="data">The AI data.</param>
+        </member>
+        <member name="T:OpenBveApi.Objects.SharedVertex">
+            <summary>Represents a vertex used in a shared mesh.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedVertex.SpatialCoordinates">
+            <summary>A reference to the list of spatial coordinates in the underlying shared mesh.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedVertex.TextureCoordinates">
+            <summary>A reference to the list of texture coordinates in the underlying shared mesh.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedVertex.Normal">
+            <summary>A reference to the list of normals in the underlying shared mesh.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.SharedFace">
+            <summary>Represents a face used in a shared mesh.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedFace.Vertices">
+            <summary>The vertices of this face.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedFace.Material">
+            <summary>The material used by this face.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedFace.Flip">
+            <summary>Flips the face.</summary>
+        </member>
+        <member name="T:OpenBveApi.Objects.SharedMesh">
+            <summary>Represents a mesh with coordinates shared between faces.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedMesh.SpatialCoordinates">
+            <summary>The list of unique spatial coordinates.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedMesh.TextureCoordinates">
+            <summary>The list of unique texture coordinates.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedMesh.Normals">
+            <summary>The list of unique normals.</summary>
+        </member>
+        <member name="F:OpenBveApi.Objects.SharedMesh.Faces">
+            <summary>The faces stored in this mesh.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.Translate(OpenBveApi.Math.Vector3)">
+            <summary>Translates the object by the specified offset.</summary>
+            <param name="offset">The offset by which to translate.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.Translate(OpenBveApi.Math.Orientation3,OpenBveApi.Math.Vector3)">
+            <summary>Translates the object by the specified offset that is measured in the specified orientation.</summary>
+            <param name="orientation">The orientation along which to translate.</param>
+            <param name="offset">The offset measured in the specified orientation.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.Rotate(OpenBveApi.Math.Vector3,System.Double,System.Double)">
+            <summary>Rotates the object around the specified axis.</summary>
+            <param name="direction">The axis along which to rotate.</param>
+            <param name="cosineOfAngle">The cosine of the angle by which to rotate.</param>
+            <param name="sineOfAngle">The sine of the angle by which to rotate.</param>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.Rotate(OpenBveApi.Math.Orientation3)">
+            <summary>Rotates the object from the default orientation into the specified orientation.</summary>
+            <param name="orientation">The target orientation.</param>
+            <remarks>The default orientation is X = {1, 0, 0), Y = {0, 1, 0} and Z = {0, 0, 1}.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.Scale(OpenBveApi.Math.Vector3)">
+            <summary>Scales the object by the specified factor.</summary>
+            <param name="factor">The factor by which to scale.</param>
+            <exception cref="T:System.ArgumentException">Raised when any component in the factor is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.Optimize">
+            <summary>Removes all duplicate and unused coordinates.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.OptimizeSpatialCoordinates">
+            <summary>Removes all duplicate and unused spatial coordinates.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.OptimizeTextureCoordinates">
+            <summary>Removes all duplicate and unused texture coordinates.</summary>
+        </member>
+        <member name="M:OpenBveApi.Objects.SharedMesh.OptimizeNormals">
+            <summary>Removes all duplicate and unused normals.</summary>
+        </member>
+        <member name="T:OpenBveApi.Sounds.Sound">
+            <summary>Represents a sound.</summary>
+        </member>
+        <member name="F:OpenBveApi.Sounds.Sound.MySampleRate">
+            <summary>The number of samples per second.</summary>
+        </member>
+        <member name="F:OpenBveApi.Sounds.Sound.MyBitsPerSample">
+            <summary>The number of bits per sample. Allowed values are 8 or 16.</summary>
+        </member>
+        <member name="F:OpenBveApi.Sounds.Sound.MyBytes">
+            <summary>The PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</summary>
+        </member>
+        <member name="M:OpenBveApi.Sounds.Sound.#ctor(System.Int32,System.Int32,System.Byte[][])">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="sampleRate">The number of samples per second.</param>
+            <param name="bitsPerSample">The number of bits per sample. Allowed values are 8 or 16.</param>
+            <param name="bytes">The PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</param>
+            <exception cref="T:System.ArgumentException">Raised when the number of samples per second is not positive.</exception>
+            <exception cref="T:System.ArgumentException">Raised when the number of bits per samples is neither 8 nor 16.</exception>
+            <exception cref="T:System.ArgumentNullException">Raised when the bytes array or any of its subarrays is a null reference.</exception>
+            <exception cref="T:System.ArgumentException">Raised when the bytes array does not contain any elements.</exception>
+            <exception cref="T:System.ArgumentException">Raised when the bytes' subarrays are of unequal length.</exception>
+        </member>
+        <member name="M:OpenBveApi.Sounds.Sound.op_Equality(OpenBveApi.Sounds.Sound,OpenBveApi.Sounds.Sound)">
+            <summary>Checks whether two sound are equal.</summary>
+            <param name="a">The first sound.</param>
+            <param name="b">The second sound.</param>
+            <returns>Whether the two sounds are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Sounds.Sound.op_Inequality(OpenBveApi.Sounds.Sound,OpenBveApi.Sounds.Sound)">
+            <summary>Checks whether two sounds are unequal.</summary>
+            <param name="a">The first sound.</param>
+            <param name="b">The second sound.</param>
+            <returns>Whether the two sounds are unequal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Sounds.Sound.Equals(System.Object)">
+            <summary>Checks whether this instance is equal to the specified object.</summary>
+            <param name="obj">The object.</param>
+            <returns>Whether this instance is equal to the specified object.</returns>
+        </member>
+        <member name="P:OpenBveApi.Sounds.Sound.SampleRate">
+            <summary>Gets the number of samples per second.</summary>
+        </member>
+        <member name="P:OpenBveApi.Sounds.Sound.BitsPerSample">
+            <summary>Gets the number of bits per sample. Allowed values are 8 or 16.</summary>
+        </member>
+        <member name="P:OpenBveApi.Sounds.Sound.Bytes">
+            <summary>Gets the PCM sound data per channel. For 8 bits per sample, samples are unsigned from 0 to 255. For 16 bits per sample, samples are signed from -32768 to 32767 and in little endian byte order.</summary>
+        </member>
+        <member name="P:OpenBveApi.Sounds.Sound.Duration">
+            <summary>Gets the duration of the sound in seconds.</summary>
+        </member>
+        <member name="T:OpenBveApi.Sounds.SoundHandle">
+            <summary>Represents a handle to a sound.</summary>
+        </member>
+        <member name="T:OpenBveApi.Sounds.SoundInterface">
+            <summary>Represents the interface for loading sounds. Plugins must implement this interface if they wish to expose sounds.</summary>
+        </member>
+        <member name="M:OpenBveApi.Sounds.SoundInterface.Load(OpenBveApi.Hosts.HostInterface)">
+            <summary>Called when the plugin is loaded.</summary>
+            <param name="host">The host that loaded the plugin.</param>
+        </member>
+        <member name="M:OpenBveApi.Sounds.SoundInterface.Unload">
+            <summary>Called when the plugin is unloaded.</summary>
+        </member>
+        <member name="M:OpenBveApi.Sounds.SoundInterface.CanLoadSound(System.String)">
+            <summary>Checks whether the plugin can load the specified sound.</summary>
+            <param name="path">The path to the file or folder that contains the sound.</param>
+            <returns>Whether the plugin can load the specified sound.</returns>
+        </member>
+        <member name="M:OpenBveApi.Sounds.SoundInterface.LoadSound(System.String,OpenBveApi.Sounds.Sound@)">
+            <summary>Loads the specified sound.</summary>
+            <param name="path">The path to the file or folder that contains the sound.</param>
+            <param name="sound">Receives the sound.</param>
+            <returns>Whether loading the sound was successful.</returns>
+        </member>
+        <member name="T:OpenBveApi.Textures.TextureTransparencyType">
+            <summary>Represents the type of transparency encountered in a texture.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureTransparencyType.Opaque">
+            <summary>All pixels in the texture are fully opaque.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureTransparencyType.Partial">
+            <summary>All pixels in the texture are either fully opaque or fully transparent.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureTransparencyType.Alpha">
+            <summary>Some pixels in the texture are neither fully opaque nor fully transparent.</summary>
+        </member>
+        <member name="T:OpenBveApi.Textures.Texture">
+            <summary>Represents a texture.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.Texture.MyWidth">
+            <summary>The width of the texture in pixels.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.Texture.MyHeight">
+            <summary>The height of the texture in pixels.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.Texture.MyBitsPerPixel">
+            <summary>The number of bits per pixel. Must be 32.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.Texture.MyBytes">
+            <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
+        </member>
+        <member name="M:OpenBveApi.Textures.Texture.#ctor(System.Int32,System.Int32,System.Int32,System.Byte[])">
+            <summary>Creates a new instance of this class.</summary>
+            <param name="width">The width of the texture in pixels.</param>
+            <param name="height">The height of the texture in pixels.</param>
+            <param name="bitsPerPixel">The number of bits per pixel. Must be 32.</param>
+            <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
+            <exception cref="T:System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
+            <exception cref="T:System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
+            <exception cref="T:System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
+        </member>
+        <member name="M:OpenBveApi.Textures.Texture.op_Equality(OpenBveApi.Textures.Texture,OpenBveApi.Textures.Texture)">
+            <summary>Checks whether two textures are equal.</summary>
+            <param name="a">The first texture.</param>
+            <param name="b">The second texture.</param>
+            <returns>Whether the two textures are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.Texture.op_Inequality(OpenBveApi.Textures.Texture,OpenBveApi.Textures.Texture)">
+            <summary>Checks whether two textures are unequal.</summary>
+            <param name="a">The first texture.</param>
+            <param name="b">The second texture.</param>
+            <returns>Whether the two textures are unequal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.Texture.Equals(System.Object)">
+            <summary>Checks whether this instance is equal to the specified object.</summary>
+            <param name="obj">The object.</param>
+            <returns>Whether this instance is equal to the specified object.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.Texture.ApplyParameters(OpenBveApi.Textures.TextureParameters)">
+            <summary>Applies the specified parameters onto this texture.</summary>
+            <param name="parameters">The parameters, or a null reference.</param>
+            <returns>The texture with the parameters applied.</returns>
+            <exception cref="T:System.ArgumentException">Raised when the clip region is outside the texture bounds.</exception>
+            <exception cref="T:System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
+        </member>
+        <member name="M:OpenBveApi.Textures.Texture.GetTransparencyType">
+            <summary>Gets the type of transparency encountered in this texture.</summary>
+            <returns>The type of transparency encountered in this texture.</returns>
+            <exception cref="T:System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
+        </member>
+        <member name="P:OpenBveApi.Textures.Texture.Width">
+            <summary>Gets the width of the texture in pixels.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.Texture.Height">
+            <summary>Gets the height of the texture in pixels.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.Texture.BitsPerPixel">
+            <summary>Gets the number of bits per pixel.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.Texture.Bytes">
+            <summary>Gets the texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
+        </member>
+        <member name="T:OpenBveApi.Textures.TextureHandle">
+            <summary>Represents a handle to a texture.</summary>
+        </member>
+        <member name="T:OpenBveApi.Textures.TextureClipRegion">
+            <summary>Represents a region in a texture to be extracted.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureClipRegion.MyLeft">
+            <summary>The left coordinate.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureClipRegion.MyTop">
+            <summary>The top coordinate.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureClipRegion.MyWidth">
+            <summary>The width.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureClipRegion.MyHeight">
+            <summary>The height.</summary>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureClipRegion.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Creates a new clip region.</summary>
+            <param name="left">The left coordinate.</param>
+            <param name="top">The top coordinate.</param>
+            <param name="width">The width.</param>
+            <param name="height">The height.</param>
+            <exception cref="T:System.ArgumentException">Raised when the left or top are negative.</exception>
+            <exception cref="T:System.ArgumentException">Raised when the width or height are non-positive.</exception>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureClipRegion.op_Equality(OpenBveApi.Textures.TextureClipRegion,OpenBveApi.Textures.TextureClipRegion)">
+            <summary>Checks whether two clip regions are equal.</summary>
+            <param name="a">The first clip region.</param>
+            <param name="b">The second clip region.</param>
+            <returns>Whether the two clip regions are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureClipRegion.op_Inequality(OpenBveApi.Textures.TextureClipRegion,OpenBveApi.Textures.TextureClipRegion)">
+            <summary>Checks whether two clip regions are unequal.</summary>
+            <param name="a">The first clip region.</param>
+            <param name="b">The second clip region.</param>
+            <returns>Whether the two clip regions are unequal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureClipRegion.Equals(System.Object)">
+            <summary>Checks whether this instance is equal to the specified object.</summary>
+            <param name="obj">The object.</param>
+            <returns>Whether this instance is equal to the specified object.</returns>
+        </member>
+        <member name="P:OpenBveApi.Textures.TextureClipRegion.Left">
+            <summary>Gets the left coordinate.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.TextureClipRegion.Top">
+            <summary>Gets the top coordinate.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.TextureClipRegion.Width">
+            <summary>Gets the width.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.TextureClipRegion.Height">
+            <summary>Gets the height.</summary>
+        </member>
+        <member name="T:OpenBveApi.Textures.TextureParameters">
+            <summary>Represents additional parameters that specify how to process the texture.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureParameters.MyClipRegion">
+            <summary>The region in the texture to be extracted, or a null reference for the entire texture.</summary>
+        </member>
+        <member name="F:OpenBveApi.Textures.TextureParameters.MyTransparentColor">
+            <summary>The color in the texture that should become transparent, or a null reference for no transparent color.</summary>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureParameters.#ctor(OpenBveApi.Textures.TextureClipRegion,System.Nullable{OpenBveApi.Colors.Color24})">
+            <summary>Creates new texture parameters.</summary>
+            <param name="clipRegion">The region in the texture to be extracted, or a null reference for the entire texture.</param>
+            <param name="transparentColor">The color in the texture that should become transparent, or a null reference for no transparent color.</param>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureParameters.op_Equality(OpenBveApi.Textures.TextureParameters,OpenBveApi.Textures.TextureParameters)">
+            <summary>Checks whether two texture parameters are equal.</summary>
+            <param name="a">The first texture parameter.</param>
+            <param name="b">The second texture parameter.</param>
+            <returns>Whether the two texture parameters are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureParameters.op_Inequality(OpenBveApi.Textures.TextureParameters,OpenBveApi.Textures.TextureParameters)">
+            <summary>Checks whether two texture parameters are unequal.</summary>
+            <param name="a">The first texture parameter.</param>
+            <param name="b">The second texture parameter.</param>
+            <returns>Whether the two texture parameters are unequal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureParameters.Equals(System.Object)">
+            <summary>Checks whether this instance is equal to the specified object.</summary>
+            <param name="obj">The object.</param>
+            <returns>Whether this instance is equal to the specified object.</returns>
+        </member>
+        <member name="P:OpenBveApi.Textures.TextureParameters.ClipRegion">
+            <summary>Gets the region in the texture to be extracted, or a null reference for the entire texture.</summary>
+        </member>
+        <member name="P:OpenBveApi.Textures.TextureParameters.TransparentColor">
+            <summary>Gets the color in the texture that should become transparent, or a null reference for no transparent color.</summary>
+        </member>
+        <member name="T:OpenBveApi.Textures.TextureInterface">
+            <summary>Represents the interface for loading textures. Plugins must implement this interface if they wish to expose textures.</summary>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureInterface.Load(OpenBveApi.Hosts.HostInterface)">
+            <summary>Called when the plugin is loaded.</summary>
+            <param name="host">The host that loaded the plugin.</param>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureInterface.Unload">
+            <summary>Called when the plugin is unloaded.</summary>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureInterface.CanLoadTexture(System.String)">
+            <summary>Checks whether the plugin can load the specified texture.</summary>
+            <param name="path">The path to the file or folder that contains the texture.</param>
+            <returns>Whether the plugin can load the specified texture.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureInterface.QueryTextureDimensions(System.String,System.Int32@,System.Int32@)">
+            <summary>Queries the dimensions of a texture.</summary>
+            <param name="path">The path to the file or folder that contains the texture.</param>
+            <param name="width">Receives the width of the texture.</param>
+            <param name="height">Receives the height of the texture.</param>
+            <returns>Whether querying the dimensions was successful.</returns>
+        </member>
+        <member name="M:OpenBveApi.Textures.TextureInterface.LoadTexture(System.String,OpenBveApi.Textures.Texture@)">
+            <summary>Loads the specified texture.</summary>
+            <param name="path">The path to the file or folder that contains the texture.</param>
+            <param name="texture">Receives the texture.</param>
+            <returns>Whether loading the texture was successful.</returns>
+        </member>
+        <member name="T:OpenBveApi.Textures.Functions">
+            <summary>Provides functions for manipulating textures.</summary>
+        </member>
+        <member name="M:OpenBveApi.Textures.Functions.ApplyParameters(OpenBveApi.Textures.Texture,OpenBveApi.Textures.TextureParameters)">
+            <summary>Applies parameters onto a texture.</summary>
+            <param name="texture">The original texture.</param>
+            <param name="parameters">The parameters, or a null reference.</param>
+            <returns>The texture with the parameters applied.</returns>
+            <exception cref="T:System.ArgumentException">Raised when the clip region is outside the texture bounds.</exception>
+            <exception cref="T:System.NotSupportedException">Raised when the bits per pixel in the texture is other than 32.</exception>
+        </member>
+        <member name="M:OpenBveApi.Textures.Functions.ExtractClipRegion(OpenBveApi.Textures.Texture,OpenBveApi.Textures.TextureClipRegion)">
+            <summary>Extracts a clip region from a texture.</summary>
+            <param name="texture">The original texture.</param>
+            <param name="region">The clip region, or a null reference.</param>
+            <returns>The texture with the extracted clip region.</returns>
+            <exception cref="T:System.ArgumentException">Raised when the clip region is outside the texture bounds.</exception>
+            <exception cref="T:System.NotSupportedException">Raised when the number of bits per pixel in the texture is not supported.</exception>
+        </member>
+        <member name="M:OpenBveApi.Textures.Functions.ApplyTransparentColor(OpenBveApi.Textures.Texture,System.Nullable{OpenBveApi.Colors.Color24})">
+            <summary>Applies a transparent color onto a texture.</summary>
+            <param name="texture">The original texture.</param>
+            <param name="color">The transparent color, or a null reference.</param>
+            <returns>The texture with the transparent color applied.</returns>
+            <exception cref="T:System.NotSupportedException">Raised when the number of bits per pixel in the texture is not supported.</exception>
+        </member>
+        <member name="T:OpenBveApi.Math.Vector2">
+            <summary>Represents a two-dimensional vector.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.X">
+            <summary>The x-coordinate.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.Y">
+            <summary>The y-coordinate.</summary>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.#ctor(System.Double,System.Double)">
+            <summary>Creates a new two-dimensional vector.</summary>
+            <param name="x">The x-coordinate.</param>
+            <param name="y">The y-coordinate.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Addition(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Adds two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The sum of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Addition(OpenBveApi.Math.Vector2,System.Double)">
+            <summary>Adds a vector and a scalar.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The sum of the vector and the scalar.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Addition(System.Double,OpenBveApi.Math.Vector2)">
+            <summary>Adds a scalar and a vector.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The sum of the scalar and the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Subtraction(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Subtracts two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The difference of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Subtraction(OpenBveApi.Math.Vector2,System.Double)">
+            <summary>Subtracts a scalar from a vector.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The difference of the vector and the scalar.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Subtraction(System.Double,OpenBveApi.Math.Vector2)">
+            <summary>Subtracts a vector from a scalar.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The difference of the scalar and the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_UnaryNegation(OpenBveApi.Math.Vector2)">
+            <summary>Negates a vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The negation of the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Multiply(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Multiplies two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The product of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Multiply(OpenBveApi.Math.Vector2,System.Double)">
+            <summary>Multiplies a vector and a scalar.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The product of the vector and the scalar.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Multiply(System.Double,OpenBveApi.Math.Vector2)">
+            <summary>Multiplies a scalar and a vector.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The product of the scalar and the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Division(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Divides two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The quotient of the two vectors.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when any member of the second vector is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Division(OpenBveApi.Math.Vector2,System.Double)">
+            <summary>Divides a vector by a scalar.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The quotient of the vector and the scalar.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when the scalar is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Division(System.Double,OpenBveApi.Math.Vector2)">
+            <summary>Divides a scalar by a vector.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The quotient of the scalar and the vector.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when any member of the vector is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Equality(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Checks whether the two specified vectors are equal.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>Whether the two vectors are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.op_Inequality(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Checks whether the two specified vectors are unequal.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>Whether the two vectors are unequal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Normalize">
+            <summary>Normalizes the vector.</summary>
+            <exception cref="T:System.DivideByZeroException">Raised when the vector is a null vector.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Translate(OpenBveApi.Math.Vector2)">
+            <summary>Translates the vector by a specified offset.</summary>
+            <param name="offset">The offset.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Scale(OpenBveApi.Math.Vector2)">
+            <summary>Scales the vector by a specified factor.</summary>
+            <param name="factor">The factor.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Rotate(System.Double,System.Double)">
+            <summary>Rotates the vector by the specified angle.</summary>
+            <param name="cosineOfAngle">The cosine of the angle.</param>
+            <param name="sineOfAngle">The sine of the angle.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.IsNullVector">
+            <summary>Checks whether the vector is a null vector.</summary>
+            <returns>A boolean indicating whether the vector is a null vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.IsNullVector(System.Double)">
+            <summary>Checks whether the vector is considered a null vector.</summary>
+            <param name="tolerance">The highest absolute value that each component of the vector may have before the vector is not considered a null vector.</param>
+            <returns>A boolean indicating whether the vector is considered a null vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Norm">
+            <summary>Gets the euclidean norm.</summary>
+            <returns>The euclidean norm.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.NormSquared">
+            <summary>Gets the square of the euclidean norm.</summary>
+            <returns>The square of the euclidean norm.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Dot(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Gives the dot product of two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The dot product of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Normalize(OpenBveApi.Math.Vector2)">
+            <summary>Normalizes a vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The normalized vector.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when the vector is a null vector.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Translate(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Translates a vector by a specified offset.</summary>
+            <param name="vector">The vector.</param>
+            <param name="offset">The offset.</param>
+            <returns>The translated vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Scale(OpenBveApi.Math.Vector2,OpenBveApi.Math.Vector2)">
+            <summary>Scales a vector by a specified factor.</summary>
+            <param name="vector">The vector.</param>
+            <param name="factor">The factor.</param>
+            <returns>The scaled vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Rotate(OpenBveApi.Math.Vector2,System.Double,System.Double)">
+            <summary>Rotates a vector by a specified angle.</summary>
+            <param name="vector">The vector.</param>
+            <param name="cosineOfAngle">The cosine of the angle.</param>
+            <param name="sineOfAngle">The sine of the angle.</param>
+            <returns>The rotated vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.IsNullVector(OpenBveApi.Math.Vector2)">
+            <summary>Checks whether a vector is a null vector.</summary>
+            <returns>A boolean indicating whether the vector is a null vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.Norm(OpenBveApi.Math.Vector2)">
+            <summary>Gets the euclidean norm of the specified vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The euclidean norm.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector2.NormSquared(OpenBveApi.Math.Vector2)">
+            <summary>Gets the square of the euclidean norm of the specified vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The square of the euclidean norm.</returns>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.Null">
+            <summary>Represents a null vector.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.Left">
+            <summary>Represents a vector pointing left.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.Right">
+            <summary>Represents a vector pointing right.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.Up">
+            <summary>Represents a vector pointing up.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector2.Down">
+            <summary>Represents a vector pointing down.</summary>
+        </member>
+        <member name="T:OpenBveApi.Math.Vector3">
+            <summary>Represents a three-dimensional vector.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.X">
+            <summary>The x-coordinate.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Y">
+            <summary>The y-coordinate.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Z">
+            <summary>The z-coordinate.</summary>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.#ctor(System.Double,System.Double,System.Double)">
+            <summary>Creates a new three-dimensional vector.</summary>
+            <param name="x">The x-coordinate.</param>
+            <param name="y">The y-coordinate.</param>
+            <param name="z">The z-coordinate.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Addition(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Adds two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The sum of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Addition(OpenBveApi.Math.Vector3,System.Double)">
+            <summary>Adds a vector and a scalar.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The sum of the vector and the scalar.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Addition(System.Double,OpenBveApi.Math.Vector3)">
+            <summary>Adds a scalar and a vector.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The sum of the scalar and the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Subtraction(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Subtracts two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The difference of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Subtraction(OpenBveApi.Math.Vector3,System.Double)">
+            <summary>Subtracts a scalar from a vector.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The difference of the vector and the scalar.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Subtraction(System.Double,OpenBveApi.Math.Vector3)">
+            <summary>Subtracts a vector from a scalar.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The difference of the scalar and the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_UnaryNegation(OpenBveApi.Math.Vector3)">
+            <summary>Negates a vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The negation of the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Multiply(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Multiplies two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The product of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Multiply(OpenBveApi.Math.Vector3,System.Double)">
+            <summary>Multiplies a vector and a scalar.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The product of the vector and the scalar.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Multiply(System.Double,OpenBveApi.Math.Vector3)">
+            <summary>Multiplies a scalar and a vector.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The product of the scalar and the vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Division(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Divides two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The quotient of the two vectors.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when any member of the second vector is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Division(OpenBveApi.Math.Vector3,System.Double)">
+            <summary>Divides a vector by a scalar.</summary>
+            <param name="a">The vector.</param>
+            <param name="b">The scalar.</param>
+            <returns>The quotient of the vector and the scalar.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when the scalar is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Division(System.Double,OpenBveApi.Math.Vector3)">
+            <summary>Divides a scalar by a vector.</summary>
+            <param name="a">The scalar.</param>
+            <param name="b">The vector.</param>
+            <returns>The quotient of the scalar and the vector.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when any member of the vector is zero.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Equality(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Checks whether the two specified vectors are equal.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>Whether the two vectors are equal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.op_Inequality(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Checks whether the two specified vectors are unequal.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>Whether the two vectors are unequal.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Normalize">
+            <summary>Normalizes the vector.</summary>
+            <exception cref="T:System.DivideByZeroException">Raised when the vector is a null vector.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Translate(OpenBveApi.Math.Vector3)">
+            <summary>Translates the vector by a specified offset.</summary>
+            <param name="offset">The offset.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Translate(OpenBveApi.Math.Orientation3,OpenBveApi.Math.Vector3)">
+            <summary>Translates the vector by a specified offset that is measured in a specified orientation.</summary>
+            <param name="orientation">The orientation.</param>
+            <param name="offset">The offset measured in the specified orientation.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Scale(OpenBveApi.Math.Vector3)">
+            <summary>Scales the vector by a specified factor.</summary>
+            <param name="factor">The factor.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Rotate(OpenBveApi.Math.Vector3,System.Double,System.Double)">
+            <summary>Rotates the vector on the plane perpendicular to a specified direction by a specified angle.</summary>
+            <param name="direction">The direction perpendicular to the plane on which to rotate.</param>
+            <param name="cosineOfAngle">The cosine of the angle.</param>
+            <param name="sineOfAngle">The sine of the angle.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Rotate(OpenBveApi.Math.Orientation3)">
+            <summary>Rotates the vector from the default orientation into a specified orientation.</summary>
+            <param name="orientation">The orientation.</param>
+            <remarks>The default orientation is X = {1, 0, 0), Y = {0, 1, 0} and Z = {0, 0, 1}.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.IsNullVector">
+            <summary>Checks whether the vector is a null vector.</summary>
+            <returns>A boolean indicating whether the vector is a null vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.IsNullVector(System.Double)">
+            <summary>Checks whether the vector is considered a null vector.</summary>
+            <param name="tolerance">The highest absolute value that each component of the vector may have before the vector is not considered a null vector.</param>
+            <returns>A boolean indicating whether the vector is considered a null vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Norm">
+            <summary>Gets the euclidean norm.</summary>
+            <returns>The euclidean norm.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.NormSquared">
+            <summary>Gets the square of the euclidean norm.</summary>
+            <returns>The square of the euclidean norm.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Dot(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Gives the dot product of two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The dot product of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Cross(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Gives the cross product of two vectors.</summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The cross product of the two vectors.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Normalize(OpenBveApi.Math.Vector3)">
+            <summary>Normalizes a vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The normalized vector.</returns>
+            <exception cref="T:System.DivideByZeroException">Raised when the vector is a null vector.</exception>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Translate(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Translates a vector by a specified offset.</summary>
+            <param name="vector">The vector.</param>
+            <param name="offset">The offset.</param>
+            <returns>The translated vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Translate(OpenBveApi.Math.Vector3,OpenBveApi.Math.Orientation3,OpenBveApi.Math.Vector3)">
+            <summary>Translates a vector by a specified offset that is measured along a specified orientation.</summary>
+            <param name="vector">The vector.</param>
+            <param name="orientation">The orientation.</param>
+            <param name="offset">The offset measured in the specified orientation.</param>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Scale(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Scales a vector by a specified factor.</summary>
+            <param name="vector">The vector.</param>
+            <param name="factor">The factor.</param>
+            <returns>The scaled vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Rotate(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3,System.Double,System.Double)">
+            <summary>Rotates a vector on the plane perpendicular to a specified direction by a specified angle.</summary>
+            <param name="vector">The vector.</param>
+            <param name="direction">The direction perpendicular to the plane on which to rotate.</param>
+            <param name="cosineOfAngle">The cosine of the angle.</param>
+            <param name="sineOfAngle">The sine of the angle.</param>
+            <returns>The rotated vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Rotate(OpenBveApi.Math.Vector3,OpenBveApi.Math.Orientation3)">
+            <summary>Rotates a vector from the default orientation into a specified orientation.</summary>
+            <param name="vector">The vector.</param>
+            <param name="orientation">The orientation.</param>
+            <returns>The rotated vector.</returns>
+            <remarks>The default orientation is X = {1, 0, 0), Y = {0, 1, 0} and Z = {0, 0, 1}.</remarks>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.CreateNormal(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3@)">
+            <summary>Creates a unit vector perpendicular to the plane described by three spatial coordinates, suitable for being a surface normal.</summary>
+            <param name="a">The first spatial coordinate.</param>
+            <param name="b">The second spatial coordinate.</param>
+            <param name="c">The third spatial coordinate.</param>
+            <param name="normal">On success, receives the vector perpendicular to the described plane. On failure, receives Vector3.Up.</param>
+            <returns>The success of the operation. This operation fails if the specified three vectors are colinear.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.AreColinear(OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3,OpenBveApi.Math.Vector3)">
+            <summary>Checks whether three spatial coordinates are colinear.</summary>
+            <param name="a">The first spatial coordinate.</param>
+            <param name="b">The second spatial coordinate.</param>
+            <param name="c">The third spatial coordinate.</param>
+            <returns>A boolean indicating whether the three spatial coordinates are colinear.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.IsNullVector(OpenBveApi.Math.Vector3)">
+            <summary>Checks whether a vector is a null vector.</summary>
+            <returns>A boolean indicating whether the vector is a null vector.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.Norm(OpenBveApi.Math.Vector3)">
+            <summary>Gets the euclidean norm of the specified vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The euclidean norm.</returns>
+        </member>
+        <member name="M:OpenBveApi.Math.Vector3.NormSquared(OpenBveApi.Math.Vector3)">
+            <summary>Gets the square of the euclidean norm of the specified vector.</summary>
+            <param name="vector">The vector.</param>
+            <returns>The square of the euclidean norm.</returns>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Null">
+            <summary>Represents a null vector.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Left">
+            <summary>Represents a vector pointing left.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Right">
+            <summary>Represents a vector pointing right.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Up">
+            <summary>Represents a vector pointing up.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Down">
+            <summary>Represents a vector pointing down.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Backward">
+            <summary>Represents a vector pointing up.</summary>
+        </member>
+        <member name="F:OpenBveApi.Math.Vector3.Forward">
+            <summary>Represents a vector pointing down.</summary>
+        </member>
+    </members>
+</doc>
