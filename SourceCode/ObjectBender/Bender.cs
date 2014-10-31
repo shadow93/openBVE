@@ -425,15 +425,15 @@ namespace ObjectBender {
 									}
 									if (isB3d) {
 										if (nx == 0.0 & ny == 0.0 & nz == 0.0) {
-											builder.AppendLine("Vertex " + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture));
+											builder.AppendLine("Vertex " + vx.ToString("R", culture) + "," + vy.ToString("R", culture) + "," + vz.ToString("R", culture));
 										} else {
-											builder.AppendLine("Vertex " + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture) + "," + nx.ToString("0.000", culture) + "," + ny.ToString("0.000", culture) + "," + nz.ToString("0.000", culture));
+											builder.AppendLine("Vertex " + vx.ToString("R", culture) + "," + vy.ToString("R", culture) + "," + vz.ToString("R", culture) + "," + nx.ToString("R", culture) + "," + ny.ToString("R", culture) + "," + nz.ToString("R", culture));
 										}
 									} else {
 										if (nx == 0.0 & ny == 0.0 & nz == 0.0) {
-											builder.AppendLine("AddVertex," + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture));
+											builder.AppendLine("AddVertex," + vx.ToString("R", culture) + "," + vy.ToString("R", culture) + "," + vz.ToString("R", culture));
 										} else {
-											builder.AppendLine("AddVertex," + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture) + "," + nx.ToString("0.000", culture) + "," + ny.ToString("0.000", culture) + "," + nz.ToString("0.000", culture));
+											builder.AppendLine("AddVertex," + vx.ToString("R", culture) + "," + vy.ToString("R", culture) + "," + vz.ToString("R", culture) + "," + nx.ToString("R", culture) + "," + ny.ToString("R", culture) + "," + nz.ToString("R", culture));
 										}
 									}
 								}
@@ -449,9 +449,9 @@ namespace ObjectBender {
 									x += (double)i * dx;
 									y += (double)i * dy;
 									if (isB3d) {
-										builder.AppendLine("Coordinates " + k.ToString(culture) + "," + x.ToString("0.000", culture) + "," + y.ToString("0.000", culture));
+										builder.AppendLine("Coordinates " + k.ToString(culture) + "," + x.ToString("R", culture) + "," + y.ToString("R", culture));
 									} else {
-										builder.AppendLine("SetTextureCoordinates," + k.ToString(culture) + "," + x.ToString("0.000", culture) + "," + y.ToString("0.000", culture));
+										builder.AppendLine("SetTextureCoordinates," + k.ToString(culture) + "," + x.ToString("R", culture) + "," + y.ToString("R", culture));
 									}
 								}
 								break;
@@ -585,16 +585,16 @@ namespace ObjectBender {
 				cells[cellPointer] = new string[1 + segments];
 				cells[cellPointer][0] = "AddFace";
 				for (int i = 0; i < segments; i++) {
-					cells[cellPointer][1 + i] = (numVertices + 2 * (segments - i - 1)).ToString(culture);
+					cells[cellPointer][1 + i] = (numVertices + 2 * i + 1).ToString(culture);
 				}
 				cellPointer++;
 			}
 			/* Face for lower cap */
-			if (lowerCap) {
+			if (upperCap) {
 				cells[cellPointer] = new string[1 + segments];
 				cells[cellPointer][0] = "AddFace";
 				for (int i = 0; i < segments; i++) {
-					cells[cellPointer][1 + i] = (numVertices + 2 * i + 1).ToString(culture);
+					cells[cellPointer][1 + i] = (numVertices + 2 * (segments - i - 1)).ToString(culture);
 				}
 				cellPointer++;
 			}
@@ -621,10 +621,10 @@ namespace ObjectBender {
 
 		/// <summary>Rotates a vector.</summary>
 		private static void Rotate(ref double vx, ref double vy, ref double vz, double dx, double dy, double dz, double cos, double sin) {
-			double versin = 1.0 - cos;
-			double x = (cos + versin * dx * dx) * vx + (versin * dx * dy - sin * dz) * vy + (versin * dx * dz + sin * dy) * vz;
-			double y = (cos + versin * dy * dy) * vy + (versin * dx * dy + sin * dz) * vx + (versin * dy * dz - sin * dx) * vz;
-			double z = (cos + versin * dz * dz) * vz + (versin * dx * dz - sin * dy) * vx + (versin * dy * dz + sin * dx) * vy;
+			double complement = 1.0 - cos;
+			double x = (cos + complement * dx * dx) * vx + (complement * dx * dy - sin * dz) * vy + (complement * dx * dz + sin * dy) * vz;
+			double y = (cos + complement * dy * dy) * vy + (complement * dx * dy + sin * dz) * vx + (complement * dy * dz - sin * dx) * vz;
+			double z = (cos + complement * dz * dz) * vz + (complement * dx * dz - sin * dy) * vx + (complement * dy * dz + sin * dx) * vy;
 			vx = x;
 			vy = y;
 			vz = z;

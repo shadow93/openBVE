@@ -710,7 +710,7 @@ namespace OpenBve {
 			if (a >= AnimatedWorldObjects.Length) {
 				Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 			}
-			World.Transformation FinalTransformation = new World.Transformation(AuxTransformation, BaseTransformation);
+			World.Transformation FinalTransformation = new World.Transformation(BaseTransformation, AuxTransformation);
 			AnimatedWorldObjects[a] = new AnimatedWorldObject();
 			AnimatedWorldObjects[a].Position = Position;
 			AnimatedWorldObjects[a].Direction = FinalTransformation.Z;

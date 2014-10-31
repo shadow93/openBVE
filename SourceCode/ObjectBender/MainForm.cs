@@ -116,9 +116,7 @@ namespace ObjectBender {
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The event arguments.</param>
 		private void ButtonStartClick(object sender, EventArgs e) {
-			#if !DEBUG
 			try {
-				#endif
 				if (InputFile != null & OutputFile != null) {
 					CultureInfo culture = CultureInfo.InvariantCulture;
 					Bender.Options options = new Bender.Options();
@@ -165,11 +163,9 @@ namespace ObjectBender {
 				} else {
 					MessageBox.Show("Please specify a source and a target file.", "ObjectBender", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
-				#if !DEBUG
 			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, "ObjectBender", MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
-			#endif
 		}
 		
 		/// <summary>Raised when the Close button is clicked.</summary>

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{83A693FD-FFD4-455E-B65D-F899E8CBBE30}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>OpenBveObjectValidator</RootNamespace>
+    <AssemblyName>OpenBveObjectValidator</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CsvB3dDecoder\Decoder.cs" />
+    <Compile Include="CsvB3dDecoder\FileInformation.cs" />
+    <Compile Include="CsvB3dDecoder\HelperFunctions.cs" />
+    <Compile Include="CsvB3dDecoder\LineInformation.cs" />
+    <Compile Include="CsvB3dDecoder\MeshBuilder.cs" />
+    <Compile Include="CsvB3dDecoder\MeshBuilderFace.cs" />
+    <Compile Include="CsvB3dDecoder\MeshBuilderFaceNormals.cs" />
+    <Compile Include="CsvB3dDecoder\MeshBuilderVertex.cs" />
+    <Compile Include="MainForm.cs" />
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrainsimApi\Codecs\ErrorLogger.cs" />
+    <Compile Include="TrainsimApi\Codecs\MeshDecoder.cs" />
+    <Compile Include="TrainsimApi\Codecs\MeshDecodingOptions.cs" />
+    <Compile Include="TrainsimApi\Geometry\Face.cs" />
+    <Compile Include="TrainsimApi\Geometry\Material.cs" />
+    <Compile Include="TrainsimApi\Geometry\Mesh.cs" />
+    <Compile Include="TrainsimApi\Geometry\Object3D.cs" />
+    <Compile Include="TrainsimApi\Geometry\ObjectManager.cs" />
+    <Compile Include="TrainsimApi\Geometry\Texture.cs" />
+    <Compile Include="TrainsimApi\Geometry\TextureManager.cs" />
+    <Compile Include="TrainsimApi\Geometry\Vertex.cs" />
+    <Compile Include="TrainsimApi\Platform\Path.cs" />
+    <Compile Include="TrainsimApi\Vectors\Orientation2d.cs" />
+    <Compile Include="TrainsimApi\Vectors\Orientation2f.cs" />
+    <Compile Include="TrainsimApi\Vectors\Orientation3d.cs" />
+    <Compile Include="TrainsimApi\Vectors\Orientation3f.cs" />
+    <Compile Include="TrainsimApi\Vectors\Vector2d.cs" />
+    <Compile Include="TrainsimApi\Vectors\Vector2f.cs" />
+    <Compile Include="TrainsimApi\Vectors\Vector3b.cs" />
+    <Compile Include="TrainsimApi\Vectors\Vector3d.cs" />
+    <Compile Include="TrainsimApi\Vectors\Vector3f.cs" />
+    <Compile Include="Validator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CsvB3dDecoder" />
+    <Folder Include="TrainsimApi" />
+    <Folder Include="TrainsimApi\Codecs" />
+    <Folder Include="TrainsimApi\Geometry" />
+    <Folder Include="TrainsimApi\Platform" />
+    <Folder Include="TrainsimApi\Vectors" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+</Project>
