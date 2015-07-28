@@ -35,6 +35,7 @@ If you make modifications and release them to others, please change the title of
 
 ## Pull requests:
 We are open for pull requests if anyone wishes to contribute to development of this project. Pre-compiled binaries are optional (please make a note if not including pre-compiled binaries to your pull requests)
+
 If you wish to make a pull request, please document all the changes you made, and add comments to your code to better understand what functions your code does.
 
 ## Credits:
