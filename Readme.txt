@@ -1,21 +1,12 @@
-﻿================
-openBVE - Readme
-================
+﻿## Welcome to openBVE's (not-so) official Github repository
 
 
----------------
-Getting started
----------------
-
+### Getting started
 Before starting the program for the first time, please read the quick install guide located at:
+* https://sites.google.com/site/openbvesim/installUse
 
-https://sites.google.com/site/openbvesim/installUse
-
-
-----------------------
-Command-line arguments
-----------------------
-
+### Command-line arguments
+```
 /route=FILE
 Loads the specified route (CSV/RW) on startup. If /train is not also specified, the default train of the route will be used if one is found, otherwise the main menu opens with just the route selected.
 
@@ -46,3 +37,49 @@ Free as in freedom
 This program is released into the public domain where legally possible. For anywhere else, you are given permission to do whatever you want with the program.
 
 If you make modifications and release them to others, please change the title of the program so that others don't confuse our program with your modification.
+
+## openBVE - Credits
+
+This is a list of credits intended to include everyone who made significant contributions to this project.
+
+
+###Programming
+* shadow93 - current maintainer 
+* michelle - Former lead programming
+* odakyufan - Additional programming & former maintainer
+* Anthony Bowden (Anthony_B) - Additional programming
+
+
+###Homepage
+
+odakyufan - Former homepage content
+
+michelle - Former homepage content
+
+Anthony Bowden (Anthony_B) - Former hosting solution
+
+Steve Green (wumpty) - Former hosting solution
+
+
+---------
+Packagers
+---------
+
+Paul Sladen (sladen) - Ubuntu liaison and package maintainer
+
+
+-----------
+Translators
+-----------
+
+Marc Riera Irigoyen (Markitus95) - Catalan
+
+Jan Henning (Jan) - German
+
+phontanka - Hungarian
+
+Dirk-Jan Breunissen (DJB) - Dutch
+
+Alvin Wong (alvinwong) - Chinese (Simplified)
+
+and others...
