@@ -6,8 +6,9 @@ Before starting the program for the first time, please read the quick install gu
 * https://sites.google.com/site/openbvesim/installUse
 
 ### Command-line arguments
-```
+```C++
 /route=FILE
+```
 Loads the specified route (CSV/RW) on startup. If /train is not also specified, the default train of the route will be used if one is found, otherwise the main menu opens with just the route selected.
 
 /train=FOLDER
