@@ -9,11 +9,7 @@ Getting started
 
 Before starting the program for the first time, please read the quick install guide located at:
 
-http://odakyufan.zxq.net/openbve/install.html
-
-You can also download documentation including an introduction to driving, an overview of the default keyboard assignment, as well as a troubleshooting section:
-
-http://odakyufan.zxq.net/openbve/index.html
+https://sites.google.com/site/openbvesim/installUse
 
 
 ----------------------
@@ -35,9 +31,10 @@ Links
 -----
 
 Project homepage:
-http://odakyufan.zxq.net/openbve/index.html
+http://openbve.shadow93.info
 
 Authors' homepages:
+http://shadow93.info/
 http://odakyufan.zxq.net/
 http://railsimroutes.net/
 

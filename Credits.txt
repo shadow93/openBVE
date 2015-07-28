@@ -9,9 +9,11 @@ This is a list of credits intended to include everyone who made significant cont
 Programming
 -----------
 
+shadow93 - current maintainer 
+
 michelle - Former lead programming
 
-odakyufan - Additional programming
+odakyufan - Additional programming & former maintainer
 
 Anthony Bowden (Anthony_B) - Additional programming
 
@@ -19,6 +21,8 @@ Anthony Bowden (Anthony_B) - Additional programming
 --------
 Homepage
 --------
+
+odakyufan - Former homepage content
 
 michelle - Former homepage content
 
