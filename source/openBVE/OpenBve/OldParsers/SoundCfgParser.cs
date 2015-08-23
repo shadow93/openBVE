@@ -15,7 +15,7 @@ namespace OpenBve {
 		}
 		
 		internal static void LoadDefaultPluginSounds(TrainManager.Train train, string trainFolder) {
-			Vector3 position = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3D position = new Vector3D(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
 			const double radius = 2.0;
 			train.Cars[train.DriverCar].Sounds.Plugin = new TrainManager.CarSound[] {
 				TryLoadSound(OpenBveApi.Path.CombineFile(trainFolder, "ats.wav"), position, radius),
@@ -79,12 +79,12 @@ namespace OpenBve {
 		// load bve 2 sound
 		private static void LoadBve2Sound(string TrainPath, TrainManager.Train train) {
 			// set sound positions and radii
-			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
-			Vector3 center = new Vector3(0.0, 0.0, 0.0);
-			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
-			Vector3 right = new Vector3(1.3, 0.0, 0.0);
-			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
-			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			Vector3D front = new Vector3D(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
+			Vector3D center = new Vector3D(0.0, 0.0, 0.0);
+			Vector3D left = new Vector3D(-1.3, 0.0, 0.0);
+			Vector3D right = new Vector3D(1.3, 0.0, 0.0);
+			Vector3D cab = new Vector3D(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
+			Vector3D panel = new Vector3D(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
 			const double large = 30.0;
 			const double medium = 10.0;
 			const double small = 5.0;
@@ -107,8 +107,8 @@ namespace OpenBve {
 			train.Cars[train.DriverCar].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
 			// load sounds for all cars
 			for (int i = 0; i < train.Cars.Length; i++) {
-				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxlePosition);
-				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxlePosition);
+				Vector3D frontaxle = new Vector3D(0.0, 0.0, train.Cars[i].FrontAxlePosition);
+				Vector3D rearaxle = new Vector3D(0.0, 0.0, train.Cars[i].RearAxlePosition);
 				train.Cars[i].Sounds.Air = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "Air.wav"), center, small);
 				train.Cars[i].Sounds.AirHigh = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "AirHigh.wav"), center, small);
 				train.Cars[i].Sounds.AirZero = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, "AirZero.wav"), center, small);
@@ -167,16 +167,16 @@ namespace OpenBve {
 		// load bve 4 sound
 		private static void LoadBve4Sound(string FileName, string TrainPath, System.Text.Encoding Encoding, TrainManager.Train train) {
 			// set sound positions and radii
-			Vector3 center = new Vector3(0.0, 0.0, 0.0);
-			Vector3 left = new Vector3(-1.3, 0.0, 0.0);
-			Vector3 right = new Vector3(1.3, 0.0, 0.0);
-			Vector3 front = new Vector3(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
-			Vector3 cab = new Vector3(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
-			Vector3 panel = new Vector3(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
-			double large = 30.0;
-			double medium = 10.0;
-			double small = 5.0;
-			double tiny = 2.0;
+			Vector3D center = new Vector3D(0.0, 0.0, 0.0);
+			Vector3D left = new Vector3D(-1.3, 0.0, 0.0);
+			Vector3D right = new Vector3D(1.3, 0.0, 0.0);
+			Vector3D front = new Vector3D(0.0, 0.0, 0.5 * train.Cars[train.DriverCar].Length);
+			Vector3D cab = new Vector3D(-train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ - 0.5);
+			Vector3D panel = new Vector3D(train.Cars[train.DriverCar].DriverX, train.Cars[train.DriverCar].DriverY, train.Cars[train.DriverCar].DriverZ + 1.0);
+			const double large = 30.0;
+			const double medium = 10.0;
+			const double small = 5.0;
+			const double tiny = 2.0;
 			LoadNoSound(train);
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -190,7 +190,7 @@ namespace OpenBve {
 				}
 			}
 			if (Lines.Length < 1 || string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
+				Debug.AddMessage(Debug.MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
 			}
 			string[] MotorFiles = new string[] { };
 			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / (double)Lines.Length;
@@ -203,15 +203,15 @@ namespace OpenBve {
 				switch (Lines[i].ToLowerInvariant()) {
 					case "[run]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								} else if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									Debug.AddMessage(Debug.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									if (k >= 0) {
 										for (int c = 0; c < train.Cars.Length; c++) {
@@ -225,22 +225,22 @@ namespace OpenBve {
 											train.Cars[c].Sounds.Run[k] = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), center, medium);
 										}
 									} else {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							} i++;
 						} i--; break;
 					case "[flange]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								} else if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									Debug.AddMessage(Debug.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									if (k >= 0) {
 										for (int c = 0; c < train.Cars.Length; c++) {
@@ -254,22 +254,22 @@ namespace OpenBve {
 											train.Cars[c].Sounds.Flange[k] = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), center, medium);
 										}
 									} else {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							} i++;
 						} i--; break;
 					case "[motor]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-								} else if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									Debug.AddMessage(Debug.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								} else if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									if (k >= 0) {
 										if (k >= MotorFiles.Length) {
@@ -277,43 +277,43 @@ namespace OpenBve {
 										}
 										MotorFiles[k] = OpenBveApi.Path.CombineFile(TrainPath, b);
 										if (!System.IO.File.Exists(MotorFiles[k])) {
-											Interface.AddMessage(Interface.MessageType.Error, true, "File " + MotorFiles[k] + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, true, "File " + MotorFiles[k] + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											MotorFiles[k] = null;
 										}
 									} else {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Index is invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Index is invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									}
 								}
 							} i++;
 						} i--; break;
 					case "[switch]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (a == "0") {
 									for (int c = 0; c < train.Cars.Length; c++) {
-										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxlePosition);
-										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxlePosition);
+										Vector3D frontaxle = new Vector3D(0.0, 0.0, train.Cars[c].FrontAxlePosition);
+										Vector3D rearaxle = new Vector3D(0.0, 0.0, train.Cars[c].RearAxlePosition);
 										train.Cars[c].Sounds.PointFrontAxle = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), frontaxle, small);
 										train.Cars[c].Sounds.PointRearAxle = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), rearaxle, small);
 									}
 								} else {
-									Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported index " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+									Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported index " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							} i++;
 						} i--; break;
 					case "[brake]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "bc release high":
@@ -337,7 +337,7 @@ namespace OpenBve {
 												train.Cars[c].Sounds.Brake = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), center, small);
 											} break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -345,12 +345,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[compressor]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									for (int c = 0; c < train.Cars.Length; c++) {
 										if (train.Cars[c].Specs.AirBrake.Type == TrainManager.AirBrakeType.Main) {
@@ -365,7 +365,7 @@ namespace OpenBve {
 													train.Cars[c].Sounds.CpEnd = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), center, medium);
 													break;
 												default:
-													Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
 											}
 										}
@@ -375,12 +375,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[suspension]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "left":
@@ -392,7 +392,7 @@ namespace OpenBve {
 												train.Cars[c].Sounds.SpringR = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), right, small);
 											} break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -401,12 +401,12 @@ namespace OpenBve {
 					case "[horn]":
 						i++;
 						while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "primary":
@@ -422,7 +422,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.Horns[2].Loop = true;
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -430,12 +430,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[door]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "open left":
@@ -455,7 +455,7 @@ namespace OpenBve {
 												train.Cars[c].Sounds.DoorCloseR = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), left, small);
 											} break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -463,16 +463,16 @@ namespace OpenBve {
 						} i--; break;
 					case "[ats]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									int k;
 									if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k)) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Invalid index appeared at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									} else {
 										if (k >= 0) {
 											int n = train.Cars[train.DriverCar].Sounds.Plugin.Length;
@@ -484,7 +484,7 @@ namespace OpenBve {
 											}
 											train.Cars[train.DriverCar].Sounds.Plugin[k] = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, tiny);
 										} else {
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
 								}
@@ -492,19 +492,19 @@ namespace OpenBve {
 						} i--; break;
 					case "[buzzer]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "correct":
 											train.Cars[train.DriverCar].Sounds.Adjust = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, tiny);
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -512,12 +512,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[pilot lamp]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "on":
@@ -527,7 +527,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.PilotLampOff = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, tiny);
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -535,12 +535,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[brake handle]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "apply":
@@ -556,7 +556,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.BrakeHandleMax = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, tiny);
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -564,12 +564,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[master controller]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "up":
@@ -585,7 +585,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.MasterControllerMax = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, tiny);
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -593,12 +593,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[reverser]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "on":
@@ -608,7 +608,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.ReverserOff = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, tiny);
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -616,12 +616,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[breaker]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "on":
@@ -631,7 +631,7 @@ namespace OpenBve {
 											train.Cars[train.DriverCar].Sounds.BreakerResumeOrInterrupt = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), panel, small);
 											break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -639,12 +639,12 @@ namespace OpenBve {
 						} i--; break;
 					case "[others]":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal)) {
-							int j = Lines[i].IndexOf("=");
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0) {
 								string a = Lines[i].Substring(0, j).TrimEnd();
 								string b = Lines[i].Substring(j + 1).TrimStart();
-								if (b.Length == 0 || Interface.ContainsInvalidPathChars(b)) {
-									Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								if (b.Length == 0 || OpenBveApi.Path.ContainsInvalidPathChars(b)) {
+									Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else {
 									switch (a.ToLowerInvariant()) {
 										case "noise":
@@ -658,7 +658,7 @@ namespace OpenBve {
 												train.Cars[c].Sounds.Rub = TryLoadSound(OpenBveApi.Path.CombineFile(TrainPath, b), center, medium);
 											} break;
 										default:
-											Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											Debug.AddMessage(Debug.MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											break;
 									}
 								}
@@ -689,7 +689,7 @@ namespace OpenBve {
 		}
 
 		// try load sound
-		private static TrainManager.CarSound TryLoadSound(string FileName, Vector3 Position, double Radius) {
+		private static TrainManager.CarSound TryLoadSound(string FileName, Vector3D Position, double Radius) {
 			TrainManager.CarSound s;
 			s = TrainManager.CarSound.Empty;
 			s.Position = Position;
@@ -701,7 +701,7 @@ namespace OpenBve {
 			}
 			return s;
 		}
-		private static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius) {
+		private static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3D Position, double Radius) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			TrainManager.CarSound[] Sounds = new TrainManager.CarSound[] { };
 			string[] Files = System.IO.Directory.GetFiles(Folder);

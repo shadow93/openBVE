@@ -14,23 +14,23 @@ namespace OpenBveApi.Objects {
 	public abstract class AbstractObject {
 		/// <summary>Translates the object by the specified offset.</summary>
 		/// <param name="offset">The offset by which to translate.</param>
-		public abstract void Translate(Vector3 offset);
+		public abstract void Translate(Vector3D offset);
 		/// <summary>Translates the object by the specified offset that is measured in the specified orientation.</summary>
 		/// <param name="orientation">The orientation along which to translate.</param>
 		/// <param name="offset">The offset measured in the specified orientation.</param>
-		public abstract void Translate(Orientation3 orientation, Vector3 offset);
+		public abstract void Translate(Orientation3 orientation, Vector3D offset);
 		/// <summary>Rotates the object around the specified axis.</summary>
 		/// <param name="direction">The axis along which to rotate.</param>
 		/// <param name="cosineOfAngle">The cosine of the angle by which to rotate.</param>
 		/// <param name="sineOfAngle">The sine of the angle by which to rotate.</param>
-		public abstract void Rotate(Vector3 direction, double cosineOfAngle, double sineOfAngle);
+		public abstract void Rotate(Vector3D direction, double cosineOfAngle, double sineOfAngle);
 		/// <summary>Rotates the object from the default orientation into the specified orientation.</summary>
 		/// <param name="orientation">The target orientation.</param>
 		/// <remarks>The default orientation is X = {1, 0, 0), Y = {0, 1, 0} and Z = {0, 0, 1}.</remarks>
 		public abstract void Rotate(Orientation3 orientation);
 		/// <summary>Scales the object by the specified factor.</summary>
 		/// <param name="factor">The factor by which to scale.</param>
-		public abstract void Scale(Vector3 factor);
+		public abstract void Scale(Vector3D factor);
 	}
 	
 	/// <summary>Represents an abstract static object. This is the base class from which all static objects must inherit.</summary>
@@ -71,7 +71,7 @@ namespace OpenBveApi.Objects {
 		/// <param name="objectPosition">The position of the object.</param>
 		/// <param name="objectOrientation">The orientation of the object.</param>
 		/// <returns>The intensity of the glow expressed as a value between 0 and 1.</returns>
-		public abstract double GetIntensity(Vector3 cameraPosition, Orientation3 cameraOrientation, Vector3 objectPosition, Vector3 objectOrientation);
+		public abstract double GetIntensity(Vector3D cameraPosition, Orientation3 cameraOrientation, Vector3D objectPosition, Vector3D objectOrientation);
 	}
 	
 	/// <summary>Represents a glow where the intensity is inversely proportional to the distance between the object and the camera.</summary>
@@ -92,7 +92,7 @@ namespace OpenBveApi.Objects {
 		/// <param name="objectPosition">The position of the object.</param>
 		/// <param name="objectOrientation">The orientation of the object.</param>
 		/// <returns>The intensity of the glow expressed as a value between 0 and 1.</returns>
-		public override double GetIntensity(Vector3 cameraPosition, Orientation3 cameraOrientation, Vector3 objectPosition, Vector3 objectOrientation) {
+		public override double GetIntensity(Vector3D cameraPosition, Orientation3 cameraOrientation, Vector3D objectPosition, Vector3D objectOrientation) {
 			/* The underlying formula for the intensity is
 			 *    i = d^2 / (d^2 + h^2)
 			 * where

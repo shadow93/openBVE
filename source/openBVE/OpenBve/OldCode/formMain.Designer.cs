@@ -158,6 +158,7 @@
         	this.radiobuttonReview = new System.Windows.Forms.RadioButton();
         	this.radiobuttonStart = new System.Windows.Forms.RadioButton();
         	this.labelPanelsTop = new System.Windows.Forms.Label();
+        	this.radiobuttonGetAddOns = new System.Windows.Forms.RadioButton();
         	this.panelReview = new System.Windows.Forms.Panel();
         	this.comboboxBlackBoxFormat = new System.Windows.Forms.ComboBox();
         	this.labelBlackBoxFormat = new System.Windows.Forms.Label();
@@ -238,6 +239,31 @@
         	this.labelVersion = new System.Windows.Forms.Label();
         	this.labelInfoBottom = new System.Windows.Forms.Label();
         	this.labelInfoTop = new System.Windows.Forms.Label();
+        	this.panelGetAddOns = new System.Windows.Forms.Panel();
+        	this.panelPackages = new System.Windows.Forms.Panel();
+        	this.checkboxFilterNoWIPs = new System.Windows.Forms.CheckBox();
+        	this.groupboxPackage = new System.Windows.Forms.GroupBox();
+        	this.linkPackageHomepage = new System.Windows.Forms.LinkLabel();
+        	this.buttonScreenshotNext = new System.Windows.Forms.Button();
+        	this.buttonScreenshotPrevious = new System.Windows.Forms.Button();
+        	this.pictureboxScreenshot = new System.Windows.Forms.PictureBox();
+        	this.labelPackageInformation = new System.Windows.Forms.Label();
+        	this.textboxPackageDescription = new System.Windows.Forms.TextBox();
+        	this.buttonPackageInstall = new System.Windows.Forms.Button();
+        	this.buttonPackageRemove = new System.Windows.Forms.Button();
+        	this.treeviewPackages = new System.Windows.Forms.TreeView();
+        	this.checkboxFilterUpdates = new System.Windows.Forms.CheckBox();
+        	this.checkboxFilterSharedLibraries = new System.Windows.Forms.CheckBox();
+        	this.checkboxFilterLibraries = new System.Windows.Forms.CheckBox();
+        	this.checkboxFilterTrains = new System.Windows.Forms.CheckBox();
+        	this.checkboxFilterRoutes = new System.Windows.Forms.CheckBox();
+        	this.textboxFilter = new System.Windows.Forms.TextBox();
+        	this.labelFilter = new System.Windows.Forms.Label();
+        	this.progressbarDownloading = new System.Windows.Forms.ProgressBar();
+        	this.labelDownloading = new System.Windows.Forms.Label();
+        	this.label18 = new System.Windows.Forms.Label();
+        	this.labelGetAddOnsTitle = new System.Windows.Forms.Label();
+        	this.labelGetAddOnsBackground = new System.Windows.Forms.Label();
         	this.timerInstall = new System.Windows.Forms.Timer(this.components);
         	this.timerFilter = new System.Windows.Forms.Timer(this.components);
         	((System.ComponentModel.ISupportInitialize)(this.pictureboxLogo)).BeginInit();
@@ -306,6 +332,10 @@
         	this.panelJoystick.SuspendLayout();
         	this.panelKeyboard.SuspendLayout();
         	this.panelInfo.SuspendLayout();
+        	this.panelGetAddOns.SuspendLayout();
+        	this.panelPackages.SuspendLayout();
+        	this.groupboxPackage.SuspendLayout();
+        	((System.ComponentModel.ISupportInitialize)(this.pictureboxScreenshot)).BeginInit();
         	this.SuspendLayout();
         	// 
         	// labelFillerOne
@@ -2044,6 +2074,20 @@
         	this.labelPanelsTop.Size = new System.Drawing.Size(160, 2);
         	this.labelPanelsTop.TabIndex = 0;
         	// 
+        	// radiobuttonGetAddOns
+        	// 
+        	this.radiobuttonGetAddOns.AutoSize = true;
+        	this.radiobuttonGetAddOns.Enabled = false;
+        	this.radiobuttonGetAddOns.Location = new System.Drawing.Point(8, 320);
+        	this.radiobuttonGetAddOns.Name = "radiobuttonGetAddOns";
+        	this.radiobuttonGetAddOns.Size = new System.Drawing.Size(84, 17);
+        	this.radiobuttonGetAddOns.TabIndex = 2;
+        	this.radiobuttonGetAddOns.TabStop = true;
+        	this.radiobuttonGetAddOns.Text = "Get Add-ons";
+        	this.radiobuttonGetAddOns.UseVisualStyleBackColor = true;
+        	this.radiobuttonGetAddOns.Visible = false;
+        	this.radiobuttonGetAddOns.CheckedChanged += new System.EventHandler(this.RadiobuttonGetAddOnsCheckedChanged);
+        	// 
         	// panelReview
         	// 
         	this.panelReview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -2971,6 +3015,331 @@
         	this.labelInfoTop.Size = new System.Drawing.Size(160, 2);
         	this.labelInfoTop.TabIndex = 0;
         	// 
+        	// panelGetAddOns
+        	// 
+        	this.panelGetAddOns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.panelGetAddOns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(243)))), ((int)(((byte)(243)))));
+        	this.panelGetAddOns.Controls.Add(this.panelPackages);
+        	this.panelGetAddOns.Controls.Add(this.progressbarDownloading);
+        	this.panelGetAddOns.Controls.Add(this.labelDownloading);
+        	this.panelGetAddOns.Controls.Add(this.label18);
+        	this.panelGetAddOns.Controls.Add(this.labelGetAddOnsTitle);
+        	this.panelGetAddOns.Controls.Add(this.labelGetAddOnsBackground);
+        	this.panelGetAddOns.Location = new System.Drawing.Point(160, 0);
+        	this.panelGetAddOns.Name = "panelGetAddOns";
+        	this.panelGetAddOns.Size = new System.Drawing.Size(640, 584);
+        	this.panelGetAddOns.TabIndex = 14;
+        	// 
+        	// panelPackages
+        	// 
+        	this.panelPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.panelPackages.Controls.Add(this.checkboxFilterNoWIPs);
+        	this.panelPackages.Controls.Add(this.groupboxPackage);
+        	this.panelPackages.Controls.Add(this.treeviewPackages);
+        	this.panelPackages.Controls.Add(this.checkboxFilterUpdates);
+        	this.panelPackages.Controls.Add(this.checkboxFilterSharedLibraries);
+        	this.panelPackages.Controls.Add(this.checkboxFilterLibraries);
+        	this.panelPackages.Controls.Add(this.checkboxFilterTrains);
+        	this.panelPackages.Controls.Add(this.checkboxFilterRoutes);
+        	this.panelPackages.Controls.Add(this.textboxFilter);
+        	this.panelPackages.Controls.Add(this.labelFilter);
+        	this.panelPackages.Enabled = false;
+        	this.panelPackages.Location = new System.Drawing.Point(8, 40);
+        	this.panelPackages.Name = "panelPackages";
+        	this.panelPackages.Size = new System.Drawing.Size(624, 480);
+        	this.panelPackages.TabIndex = 0;
+        	// 
+        	// checkboxFilterNoWIPs
+        	// 
+        	this.checkboxFilterNoWIPs.AutoSize = true;
+        	this.checkboxFilterNoWIPs.Location = new System.Drawing.Point(424, 24);
+        	this.checkboxFilterNoWIPs.Name = "checkboxFilterNoWIPs";
+        	this.checkboxFilterNoWIPs.Size = new System.Drawing.Size(69, 17);
+        	this.checkboxFilterNoWIPs.TabIndex = 6;
+        	this.checkboxFilterNoWIPs.Text = "No WIPs";
+        	this.checkboxFilterNoWIPs.UseVisualStyleBackColor = true;
+        	this.checkboxFilterNoWIPs.CheckedChanged += new System.EventHandler(this.CheckboxFilterNoWIPsCheckedChanged);
+        	// 
+        	// groupboxPackage
+        	// 
+        	this.groupboxPackage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.groupboxPackage.Controls.Add(this.linkPackageHomepage);
+        	this.groupboxPackage.Controls.Add(this.buttonScreenshotNext);
+        	this.groupboxPackage.Controls.Add(this.buttonScreenshotPrevious);
+        	this.groupboxPackage.Controls.Add(this.pictureboxScreenshot);
+        	this.groupboxPackage.Controls.Add(this.labelPackageInformation);
+        	this.groupboxPackage.Controls.Add(this.textboxPackageDescription);
+        	this.groupboxPackage.Controls.Add(this.buttonPackageInstall);
+        	this.groupboxPackage.Controls.Add(this.buttonPackageRemove);
+        	this.groupboxPackage.Location = new System.Drawing.Point(0, 288);
+        	this.groupboxPackage.Name = "groupboxPackage";
+        	this.groupboxPackage.Size = new System.Drawing.Size(624, 192);
+        	this.groupboxPackage.TabIndex = 1;
+        	this.groupboxPackage.TabStop = false;
+        	this.groupboxPackage.Text = "Package details";
+        	// 
+        	// linkPackageHomepage
+        	// 
+        	this.linkPackageHomepage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.linkPackageHomepage.Location = new System.Drawing.Point(216, 152);
+        	this.linkPackageHomepage.Name = "linkPackageHomepage";
+        	this.linkPackageHomepage.Size = new System.Drawing.Size(192, 32);
+        	this.linkPackageHomepage.TabIndex = 4;
+        	this.linkPackageHomepage.UseMnemonic = false;
+        	this.linkPackageHomepage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkPackageHomepageLinkClicked);
+        	// 
+        	// buttonScreenshotNext
+        	// 
+        	this.buttonScreenshotNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+        	this.buttonScreenshotNext.BackColor = System.Drawing.SystemColors.ButtonFace;
+        	this.buttonScreenshotNext.Enabled = false;
+        	this.buttonScreenshotNext.Location = new System.Drawing.Point(520, 160);
+        	this.buttonScreenshotNext.Name = "buttonScreenshotNext";
+        	this.buttonScreenshotNext.Size = new System.Drawing.Size(96, 24);
+        	this.buttonScreenshotNext.TabIndex = 6;
+        	this.buttonScreenshotNext.Text = "Next";
+        	this.buttonScreenshotNext.UseVisualStyleBackColor = true;
+        	this.buttonScreenshotNext.Click += new System.EventHandler(this.ButtonScreenshotNextClick);
+        	// 
+        	// buttonScreenshotPrevious
+        	// 
+        	this.buttonScreenshotPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+        	this.buttonScreenshotPrevious.BackColor = System.Drawing.SystemColors.ButtonFace;
+        	this.buttonScreenshotPrevious.Enabled = false;
+        	this.buttonScreenshotPrevious.Location = new System.Drawing.Point(416, 160);
+        	this.buttonScreenshotPrevious.Name = "buttonScreenshotPrevious";
+        	this.buttonScreenshotPrevious.Size = new System.Drawing.Size(96, 24);
+        	this.buttonScreenshotPrevious.TabIndex = 5;
+        	this.buttonScreenshotPrevious.Text = "Previous";
+        	this.buttonScreenshotPrevious.UseVisualStyleBackColor = true;
+        	this.buttonScreenshotPrevious.Click += new System.EventHandler(this.ButtonScreenshotPreviousClick);
+        	// 
+        	// pictureboxScreenshot
+        	// 
+        	this.pictureboxScreenshot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.pictureboxScreenshot.Cursor = System.Windows.Forms.Cursors.Default;
+        	this.pictureboxScreenshot.Location = new System.Drawing.Point(416, 16);
+        	this.pictureboxScreenshot.Name = "pictureboxScreenshot";
+        	this.pictureboxScreenshot.Size = new System.Drawing.Size(200, 136);
+        	this.pictureboxScreenshot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+        	this.pictureboxScreenshot.TabIndex = 10;
+        	this.pictureboxScreenshot.TabStop = false;
+        	this.pictureboxScreenshot.Click += new System.EventHandler(this.PictureboxScreenshotClick);
+        	// 
+        	// labelPackageInformation
+        	// 
+        	this.labelPackageInformation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left)));
+        	this.labelPackageInformation.Location = new System.Drawing.Point(8, 16);
+        	this.labelPackageInformation.Name = "labelPackageInformation";
+        	this.labelPackageInformation.Size = new System.Drawing.Size(200, 136);
+        	this.labelPackageInformation.TabIndex = 0;
+        	this.labelPackageInformation.UseMnemonic = false;
+        	// 
+        	// textboxPackageDescription
+        	// 
+        	this.textboxPackageDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.textboxPackageDescription.BackColor = System.Drawing.SystemColors.Window;
+        	this.textboxPackageDescription.Location = new System.Drawing.Point(216, 16);
+        	this.textboxPackageDescription.Multiline = true;
+        	this.textboxPackageDescription.Name = "textboxPackageDescription";
+        	this.textboxPackageDescription.ReadOnly = true;
+        	this.textboxPackageDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        	this.textboxPackageDescription.Size = new System.Drawing.Size(192, 136);
+        	this.textboxPackageDescription.TabIndex = 3;
+        	// 
+        	// buttonPackageInstall
+        	// 
+        	this.buttonPackageInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+        	this.buttonPackageInstall.BackColor = System.Drawing.SystemColors.ButtonFace;
+        	this.buttonPackageInstall.Enabled = false;
+        	this.buttonPackageInstall.Location = new System.Drawing.Point(8, 160);
+        	this.buttonPackageInstall.Name = "buttonPackageInstall";
+        	this.buttonPackageInstall.Size = new System.Drawing.Size(96, 24);
+        	this.buttonPackageInstall.TabIndex = 1;
+        	this.buttonPackageInstall.Text = "Install";
+        	this.buttonPackageInstall.UseVisualStyleBackColor = true;
+        	this.buttonPackageInstall.Click += new System.EventHandler(this.ButtonPackageInstallClick);
+        	// 
+        	// buttonPackageRemove
+        	// 
+        	this.buttonPackageRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+        	this.buttonPackageRemove.BackColor = System.Drawing.SystemColors.ButtonFace;
+        	this.buttonPackageRemove.Enabled = false;
+        	this.buttonPackageRemove.Location = new System.Drawing.Point(112, 160);
+        	this.buttonPackageRemove.Name = "buttonPackageRemove";
+        	this.buttonPackageRemove.Size = new System.Drawing.Size(96, 24);
+        	this.buttonPackageRemove.TabIndex = 2;
+        	this.buttonPackageRemove.Text = "Remove";
+        	this.buttonPackageRemove.UseVisualStyleBackColor = true;
+        	this.buttonPackageRemove.Click += new System.EventHandler(this.ButtonPackageRemoveClick);
+        	// 
+        	// treeviewPackages
+        	// 
+        	this.treeviewPackages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.treeviewPackages.HideSelection = false;
+        	this.treeviewPackages.Location = new System.Drawing.Point(0, 64);
+        	this.treeviewPackages.Name = "treeviewPackages";
+        	this.treeviewPackages.Size = new System.Drawing.Size(624, 216);
+        	this.treeviewPackages.TabIndex = 8;
+        	this.treeviewPackages.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeviewPackagesAfterSelect);
+        	// 
+        	// checkboxFilterUpdates
+        	// 
+        	this.checkboxFilterUpdates.AutoSize = true;
+        	this.checkboxFilterUpdates.Location = new System.Drawing.Point(424, 40);
+        	this.checkboxFilterUpdates.Name = "checkboxFilterUpdates";
+        	this.checkboxFilterUpdates.Size = new System.Drawing.Size(88, 17);
+        	this.checkboxFilterUpdates.TabIndex = 7;
+        	this.checkboxFilterUpdates.Text = "Only updates";
+        	this.checkboxFilterUpdates.UseVisualStyleBackColor = true;
+        	this.checkboxFilterUpdates.CheckedChanged += new System.EventHandler(this.CheckboxFilterUpdatesCheckedChanged);
+        	// 
+        	// checkboxFilterSharedLibraries
+        	// 
+        	this.checkboxFilterSharedLibraries.AutoSize = true;
+        	this.checkboxFilterSharedLibraries.Location = new System.Drawing.Point(184, 40);
+        	this.checkboxFilterSharedLibraries.Name = "checkboxFilterSharedLibraries";
+        	this.checkboxFilterSharedLibraries.Size = new System.Drawing.Size(98, 17);
+        	this.checkboxFilterSharedLibraries.TabIndex = 5;
+        	this.checkboxFilterSharedLibraries.Text = "Shared libraries";
+        	this.checkboxFilterSharedLibraries.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+        	this.checkboxFilterSharedLibraries.UseVisualStyleBackColor = true;
+        	this.checkboxFilterSharedLibraries.CheckedChanged += new System.EventHandler(this.CheckboxFilterSharedLibrariesCheckedChanged);
+        	// 
+        	// checkboxFilterLibraries
+        	// 
+        	this.checkboxFilterLibraries.AutoSize = true;
+        	this.checkboxFilterLibraries.Location = new System.Drawing.Point(184, 24);
+        	this.checkboxFilterLibraries.Name = "checkboxFilterLibraries";
+        	this.checkboxFilterLibraries.Size = new System.Drawing.Size(65, 17);
+        	this.checkboxFilterLibraries.TabIndex = 4;
+        	this.checkboxFilterLibraries.Text = "Libraries";
+        	this.checkboxFilterLibraries.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+        	this.checkboxFilterLibraries.UseVisualStyleBackColor = true;
+        	this.checkboxFilterLibraries.CheckedChanged += new System.EventHandler(this.CheckboxFilterLibrariesCheckedChanged);
+        	// 
+        	// checkboxFilterTrains
+        	// 
+        	this.checkboxFilterTrains.AutoSize = true;
+        	this.checkboxFilterTrains.Checked = true;
+        	this.checkboxFilterTrains.CheckState = System.Windows.Forms.CheckState.Checked;
+        	this.checkboxFilterTrains.Location = new System.Drawing.Point(64, 40);
+        	this.checkboxFilterTrains.Name = "checkboxFilterTrains";
+        	this.checkboxFilterTrains.Size = new System.Drawing.Size(55, 17);
+        	this.checkboxFilterTrains.TabIndex = 3;
+        	this.checkboxFilterTrains.Text = "Trains";
+        	this.checkboxFilterTrains.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+        	this.checkboxFilterTrains.UseVisualStyleBackColor = true;
+        	this.checkboxFilterTrains.CheckedChanged += new System.EventHandler(this.CheckboxFilterTrainsCheckedChanged);
+        	// 
+        	// checkboxFilterRoutes
+        	// 
+        	this.checkboxFilterRoutes.AutoSize = true;
+        	this.checkboxFilterRoutes.Checked = true;
+        	this.checkboxFilterRoutes.CheckState = System.Windows.Forms.CheckState.Checked;
+        	this.checkboxFilterRoutes.Location = new System.Drawing.Point(64, 24);
+        	this.checkboxFilterRoutes.Name = "checkboxFilterRoutes";
+        	this.checkboxFilterRoutes.Size = new System.Drawing.Size(60, 17);
+        	this.checkboxFilterRoutes.TabIndex = 2;
+        	this.checkboxFilterRoutes.Text = "Routes";
+        	this.checkboxFilterRoutes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+        	this.checkboxFilterRoutes.UseVisualStyleBackColor = true;
+        	this.checkboxFilterRoutes.CheckedChanged += new System.EventHandler(this.CheckboxFilterRoutesCheckedChanged);
+        	// 
+        	// textboxFilter
+        	// 
+        	this.textboxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.textboxFilter.Location = new System.Drawing.Point(64, 0);
+        	this.textboxFilter.Name = "textboxFilter";
+        	this.textboxFilter.Size = new System.Drawing.Size(560, 20);
+        	this.textboxFilter.TabIndex = 1;
+        	this.textboxFilter.TextChanged += new System.EventHandler(this.TextboxFilterTextChanged);
+        	// 
+        	// labelFilter
+        	// 
+        	this.labelFilter.Location = new System.Drawing.Point(0, 0);
+        	this.labelFilter.Name = "labelFilter";
+        	this.labelFilter.Size = new System.Drawing.Size(64, 16);
+        	this.labelFilter.TabIndex = 0;
+        	this.labelFilter.Text = "Filter:";
+        	this.labelFilter.TextAlign = System.Drawing.ContentAlignment.TopRight;
+        	// 
+        	// progressbarDownloading
+        	// 
+        	this.progressbarDownloading.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.progressbarDownloading.Location = new System.Drawing.Point(8, 560);
+        	this.progressbarDownloading.Name = "progressbarDownloading";
+        	this.progressbarDownloading.Size = new System.Drawing.Size(624, 16);
+        	this.progressbarDownloading.TabIndex = 3;
+        	// 
+        	// labelDownloading
+        	// 
+        	this.labelDownloading.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.labelDownloading.Location = new System.Drawing.Point(8, 528);
+        	this.labelDownloading.Name = "labelDownloading";
+        	this.labelDownloading.Size = new System.Drawing.Size(624, 32);
+        	this.labelDownloading.TabIndex = 2;
+        	// 
+        	// label18
+        	// 
+        	this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.label18.BackColor = System.Drawing.Color.White;
+        	this.label18.Location = new System.Drawing.Point(0, 32);
+        	this.label18.Name = "label18";
+        	this.label18.Size = new System.Drawing.Size(640, 2);
+        	this.label18.TabIndex = 2;
+        	// 
+        	// labelGetAddOnsTitle
+        	// 
+        	this.labelGetAddOnsTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.labelGetAddOnsTitle.AutoEllipsis = true;
+        	this.labelGetAddOnsTitle.AutoSize = true;
+        	this.labelGetAddOnsTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+        	this.labelGetAddOnsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.labelGetAddOnsTitle.ForeColor = System.Drawing.Color.White;
+        	this.labelGetAddOnsTitle.Location = new System.Drawing.Point(8, 8);
+        	this.labelGetAddOnsTitle.Name = "labelGetAddOnsTitle";
+        	this.labelGetAddOnsTitle.Size = new System.Drawing.Size(83, 16);
+        	this.labelGetAddOnsTitle.TabIndex = 1;
+        	this.labelGetAddOnsTitle.Text = "Get Add-ons";
+        	// 
+        	// labelGetAddOnsBackground
+        	// 
+        	this.labelGetAddOnsBackground.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.labelGetAddOnsBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(179)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+        	this.labelGetAddOnsBackground.Location = new System.Drawing.Point(0, 0);
+        	this.labelGetAddOnsBackground.Name = "labelGetAddOnsBackground";
+        	this.labelGetAddOnsBackground.Size = new System.Drawing.Size(640, 32);
+        	this.labelGetAddOnsBackground.TabIndex = 0;
+        	// 
+        	// timerInstall
+        	// 
+        	this.timerInstall.Interval = 250;
+        	this.timerInstall.Tick += new System.EventHandler(this.TimerInstallTick);
+        	// 
+        	// timerFilter
+        	// 
+        	this.timerFilter.Interval = 250;
+        	this.timerFilter.Tick += new System.EventHandler(this.TimerFilterTick);
+        	// 
         	// formMain
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2978,6 +3347,8 @@
         	this.BackColor = System.Drawing.Color.White;
         	this.ClientSize = new System.Drawing.Size(800, 584);
         	this.Controls.Add(this.labelVerticalSeparator);
+        	this.Controls.Add(this.radiobuttonGetAddOns);
+        	//this.Controls.Add(this.linkUpdates);
         	this.Controls.Add(this.panelInfo);
         	this.Controls.Add(this.panelPanels);
         	this.Controls.Add(this.buttonClose);
@@ -2989,6 +3360,7 @@
         	this.Controls.Add(this.panelControls);
         	this.Controls.Add(this.panelReview);
         	this.Controls.Add(this.panelStart);
+        	this.Controls.Add(this.panelGetAddOns);
         	this.KeyPreview = true;
         	this.Name = "formMain";
         	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -3088,18 +3460,52 @@
         	this.panelKeyboard.ResumeLayout(false);
         	this.panelKeyboard.PerformLayout();
         	this.panelInfo.ResumeLayout(false);
+        	this.panelGetAddOns.ResumeLayout(false);
+        	this.panelGetAddOns.PerformLayout();
+        	this.panelPackages.ResumeLayout(false);
+        	this.panelPackages.PerformLayout();
+        	this.groupboxPackage.ResumeLayout(false);
+        	this.groupboxPackage.PerformLayout();
+        	((System.ComponentModel.ISupportInitialize)(this.pictureboxScreenshot)).EndInit();
         	this.ResumeLayout(false);
+        	this.PerformLayout();
         }
         private System.Windows.Forms.Label labelAntiAliasing;
         private System.Windows.Forms.NumericUpDown updownAntiAliasing;
+        private System.Windows.Forms.CheckBox checkboxFilterNoWIPs;
+        private System.Windows.Forms.LinkLabel linkPackageHomepage;
+        private System.Windows.Forms.PictureBox pictureboxScreenshot;
+        private System.Windows.Forms.Button buttonScreenshotPrevious;
+        private System.Windows.Forms.Button buttonScreenshotNext;
         private System.Windows.Forms.TextBox textboxTrainFilter;
         private System.Windows.Forms.TreeView treeviewTrainAddOns;
         private System.Windows.Forms.TreeView treeviewRouteAddOns;
         private System.Windows.Forms.ListView listviewRouteFiles;
         private System.Windows.Forms.TextBox textboxRouteFilter;
+        private System.Windows.Forms.Label labelPackageInformation;
+        private System.Windows.Forms.TextBox textboxPackageDescription;
+        private System.Windows.Forms.GroupBox groupboxPackage;
+        private System.Windows.Forms.TreeView treeviewPackages;
         private System.Windows.Forms.CheckBox checkboxTrainDefault;
         private System.Windows.Forms.Timer timerFilter;
+        private System.Windows.Forms.CheckBox checkboxFilterRoutes;
+        private System.Windows.Forms.CheckBox checkboxFilterTrains;
+        private System.Windows.Forms.CheckBox checkboxFilterLibraries;
+        private System.Windows.Forms.CheckBox checkboxFilterSharedLibraries;
+        private System.Windows.Forms.CheckBox checkboxFilterUpdates;
         private System.Windows.Forms.Timer timerInstall;
+        private System.Windows.Forms.Panel panelPackages;
+        private System.Windows.Forms.Button buttonPackageRemove;
+        private System.Windows.Forms.Button buttonPackageInstall;
+        private System.Windows.Forms.Label labelFilter;
+        private System.Windows.Forms.TextBox textboxFilter;
+        private System.Windows.Forms.ProgressBar progressbarDownloading;
+        private System.Windows.Forms.Label labelDownloading;
+        private System.Windows.Forms.Label labelGetAddOnsTitle;
+        private System.Windows.Forms.Label labelGetAddOnsBackground;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Panel panelGetAddOns;
+        private System.Windows.Forms.RadioButton radiobuttonGetAddOns;
         private System.Windows.Forms.TabPage tabpageRouteManaged;
         private System.Windows.Forms.TabPage tabpageTrainManaged;
         private System.Windows.Forms.Label labelTransparencyPerformance;
@@ -3297,6 +3703,7 @@
         private System.Windows.Forms.Button buttonControlsExport;
         private System.Windows.Forms.Button buttonControlsImport;
         private System.Windows.Forms.Label labelTransparency;
+        //private System.Windows.Forms.LinkLabel linkUpdates;
         private System.Windows.Forms.RadioButton radiobuttonStart;
         private System.Windows.Forms.RadioButton radiobuttonOptions;
         private System.Windows.Forms.RadioButton radiobuttonControls;

@@ -28,7 +28,7 @@ namespace OpenBve {
 				this.Duration = 0.0;
 				this.Ignore = false;
 			}
-			internal SoundBuffer(OpenBveApi.Sounds.Sound sound, double radius) {
+			internal SoundBuffer(Sound sound, double radius) {
 				this.Origin = new RawOrigin(sound);
 				this.Radius = radius;
 				this.Loaded = false;

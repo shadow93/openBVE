@@ -3,8 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-
-using Tao.OpenGl;
+using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
 	/// <summary>Provides functions for dealing with textures.</summary>
@@ -108,20 +107,20 @@ namespace OpenBve {
 		/// <param name="handle">The handle to the registered texture.</param>
 		/// <param name="wrap">The texture type indicating the clamp mode.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		internal static bool LoadTexture(Texture handle, OpenGlTextureWrapMode wrap) {
-			if (handle.OpenGlTextures[(int)wrap].Valid) {
+		internal static bool LoadTexture(Texture handle, OpenGlTextureWrapMode wrap){
+			if (handle.OpenGlTextures[(int)wrap].Valid)
 				return true;
-			} else if (handle.Ignore) {
+			if (handle.Ignore)
 				return false;
-			} else {
+			else {
 				OpenBveApi.Textures.Texture texture;
 				if (handle.Origin.GetTexture(out texture)) {
 					if (texture.BitsPerPixel == 32) {
 						int[] names = new int[1];
-						Gl.glGenTextures(1, names);
-						int error = Gl.glGetError();
-						Gl.glBindTexture(Gl.GL_TEXTURE_2D, names[0]);
-						error = Gl.glGetError();
+						GL.GenTextures(1, names);
+						ErrorCode error = GL.GetError();
+						GL.BindTexture(TextureTarget.Texture2D, names[0]);
+						error = GL.GetError();
 						handle.OpenGlTextures[(int)wrap].Name = names[0];
 						handle.Width = texture.Width;
 						handle.Height = texture.Height;
@@ -132,49 +131,49 @@ namespace OpenBve {
 //						int newHeight = Math.Min(texture.Height, 256);
 //						texture = Resize(texture, newWidth, newHeight);
 						
-						switch (Interface.CurrentOptions.Interpolation) {
-							case Interface.InterpolationMode.NearestNeighbor:
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST);
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
+						switch (Options.Current.Interpolation) {
+							case Options.InterpolationMode.NearestNeighbor:
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
 								break;
-							case Interface.InterpolationMode.Bilinear:
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR);
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+							case Options.InterpolationMode.Bilinear:
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Linear);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 								break;
-							case Interface.InterpolationMode.NearestNeighborMipmapped:
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_NEAREST);
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_NEAREST);
+							case Options.InterpolationMode.NearestNeighborMipmapped:
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapNearest);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
 								break;
-							case Interface.InterpolationMode.BilinearMipmapped:
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_NEAREST_MIPMAP_LINEAR);
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+							case Options.InterpolationMode.BilinearMipmapped:
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.NearestMipmapLinear);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 								break;
-							case Interface.InterpolationMode.TrilinearMipmapped:
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+							case Options.InterpolationMode.TrilinearMipmapped:
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 								break;
 							default:
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MIN_FILTER, Gl.GL_LINEAR_MIPMAP_LINEAR);
-								Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAG_FILTER, Gl.GL_LINEAR);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
+								GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 								break;
 						}
 						if ((wrap & OpenGlTextureWrapMode.RepeatClamp) != 0) {
-							Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_REPEAT);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.Repeat);
 						} else {
-							Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_S, Gl.GL_CLAMP_TO_EDGE);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.ClampToEdge);
 						}
 						if ((wrap & OpenGlTextureWrapMode.ClampRepeat) != 0) {
-							Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_REPEAT);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.Repeat);
 						} else {
-							Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_WRAP_T, Gl.GL_CLAMP_TO_EDGE);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
 						}
-						if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.Bilinear) {
-							Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_FALSE);
+						if (Options.Current.Interpolation == Options.InterpolationMode.NearestNeighbor && Options.Current.Interpolation == Options.InterpolationMode.Bilinear) {
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
 						} else {
-							Gl.glTexParameteri(Gl.GL_TEXTURE_2D, Gl.GL_GENERATE_MIPMAP, Gl.GL_TRUE);
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
 						}
-						if (Interface.CurrentOptions.Interpolation == Interface.InterpolationMode.AnisotropicFiltering) {
-							Gl.glTexParameterf(Gl.GL_TEXTURE_2D, Gl.GL_TEXTURE_MAX_ANISOTROPY_EXT, Interface.CurrentOptions.AnisotropicFilteringLevel);
+						if (Options.Current.Interpolation == Options.InterpolationMode.AnisotropicFiltering) {
+							GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, Options.Current.AnisotropicFilteringLevel);
 						}
 						if (handle.Transparency == OpenBveApi.Textures.TextureTransparencyType.Opaque) {
 							/*
@@ -201,13 +200,21 @@ namespace OpenBve {
 								}
 								j += stride - 3 * width;
 							}
-							Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGB8, texture.Width, texture.Height, 0, Gl.GL_RGB, Gl.GL_UNSIGNED_BYTE, newBytes);
+							GL.TexImage2D(TextureTarget.Texture2D, 0, 
+								PixelInternalFormat.Rgb8, 
+								texture.Width, texture.Height, 0,
+								OpenTK.Graphics.OpenGL.PixelFormat.Rgb, 
+								PixelType.UnsignedByte, newBytes);
 						} else {
 							/*
 							 * The texture uses its alpha channel, so send the bitmap data
 							 * in 32-bits per channel as-is.
 							 * */
-							Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA8, texture.Width, texture.Height, 0, Gl.GL_RGBA, Gl.GL_UNSIGNED_BYTE, texture.Bytes);
+							GL.TexImage2D(TextureTarget.Texture2D, 0, 
+								PixelInternalFormat.Rgba8, 
+								texture.Width, texture.Height, 0, 
+								OpenTK.Graphics.OpenGL.PixelFormat.Rgba, 
+								PixelType.UnsignedByte, texture.Bytes);
 						}
 						handle.OpenGlTextures[(int)wrap].Valid = true;
 						return true;
@@ -233,7 +240,7 @@ namespace OpenBve {
 		/// <param name="texture">The texture.</param>
 		/// <remarks>The texture is always saved in PNG format.</remarks>
 		internal static void SaveTexture(string file, OpenBveApi.Textures.Texture texture) {
-			Bitmap bitmap = new Bitmap(texture.Width, texture.Height, PixelFormat.Format32bppArgb);
+			Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
 			byte[] bytes = new byte[texture.Bytes.Length];
 			for (int i = 0; i < bytes.Length; i += 4) {
@@ -267,24 +274,24 @@ namespace OpenBve {
 		/// <param name="height">The new height.</param>
 		/// <returns>The resize texture, or the original if already of the specified size.</returns>
 		/// <exception cref="System.NotSupportedException">The bits per pixel in the texture is not supported.</exception>
-		internal static OpenBveApi.Textures.Texture Resize(OpenBveApi.Textures.Texture texture, int width, int height) {
-			if (width == texture.Width & height == texture.Height) {
+		internal static OpenBveApi.Textures.Texture Resize(OpenBveApi.Textures.Texture texture, int width, int height){
+			if (width == texture.Width && height == texture.Height)
 				return texture;
-			} else if (texture.BitsPerPixel != 32) {
+			if (texture.BitsPerPixel != 32)
 				throw new NotSupportedException("The number of bits per pixel is not supported.");
-			} else {
+			else {
 				OpenBveApi.Textures.TextureTransparencyType type = texture.GetTransparencyType();
 				/*
 				 * Convert the texture into a bitmap.
 				 * */
-				Bitmap bitmap = new Bitmap(texture.Width, texture.Height, PixelFormat.Format32bppArgb);
+				Bitmap bitmap = new Bitmap(texture.Width, texture.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 				BitmapData data = bitmap.LockBits(new Rectangle(0, 0, texture.Width, texture.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
 				Marshal.Copy(texture.Bytes, 0, data.Scan0, texture.Bytes.Length);
 				bitmap.UnlockBits(data);
 				/*
 				 * Scale the bitmap.
 				 * */
-				Bitmap scaledBitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+				Bitmap scaledBitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 				Graphics graphics = Graphics.FromImage(scaledBitmap);
 				graphics.InterpolationMode = InterpolationMode.HighQualityBilinear;
 				graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
@@ -309,11 +316,7 @@ namespace OpenBve {
 					}
 				} else if (type == OpenBveApi.Textures.TextureTransparencyType.Partial) {
 					for (int i = 3; i < bytes.Length; i += 4) {
-						if (bytes[i] < 128) {
-							bytes[i] = 0;
-						} else {
-							bytes[i] = 255;
-						}
+						bytes[i] = bytes[i] < 128 ? (byte)0 : (byte)255;
 					}
 				}
 				OpenBveApi.Textures.Texture result = new OpenBveApi.Textures.Texture(width, height, 32, bytes);
@@ -329,7 +332,7 @@ namespace OpenBve {
 		internal static void UnloadTexture(Texture handle) {
 			for (int i = 0; i < handle.OpenGlTextures.Length; i++) {
 				if (handle.OpenGlTextures[i].Valid) {
-					Gl.glDeleteTextures(1, new int[] { handle.OpenGlTextures[i].Name });
+					GL.DeleteTextures(1, new int[] { handle.OpenGlTextures[i].Name });
 					handle.OpenGlTextures[i].Valid = false;
 				}
 			}
@@ -374,16 +377,14 @@ namespace OpenBve {
 		/// <param name="value">The value.</param>
 		/// <returns>The next highest power of two, or the original value if already a power of two.</returns>
 		internal static int RoundUpToPowerOfTwo(int value) {
-			if (value <= 0) {
+			if (value <= 0)
 				throw new ArgumentException("The specified value is not positive.");
-			} else {
-				value -= 1;
-				for (int i = 1; i < sizeof(int) * 8; i <<= 1) {
-					value = value | value >> i;
-				}
-				return value + 1;
+			value -= 1;
+			for (int i = 1; i < sizeof(int) * 8; i <<= 1) {
+				value = value | value >> i;
 			}
-		}
+			return value + 1;
 
+		}
 	}
 }

@@ -167,9 +167,9 @@ namespace OpenBve {
 			if (QuitOnly) {
 				// quit menu only
 				CurrentMenu = new MenuEntry[3];
-				CurrentMenu[0] = new MenuCaption(Interface.GetInterfaceString("menu_quit_question"));
-				CurrentMenu[1] = new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0);
-				CurrentMenu[2] = new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
+				CurrentMenu[0] = new MenuCaption(Strings.GetInterfaceString("menu_quit_question"));
+				CurrentMenu[1] = new MenuCommand(Strings.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0);
+				CurrentMenu[2] = new MenuCommand(Strings.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0);
 				CurrentMenuSelection = new int[] { 1 };
 				CurrentMenuOffsets = new double[] { double.NegativeInfinity };
 				CurrentMenu[1].Highlight = 1.0;
@@ -191,30 +191,30 @@ namespace OpenBve {
 				}
 				if (n != 0) {
 					CurrentMenu = new MenuEntry[4];
-					CurrentMenu[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
-					CurrentMenu[1] = new MenuSubmenu(Interface.GetInterfaceString("menu_jump"), a);
-					CurrentMenu[2] = new MenuSubmenu(Interface.GetInterfaceString("menu_exit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_exit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0)
+					CurrentMenu[0] = new MenuCommand(Strings.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
+					CurrentMenu[1] = new MenuSubmenu(Strings.GetInterfaceString("menu_jump"), a);
+					CurrentMenu[2] = new MenuSubmenu(Strings.GetInterfaceString("menu_exit"), new MenuEntry[] {
+					                                 	new MenuCaption(Strings.GetInterfaceString("menu_exit_question")),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_exit_no"), MenuTag.Back, 0),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0)
 					                                 });
-					CurrentMenu[3] = new MenuSubmenu(Interface.GetInterfaceString("menu_quit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_quit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
+					CurrentMenu[3] = new MenuSubmenu(Strings.GetInterfaceString("menu_quit"), new MenuEntry[] {
+					                                 	new MenuCaption(Strings.GetInterfaceString("menu_quit_question")),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
 					                                 });
 				} else {
 					CurrentMenu = new MenuEntry[3];
-					CurrentMenu[0] = new MenuCommand(Interface.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
-					CurrentMenu[1] = new MenuSubmenu(Interface.GetInterfaceString("menu_exit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_exit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0)
+					CurrentMenu[0] = new MenuCommand(Strings.GetInterfaceString("menu_resume"), MenuTag.Back, 0);
+					CurrentMenu[1] = new MenuSubmenu(Strings.GetInterfaceString("menu_exit"), new MenuEntry[] {
+					                                 	new MenuCaption(Strings.GetInterfaceString("menu_exit_question")),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_exit_no"), MenuTag.Back, 0),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_exit_yes"), MenuTag.ExitToMainMenu, 0)
 					                                 });
-					CurrentMenu[2] = new MenuSubmenu(Interface.GetInterfaceString("menu_quit"), new MenuEntry[] {
-					                                 	new MenuCaption(Interface.GetInterfaceString("menu_quit_question")),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
-					                                 	new MenuCommand(Interface.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
+					CurrentMenu[2] = new MenuSubmenu(Strings.GetInterfaceString("menu_quit"), new MenuEntry[] {
+					                                 	new MenuCaption(Strings.GetInterfaceString("menu_quit_question")),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_quit_no"), MenuTag.Back, 0),
+					                                 	new MenuCommand(Strings.GetInterfaceString("menu_quit_yes"), MenuTag.Quit, 0)
 					                                 });
 				}
 				CurrentMenuSelection = new int[] { 0 };
@@ -231,7 +231,7 @@ namespace OpenBve {
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
-			Interface.ClearMessages();
+			Debug.ClearMessages();
 			CurrentInterface = InterfaceType.Normal;
 			RouteComment = "";
 			RouteImage = "";
@@ -253,8 +253,8 @@ namespace OpenBve {
 			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
-			NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+			NoFogStart = (float)Math.Max(1.33333333333333 * Options.Current.ViewingDistance, 800.0);
+			NoFogEnd = (float)Math.Max(2.66666666666667 * Options.Current.ViewingDistance, 1600.0);
 			PreviousFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.0);
 			CurrentFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 0.5);
 			NextFog = new Fog(NoFogStart, NoFogEnd, new Color24(128, 128, 128), 1.0);
@@ -483,23 +483,23 @@ namespace OpenBve {
 								xc = 0;
 							}
 							// sum
-							if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade) {
+							if (Options.Current.CurrentGameMode == Options.GameMode.Arcade) {
 								int xs = xa + xb + xc;
 								AddScore("", 10.0);
 								AddScore(xs, ScoreTextToken.Total, 10.0, false);
 								AddScore(" ", 10.0);
 							}
 							// evaluation
-							if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade) {
+							if (Options.Current.CurrentGameMode == Options.GameMode.Arcade) {
 								if (Stations[j].StationType == StationType.Terminal) {
 									double y = (double)CurrentScore.Value / (double)CurrentScore.Maximum;
 									if (y < 0.0) y = 0.0;
 									if (y > 1.0) y = 1.0;
-									int k = (int)Math.Floor(y * (double)Interface.RatingsCount);
-									if (k >= Interface.RatingsCount) k = Interface.RatingsCount - 1;
+									int k = (int)Math.Floor(y * (double)BlackBox.RatingsCount);
+									if (k >= BlackBox.RatingsCount) k = BlackBox.RatingsCount - 1;
 									System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-									AddScore(Interface.GetInterfaceString("score_rating"), 20.0);
-									AddScore(Interface.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
+									AddScore(Strings.GetInterfaceString("score_rating"), 20.0);
+									AddScore(Strings.GetInterfaceString("rating_" + k.ToString(Culture)) + " (" + (100.0 * y).ToString("0.00", Culture) + "%)", 20.0);
 								}
 							}
 						}
@@ -572,7 +572,7 @@ namespace OpenBve {
 			internal string Text;
 			internal double Timeout;
 			internal MessageColor Color;
-			internal World.Vector2D RendererPosition;
+			internal Vector2D RendererPosition;
 			internal double RendererAlpha;
 		}
 		internal struct ScoreLog {
@@ -584,7 +584,7 @@ namespace OpenBve {
 		internal static ScoreLog[] ScoreLogs = new ScoreLog[64];
 		internal static int ScoreLogCount = 0;
 		internal static ScoreMessage[] ScoreMessages = new ScoreMessage[] { };
-		internal static World.Vector2D ScoreMessagesRendererSize = new World.Vector2D(16.0, 16.0);
+		internal static Vector2D ScoreMessagesRendererSize = new Vector2D(16.0, 16.0);
 		internal static string LogRouteName = "";
 		internal static string LogTrainName = "";
 		internal static DateTime LogDateTime = DateTime.Now;
@@ -592,13 +592,13 @@ namespace OpenBve {
 			AddScore(Value, TextToken, Duration, true);
 		}
 		private static void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count) {
-			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade) {
+			if (Options.Current.CurrentGameMode == Options.GameMode.Arcade) {
 				int n = ScoreMessages.Length;
 				Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 				ScoreMessages[n].Value = Value;
-				ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+				ScoreMessages[n].Text = BlackBox.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
 				ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
-				ScoreMessages[n].RendererPosition = new World.Vector2D(0.0, 0.0);
+				ScoreMessages[n].RendererPosition = new Vector2D(0.0, 0.0);
 				ScoreMessages[n].RendererAlpha = 0.0;
 				if (Value < 0.0) {
 					ScoreMessages[n].Color = MessageColor.Red;
@@ -620,19 +620,19 @@ namespace OpenBve {
 			}
 		}
 		private static void AddScore(string Text, double Duration) {
-			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade) {
+			if (Options.Current.CurrentGameMode == Options.GameMode.Arcade) {
 				int n = ScoreMessages.Length;
 				Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 				ScoreMessages[n].Value = 0;
 				ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
 				ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
-				ScoreMessages[n].RendererPosition = new World.Vector2D(0.0, 0.0);
+				ScoreMessages[n].RendererPosition = new Vector2D(0.0, 0.0);
 				ScoreMessages[n].RendererAlpha = 0.0;
 				ScoreMessages[n].Color = MessageColor.White;
 			}
 		}
 		internal static void UpdateScoreMessages(double TimeElapsed) {
-			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade) {
+			if (Options.Current.CurrentGameMode == Options.GameMode.Arcade) {
 				for (int i = 0; i < ScoreMessages.Length; i++) {
 					if (SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0) {
 						for (int j = i; j < ScoreMessages.Length - 1; j++) {
@@ -684,7 +684,7 @@ namespace OpenBve {
 			}
 		}
 		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
-			if (Interface.CurrentOptions.BlackBox) {
+			if (Options.Current.BlackBox) {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
@@ -762,7 +762,7 @@ namespace OpenBve {
 			internal double DepartureTime;
 			internal Sounds.SoundBuffer DepartureSoundBuffer;
 			internal double StopTime;
-			internal Vector3 SoundOrigin;
+			internal Vector3D SoundOrigin;
 			internal StationStopMode StopMode;
 			internal StationType StationType;
 			internal bool ForceStopSignal;
@@ -785,7 +785,8 @@ namespace OpenBve {
 			}
 			if (j == -1) {
 				return Stations[StationIndex].Stops.Length - 1;
-			} else return j;
+			}
+			return j;
 		}
 		/// <summary>Indicates whether the player's train stops at a station.</summary>
 		internal static bool PlayerStopsAtStation(int StationIndex) {
@@ -873,11 +874,10 @@ namespace OpenBve {
 			}
 			internal TrainManager.Train GetFirstTrain(bool AllowBogusTrain) {
 				for (int i = 0; i < this.Trains.Length; i++) {
-					if (this.Trains[i].State == TrainManager.TrainState.Available) {
+					if (this.Trains[i].State == TrainManager.TrainState.Available)
 						return this.Trains[i];
-					} else if (AllowBogusTrain & this.Trains[i].State == TrainManager.TrainState.Bogus) {
+					if (AllowBogusTrain && this.Trains[i].State == TrainManager.TrainState.Bogus)
 						return this.Trains[i];
-					}
 				}
 				return null;
 			}
@@ -915,9 +915,8 @@ namespace OpenBve {
 						train = Sections[l].GetFirstTrain(false);
 						if (train != null) {
 							break;
-						} else {
-							l = Sections[l].PreviousSection;
 						}
+						l = Sections[l].PreviousSection;
 					} else {
 						break;
 					}
@@ -967,9 +966,7 @@ namespace OpenBve {
 				}
 			}
 			// train in block
-			if (!Sections[SectionIndex].IsFree()) {
-				settored = true;
-			}
+			settored |= !Sections[SectionIndex].IsFree();
 			// free sections
 			int newaspect = -1;
 			if (settored) {
@@ -1786,13 +1783,13 @@ namespace OpenBve {
 			internal MessageDependency Depencency;
 			internal double Timeout;
 			internal MessageColor Color;
-			internal World.Vector2D RendererPosition;
+			internal Vector2D RendererPosition;
 			internal double RendererAlpha;
 		}
 		internal static Message[] Messages = new Message[] { };
-		internal static World.Vector2D MessagesRendererSize = new World.Vector2D(16.0, 16.0);
-		internal static void AddMessage(string Text, MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout) {
-			if (Interface.CurrentOptions.GameMode <= Mode) {
+		internal static Vector2D MessagesRendererSize = new Vector2D(16.0, 16.0);
+		internal static void AddMessage(string Text, MessageDependency Depencency, Options.GameMode Mode, MessageColor Color, double Timeout) {
+			if (Options.Current.CurrentGameMode <= Mode) {
 				if (Depencency == MessageDependency.RouteLimit | Depencency == MessageDependency.SectionLimit) {
 					for (int i = 0; i < Messages.Length; i++) {
 						if (Messages[i].Depencency == Depencency) return;
@@ -1805,12 +1802,12 @@ namespace OpenBve {
 				Messages[n].Depencency = Depencency;
 				Messages[n].Timeout = Timeout;
 				Messages[n].Color = Color;
-				Messages[n].RendererPosition = new World.Vector2D(0.0, 0.0);
+				Messages[n].RendererPosition = new Vector2D(0.0, 0.0);
 				Messages[n].RendererAlpha = 0.0;
 			}
 		}
 		internal static void AddDebugMessage(string text, double duration) {
-			Game.AddMessage(text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
+			Game.AddMessage(text, Game.MessageDependency.None, Options.GameMode.Expert, Game.MessageColor.Magenta, Game.SecondsSinceMidnight + duration);
 		}
 		internal static void UpdateMessages() {
 			for (int i = 0; i < Messages.Length; i++) {
@@ -1909,14 +1906,15 @@ namespace OpenBve {
 		// points of interest
 		internal struct PointOfInterest {
 			internal double TrackPosition;
-			internal Vector3 TrackOffset;
+			internal Vector3D TrackOffset;
 			internal double TrackYaw;
 			internal double TrackPitch;
 			internal double TrackRoll;
 			internal string Text;
 		}
 		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
-		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
+		internal static bool ApplyPointOfInterest(int Value, bool Relative)
+		{
 			double t = 0.0;
 			int j = -1;
 			if (Relative) {
@@ -1949,22 +1947,20 @@ namespace OpenBve {
 				j = Value >= 0 & Value < PointsOfInterest.Length ? Value : -1;
 			}
 			// process poi
-			if (j >= 0) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
-				World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-				World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-				World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-				World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
-				World.CameraCurrentAlignment.TrackPosition = t;
-				World.UpdateAbsoluteCamera(0.0);
-				if (PointsOfInterest[j].Text != null) {
-					double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
-					Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Interface.GameMode.Expert, Game.MessageColor.White, Game.SecondsSinceMidnight + n);
-				}
-				return true;
-			} else {
+			if (j < 0)
 				return false;
+			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
+			World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
+			World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
+			World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
+			World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+			World.CameraCurrentAlignment.TrackPosition = t;
+			World.UpdateAbsoluteCamera(0.0);
+			if (PointsOfInterest[j].Text != null) {
+				double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
+				Game.AddMessage(PointsOfInterest[j].Text, Game.MessageDependency.None, Options.GameMode.Expert, Game.MessageColor.White, Game.SecondsSinceMidnight + n);
 			}
+			return true;
 		}
 
 

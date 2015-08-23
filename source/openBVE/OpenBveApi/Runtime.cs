@@ -572,6 +572,7 @@ namespace OpenBveApi.Runtime {
 	// --- key down / key up ---
 	
 	/// <summary>Represents a virtual key.</summary>
+	/// <remarks>OpenBve.Controls.SecurityToVirtualKey function requires the short (S,A1,...) naming.</remarks>
 	public enum VirtualKeys {
 		/// <summary>The virtual S key. The default assignment is [Space]. The numerical value of this constant is 0.</summary>
 		S = 0,
@@ -604,7 +605,33 @@ namespace OpenBveApi.Runtime {
 		/// <summary>The virtual K key. The default assignment is [9]. The numerical value of this constant is 14.</summary>
 		K = 14,
 		/// <summary>The virtual L key. The default assignment is [0]. The numerical value of this constant is 15.</summary>
-		L = 15
+		L = 15,
+		/// <summary>The virtual M key. There isn't any assignment yet. The numerical value of this constant is 16.</summary>
+		M = 16,
+		/// <summary>The virtual N key. There isn't any assignment yet. The numerical value of this constant is 17.</summary>
+		N = 17,
+		/// <summary>The virtual O key. There isn't any assignment yet. The numerical value of this constant is 18.</summary>
+		O = 18,
+		/// <summary>The virtual P key. There isn't any assignment yet. The numerical value of this constant is 19.</summary>
+		P = 19,
+		/// <summary>The virtual Q key. There isn't any assignment yet. The numerical value of this constant is 20.</summary>
+		Q = 20,
+		/// <summary>The virtual R key. There isn't any assignment yet. The numerical value of this constant is 21.</summary>
+		R = 21,
+		/// <summary>The virtual T key. There isn't any assignment yet. The numerical value of this constant is 23.</summary>
+		T = 23,
+		/// <summary>The virtual U key. There isn't any assignment yet. The numerical value of this constant is 24.</summary>
+		U = 24,
+		/// <summary>The virtual V key. There isn't any assignment yet. The numerical value of this constant is 25.</summary>
+		V = 25,
+		/// <summary>The virtual W key. There isn't any assignment yet. The numerical value of this constant is 26.</summary>
+		W = 26,
+		/// <summary>The virtual X key. There isn't any assignment yet. The numerical value of this constant is 27.</summary>
+		X = 27,
+		/// <summary>The virtual Y key. There isn't any assignment yet. The numerical value of this constant is 28.</summary>
+		Y = 28,
+		/// <summary>The virtual Z key. There isn't any assignment yet. The numerical value of this constant is 29.</summary>
+		Z = 29
 	}
 	
 	

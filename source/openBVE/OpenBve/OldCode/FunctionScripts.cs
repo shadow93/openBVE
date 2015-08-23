@@ -5,7 +5,7 @@ namespace OpenBve {
 	internal static class FunctionScripts {
 
 		// instruction set
-		internal enum Instructions : int {
+		internal enum Instructions {
 			SystemHalt, SystemConstant, SystemConstantArray, SystemValue, SystemDelta,
 			StackCopy, StackSwap,
 			MathPlus, MathSubtract, MathMinus, MathTimes, MathDivide, MathReciprocal, MathPower,
@@ -37,7 +37,7 @@ namespace OpenBve {
 			internal double[] Stack;
 			internal double[] Constants;
 			internal double LastResult;
-			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed) {
+			internal double Perform(TrainManager.Train Train, int CarIndex, Vector3D Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed) {
 				ExecuteFunctionScript(this, Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed);
 				return this.LastResult;
 			}
@@ -47,7 +47,7 @@ namespace OpenBve {
 		}
 
 		// execute function script
-		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed) {
+		private static void ExecuteFunctionScript(FunctionScript Function, TrainManager.Train Train, int CarIndex, Vector3D Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed) {
 			int s = 0, c = 0;
 			for (int i = 0; i < Function.Instructions.Length; i++) {
 				switch (Function.Instructions[i]) {
@@ -846,7 +846,7 @@ namespace OpenBve {
 						s++; break;
 						// default
 					default:
-						throw new System.InvalidOperationException("The unknown instruction " + Function.Instructions[i].ToString() + " was encountered in ExecuteFunctionScript.");
+						throw new InvalidOperationException("The unknown instruction " + Function.Instructions[i] + " was encountered in ExecuteFunctionScript.");
 				}
 			}
 			Function.LastResult = Function.Stack[s - 1];
@@ -886,7 +886,7 @@ namespace OpenBve {
 									m--;
 									if (m < 0) {
 										throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
-									} else if (m == 0) {
+									} if (m == 0) {
 										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
 										p[n] = Expression.Substring(t, j - t);
 										n++;
@@ -898,7 +898,7 @@ namespace OpenBve {
 											if (k > 0) r.Append(',');
 											r.Append(p[k]);
 										}
-										Expression = a + "[" + r.ToString() + "]" + c;
+										Expression = a + "[" + r + "]" + c;
 										s = i + r.Length + 2;
 										q = true;
 									}
@@ -940,7 +940,7 @@ namespace OpenBve {
 								n--;
 								if (n < 0) {
 									throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
-								} else if (n == 0) {
+								} if (n == 0) {
 									string a = Expression.Substring(0, i).Trim();
 									string b = Expression.Substring(i + 1, j - i - 1).Trim();
 									string c = Expression.Substring(j + 1).Trim();
@@ -949,11 +949,10 @@ namespace OpenBve {
 						} j++;
 					}
 					throw new System.IO.InvalidDataException("No closing parenthesis found in " + Expression);
-				} else {
-					i = Expression.IndexOf(')');
-					if (i >= 0) {
-						throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
-					}
+				}
+				i = Expression.IndexOf(')');
+				if (i >= 0) {
+					throw new System.IO.InvalidDataException("Unexpected closing parenthesis encountered in " + Expression);
 				}
 			}
 			// operators
@@ -1000,12 +999,12 @@ namespace OpenBve {
 			}
 			{
 				int[] j = new int[6];
-				j[0] = Expression.LastIndexOf("==");
-				j[1] = Expression.LastIndexOf("!=");
-				j[2] = Expression.LastIndexOf("<=");
-				j[3] = Expression.LastIndexOf(">=");
-				j[4] = Expression.LastIndexOf("<");
-				j[5] = Expression.LastIndexOf(">");
+				j[0] = Expression.LastIndexOf("==", StringComparison.Ordinal);
+				j[1] = Expression.LastIndexOf("!=", StringComparison.Ordinal);
+				j[2] = Expression.LastIndexOf("<=", StringComparison.Ordinal);
+				j[3] = Expression.LastIndexOf(">=", StringComparison.Ordinal);
+				j[4] = Expression.LastIndexOf("<", StringComparison.Ordinal);
+				j[5] = Expression.LastIndexOf(">", StringComparison.Ordinal);
 				int k = -1;
 				for (int i = 0; i < j.Length; i++) {
 					if (j[i] >= 0) {
@@ -1039,7 +1038,7 @@ namespace OpenBve {
 					string a = Expression.Substring(0, i).Trim();
 					string b = Expression.Substring(i + 1).Trim();
 					return "Plus[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
-				} else if (j >= 0) {
+				} if (j >= 0) {
 					string a = Expression.Substring(0, j).Trim();
 					string b = Expression.Substring(j + 1).Trim();
 					if (a.Length != 0) {
@@ -1080,24 +1079,23 @@ namespace OpenBve {
 		private static string GetPostfixNotationFromFunctionNotation(string Expression) {
 			int i = Expression.IndexOf('[');
 			if (i >= 0) {
-				if (!Expression.EndsWith("]")) {
+				if (!Expression.EndsWith("]", StringComparison.Ordinal)) {
 					throw new System.IO.InvalidDataException("Missing closing bracket encountered in " + Expression);
 				}
 			} else {
-				if (Expression.EndsWith("]")) {
+				if (Expression.EndsWith("]", StringComparison.Ordinal)) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 				} else {
 					double value;
 					if (double.TryParse(Expression, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value)) {
 						return Expression;
-					} else {
-						for (int j = 0; j < Expression.Length; j++) {
-							if (!char.IsLetterOrDigit(Expression[j])) {
-								throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
-							}
-						}
-						return Expression;
 					}
+					for (int j = 0; j < Expression.Length; j++) {
+						if (!char.IsLetterOrDigit(Expression[j])) {
+							throw new System.IO.InvalidDataException("Invalid character encountered in variable " + Expression);
+						}
+					}
+					return Expression;
 				}
 			}
 			string f = Expression.Substring(0, i);
@@ -1120,9 +1118,8 @@ namespace OpenBve {
 										m--;
 										if (m < 0) {
 											throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
-										} else if (m == 0) {
-											q = true;
 										}
+										q |= m == 0;
 										break;
 								}
 								if (q) {
@@ -1154,26 +1151,23 @@ namespace OpenBve {
 				n = 0;
 			}
 			for (i = 0; i < n; i++) {
-				if (a[i].Length == 0) {
+				if (a[i].Length == 0)
 					throw new System.IO.InvalidDataException("An empty argument is invalid in " + f + " in " + Expression);
-				} else if (a[i].IndexOf(' ') >= 0) {
+				if (a[i].IndexOf(' ') >= 0)
 					throw new System.IO.InvalidDataException("An argument containing a space is invalid in " + f + " in " + Expression);
-				}
 				a[i] = GetPostfixNotationFromFunctionNotation(a[i]).Trim();
 			}
 			switch (f.ToLowerInvariant()) {
 					// arithmetic
 				case "plus":
-					if (n == 0) {
+					if (n == 0)
 						return "0";
-					} else if (n == 1) {
+					if (n == 1)
 						return a[0];
-					} else if (n == 2) {
-						if (a[1].EndsWith(" *")) {
-							return a[1] + " " + a[0] + " +";
-						} else {
+					if (n == 2) {
+						if (!a[1].EndsWith(" *", StringComparison.InvariantCulture))
 							return a[0] + " " + a[1] + " +";
-						}
+						return a[1] + " " + a[0] + " +";
 					} else {
 						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
 						for (i = 2; i < n; i++) {
@@ -1182,17 +1176,15 @@ namespace OpenBve {
 						return t.ToString();
 					}
 				case "subtract":
-					if (n == 2) {
-						return a[0] + " " + a[1] + " -";
-					} else {
+					if (n != 2)
 						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
-					}
+					return a[0] + " " + a[1] + " -";
 				case "times":
 					if (n == 0) {
 						return "1";
-					} else if (n == 1) {
+					} if (n == 1) {
 						return a[0];
-					} else if (n == 2) {
+					} if (n == 2) {
 						return a[0] + " " + a[1] + " *";
 					} else {
 						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " *");
@@ -1202,19 +1194,17 @@ namespace OpenBve {
 						return t.ToString();
 					}
 				case "divide":
-					if (n == 2) {
-						return a[0] + " " + a[1] + " /";
-					} else {
+					if (n != 2)
 						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
-					}
+					return a[0] + " " + a[1] + " /";
 				case "power":
-					if (n == 0) {
+					if (n == 0)
 						return "1";
-					} else if (n == 1) {
+					if (n == 1)
 						return a[0];
-					} else if (n == 2) {
+					if (n == 2)
 						return a[0] + " " + a[1] + " power";
-					} else {
+					else {
 						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1]);
 						for (i = 2; i < n; i++) {
 							t.Append(" " + a[i]);
@@ -1231,9 +1221,8 @@ namespace OpenBve {
 				case "max":
 					if (n == 2) {
 						return a[0] + " " + a[1] + " " + f;
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "minus":
 				case "reciprocal":
 				case "floor":
@@ -1250,9 +1239,8 @@ namespace OpenBve {
 				case "arctan":
 					if (n == 1) {
 						return a[0] + " " + f;
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					// comparisons
 				case "equal":
 				case "unequal":
@@ -1271,60 +1259,60 @@ namespace OpenBve {
 								default: g = "halt"; break;
 						}
 						return a[0] + " " + a[1] + " " + g;
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 2 arguments in " + Expression);
 				case "if":
 					if (n == 3) {
 						return a[0] + " " + a[1] + " " + a[2] + " ?";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 3 arguments in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 3 arguments in " + Expression);
 					// logical
 				case "not":
-					if (n == 1) {
+					if (n == 1)
 						return a[0] + " !";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
-					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 				case "and":
 					if (n == 0) {
 						return "1";
-					} else if (n == 1) {
+					} if (n == 1) {
 						return a[0];
-					} else if (n == 2) {
+					} if (n == 2) {
 						return a[0] + " " + a[1] + " &";
 					} else {
 						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
 						for (i = 2; i < n; i++) {
 							t.Append(" " + a[i] + " &");
-						} return t.ToString();
+						}
+						return t.ToString();
 					}
 				case "or":
 					if (n == 0) {
 						return "0";
-					} else if (n == 1) {
+					} if (n == 1) {
 						return a[0];
-					} else if (n == 2) {
+					} if (n == 2) {
 						return a[0] + " " + a[1] + " |";
 					} else {
 						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
 						for (i = 2; i < n; i++) {
 							t.Append(" " + a[i] + " |");
-						} return t.ToString();
+						}
+						return t.ToString();
 					}
 				case "xor":
-					if (n == 0) {
-						return "0";
-					} else if (n == 1) {
-						return a[0];
-					} else if (n == 2) {
-						return a[0] + " " + a[1] + " ^";
-					} else {
-						System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
-						for (i = 2; i < n; i++) {
-							t.Append(" " + a[i] + " ^");
-						} return t.ToString();
+					switch (n) {
+						case 0:
+							return "0";
+						case 1:
+							return a[0];
+						case 2:
+							return a[0] + " " + a[1] + " ^";
+						default:
+							System.Text.StringBuilder t = new System.Text.StringBuilder(a[0] + " " + a[1] + " +");
+							for (i = 2; i < n; i++) {
+								t.Append(" " + a[i] + " ^");
+							}
+							return t.ToString();
 					}
 					// train
 				case "distance":
@@ -1345,15 +1333,13 @@ namespace OpenBve {
 				case "straightairpipe":
 					if (n == 1) {
 						return a[0] + " " + f.ToLowerInvariant() + "index";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 				case "pluginstate":
 					if (n == 1) {
 						return a[0] + " pluginstate";
-					} else {
-						throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					}
+					throw new System.IO.InvalidDataException(f + " is expected to have 1 argument in " + Expression);
 					// not supported
 				default:
 					throw new System.IO.InvalidDataException("The function " + f + " is not supported in " + Expression);
@@ -1879,7 +1865,7 @@ namespace OpenBve {
 					switch (Arguments[i].ToLowerInvariant()) {
 							// system
 						case "halt":
-							throw new System.InvalidOperationException("The halt instruction was encountered in function script " + Expression);
+							throw new InvalidOperationException("The halt instruction was encountered in function script " + Expression);
 						case "value":
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.SystemValue;
@@ -1890,210 +1876,210 @@ namespace OpenBve {
 							n++; s++; if (s >= m) m = s; break;
 							// stack
 						case "~":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.StackCopy;
 							n++; s++; if (s >= m) m = s; break;
 						case "<>":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.StackSwap;
 							n++; break;
 							// math
 						case "+":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathPlus;
 							n++; s--; break;
 						case "-":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathSubtract;
 							n++; s--; break;
 						case "minus":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathMinus;
 							n++; break;
 						case "*":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathTimes;
 							n++; s--; break;
 						case "/":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathDivide;
 							n++; s--; break;
 						case "reciprocal":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathReciprocal;
 							n++; break;
 						case "power":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathPower;
 							n++; s--; break;
 						case "++":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathIncrement;
 							n++; break;
 						case "--":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathDecrement;
 							n++; break;
 						case "fma":
-							if (s < 3) throw new System.InvalidOperationException(Arguments[i] + " requires at least 3 arguments on the stack in function script " + Expression);
+							if (s < 3) throw new InvalidOperationException(Arguments[i] + " requires at least 3 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathFusedMultiplyAdd;
 							n++; s -= 2; break;
 						case "quotient":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathQuotient;
 							n++; s--; break;
 						case "mod":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathMod;
 							n++; s--; break;
 						case "floor":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathFloor;
 							n++; break;
 						case "ceiling":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathCeiling;
 							n++; break;
 						case "round":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathRound;
 							n++; break;
 						case "min":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathMin;
 							n++; s--; break;
 						case "max":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathMax;
 							n++; s--; break;
 						case "abs":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathAbs;
 							n++; break;
 						case "sign":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathSign;
 							n++; break;
 						case "exp":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathExp;
 							n++; break;
 						case "log":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathLog;
 							n++; break;
 						case "sqrt":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathSqrt;
 							n++; break;
 						case "sin":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathSin;
 							n++; break;
 						case "cos":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathCos;
 							n++; break;
 						case "tan":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathTan;
 							n++; break;
 						case "arctan":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.MathArcTan;
 							n++; break;
 						case "==":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareEqual;
 							n++; s--; break;
 						case "!=":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareUnequal;
 							n++; s--; break;
 							// conditionals
 						case "<":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareLess;
 							n++; s--; break;
 						case ">":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareGreater;
 							n++; s--; break;
 						case "<=":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareLessEqual;
 							n++; s--; break;
 						case ">=":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareGreaterEqual;
 							n++; s--; break;
 						case "?":
-							if (s < 3) throw new System.InvalidOperationException(Arguments[i] + " requires at least 3 arguments on the stack in function script " + Expression);
+							if (s < 3) throw new InvalidOperationException(Arguments[i] + " requires at least 3 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.CompareConditional;
 							n++; s -= 2; break;
 							// logical
 						case "!":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LogicalNot;
 							n++; break;
 						case "&":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LogicalAnd;
 							n++; s--; break;
 						case "|":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LogicalOr;
 							n++; s--; break;
 						case "!&":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LogicalNand;
 							n++; s--; break;
 						case "!|":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LogicalNor;
 							n++; s--; break;
 						case "^":
-							if (s < 2) throw new System.InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
+							if (s < 2) throw new InvalidOperationException(Arguments[i] + " requires at least 2 arguments on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LogicalXor;
 							n++; s--; break;
@@ -2116,7 +2102,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.TrainSpeed;
 							n++; s++; if (s >= m) m = s; break;
 						case "speedindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainSpeedOfCar;
 							n++; break;
@@ -2125,7 +2111,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.TrainSpeedometer;
 							n++; s++; if (s >= m) m = s; break;
 						case "speedometerindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainSpeedometerOfCar;
 							n++; break;
@@ -2134,7 +2120,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.TrainAcceleration;
 							n++; s++; if (s >= m) m = s; break;
 						case "accelerationindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainAccelerationOfCar;
 							n++; break;
@@ -2143,7 +2129,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.TrainAccelerationMotor;
 							n++; s++; if (s >= m) m = s; break;
 						case "accelerationmotorindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainAccelerationMotorOfCar;
 							n++; break;
@@ -2152,7 +2138,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.TrainDistance;
 							n++; s++; if (s >= m) m = s; break;
 						case "distanceindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainDistanceToCar;
 							n++; break;
@@ -2161,7 +2147,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.TrainTrackDistance;
 							n++; s++; if (s >= m) m = s; break;
 						case "trackdistanceindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.TrainTrackDistanceToCar;
 							n++; break;
@@ -2171,7 +2157,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.Doors;
 							n++; s++; if (s >= m) m = s; break;
 						case "doorsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.DoorsIndex;
 							n++; break;
@@ -2180,7 +2166,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.LeftDoors;
 							n++; s++; if (s >= m) m = s; break;
 						case "leftdoorsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LeftDoorsIndex;
 							n++; break;
@@ -2189,7 +2175,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.RightDoors;
 							n++; s++; if (s >= m) m = s; break;
 						case "rightdoorsindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.RightDoorsIndex;
 							n++; break;
@@ -2198,7 +2184,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.LeftDoorsTarget;
 							n++; s++; if (s >= m) m = s; break;
 						case "leftdoorstargetindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.LeftDoorsTargetIndex;
 							n++; break;
@@ -2207,7 +2193,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.RightDoorsTarget;
 							n++; s++; if (s >= m) m = s; break;
 						case "rightdoorstargetindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.RightDoorsTargetIndex;
 							n++; break;
@@ -2270,7 +2256,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.BrakeMainReservoir;
 							n++; s++; if (s >= m) m = s; break;
 						case "mainreservoirindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.BrakeMainReservoirOfCar;
 							n++; break;
@@ -2279,7 +2265,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.BrakeEqualizingReservoir;
 							n++; s++; if (s >= m) m = s; break;
 						case "equalizingreservoirindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.BrakeEqualizingReservoirOfCar;
 							n++; break;
@@ -2288,7 +2274,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.BrakeBrakePipe;
 							n++; s++; if (s >= m) m = s; break;
 						case "brakepipeindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.BrakeBrakePipeOfCar;
 							n++; break;
@@ -2297,7 +2283,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.BrakeBrakeCylinder;
 							n++; s++; if (s >= m) m = s; break;
 						case "brakecylinderindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.BrakeBrakeCylinderOfCar;
 							n++; break;
@@ -2306,7 +2292,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.BrakeStraightAirPipe;
 							n++; s++; if (s >= m) m = s; break;
 						case "straightairpipeindex":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.BrakeStraightAirPipeOfCar;
 							n++; break;
@@ -2316,7 +2302,7 @@ namespace OpenBve {
 							Result.Instructions[n] = Instructions.SafetyPluginAvailable;
 							n++; s++; if (s >= m) m = s; break;
 						case "pluginstate":
-							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (s < 1) throw new InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
 							if (n >= Result.Instructions.Length) Array.Resize<Instructions>(ref Result.Instructions, Result.Instructions.Length << 1);
 							Result.Instructions[n] = Instructions.SafetyPluginState;
 							n++; break;
@@ -2337,7 +2323,7 @@ namespace OpenBve {
 				}
 			}
 			if (s != 1) {
-				throw new System.InvalidOperationException("There must be exactly one argument left on the stack at the end in function script " + Expression);
+				throw new InvalidOperationException("There must be exactly one argument left on the stack at the end in function script " + Expression);
 			}
 			Array.Resize<Instructions>(ref Result.Instructions, n);
 			Array.Resize<double>(ref Result.Stack, m);
@@ -2347,28 +2333,19 @@ namespace OpenBve {
 
 		// mathematical functions
 		private static double Log(double X) {
-			if (X <= 0.0) {
-				return 0.0; /// ComplexInfinity or NonReal
-			} else {
-				return Math.Log(X);
-			}
+			return X <= 0.0 ? 0.0 : Math.Log(X);
 		}
 		private static double Sqrt(double X) {
-			if (X < 0.0) {
-				return 0.0; /// NonReal
-			} else {
-				return Math.Sqrt(X);
-			}
+			return X < 0.0 ? 0.0 : Math.Sqrt(X);
 		}
-		private static double Tan(double X) {
+		private static double Tan(double X){
 			double c = X / Math.PI;
 			double d = c - Math.Floor(c) - 0.5;
 			double e = Math.Floor(X >= 0.0 ? X : -X) * 1.38462643383279E-16;
-			if (d >= -e & d <= e) {
-				return 0.0; /// ComplexInfinity
-			} else {
+			if (!(d >= -e & d <= e))
 				return Math.Tan(X);
-			}
+			return 0.0;
+			// ComplexInfinity
 		}
 
 	}

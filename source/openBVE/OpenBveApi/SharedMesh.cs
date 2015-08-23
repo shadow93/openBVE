@@ -32,17 +32,17 @@ namespace OpenBveApi.Objects {
 	public class SharedMesh : StaticObject {
 		// --- members ---
 		/// <summary>The list of unique spatial coordinates.</summary>
-		public Vector3[] SpatialCoordinates;
+		public Vector3D[] SpatialCoordinates;
 		/// <summary>The list of unique texture coordinates.</summary>
-		public Vector2[] TextureCoordinates;
+		public Vector2D[] TextureCoordinates;
 		/// <summary>The list of unique normals.</summary>
-		public Vector3[] Normals;
+		public Vector3D[] Normals;
 		/// <summary>The faces stored in this mesh.</summary>
 		public SharedFace[] Faces;
 		// --- functions ---
 		/// <summary>Translates the object by the specified offset.</summary>
 		/// <param name="offset">The offset by which to translate.</param>
-		public override void Translate(Vector3 offset) {
+		public override void Translate(Vector3D offset) {
 			for (int i = 0; i < this.SpatialCoordinates.Length; i++) {
 				this.SpatialCoordinates[i].Translate(offset);
 			}
@@ -50,7 +50,7 @@ namespace OpenBveApi.Objects {
 		/// <summary>Translates the object by the specified offset that is measured in the specified orientation.</summary>
 		/// <param name="orientation">The orientation along which to translate.</param>
 		/// <param name="offset">The offset measured in the specified orientation.</param>
-		public override void Translate(Orientation3 orientation, Vector3 offset) {
+		public override void Translate(Orientation3 orientation, Vector3D offset) {
 			for (int i = 0; i < this.SpatialCoordinates.Length; i++) {
 				this.SpatialCoordinates[i].Translate(orientation, offset);
 			}
@@ -59,7 +59,7 @@ namespace OpenBveApi.Objects {
 		/// <param name="direction">The axis along which to rotate.</param>
 		/// <param name="cosineOfAngle">The cosine of the angle by which to rotate.</param>
 		/// <param name="sineOfAngle">The sine of the angle by which to rotate.</param>
-		public override void Rotate(Vector3 direction, double cosineOfAngle, double sineOfAngle) {
+		public override void Rotate(Vector3D direction, double cosineOfAngle, double sineOfAngle) {
 			for (int i = 0; i < this.SpatialCoordinates.Length; i++) {
 				this.SpatialCoordinates[i].Rotate(direction, cosineOfAngle, sineOfAngle);
 			}
@@ -81,7 +81,7 @@ namespace OpenBveApi.Objects {
 		/// <summary>Scales the object by the specified factor.</summary>
 		/// <param name="factor">The factor by which to scale.</param>
 		/// <exception cref="System.ArgumentException">Raised when any component in the factor is zero.</exception>
-		public override void Scale(Vector3 factor) {
+		public override void Scale(Vector3D factor) {
 			if (factor.X == 0.0 | factor.Y == 0.0 | factor.Z == 0.0) {
 				throw new ArgumentException("The factor contains components that are zero.");
 			}
@@ -163,7 +163,7 @@ namespace OpenBveApi.Objects {
 				}
 			}
 			if (length != this.SpatialCoordinates.Length) {
-				Array.Resize<Vector3>(ref this.SpatialCoordinates, length);
+				Array.Resize<Vector3D>(ref this.SpatialCoordinates, length);
 			}
 		}
 		/// <summary>Removes all duplicate and unused texture coordinates.</summary>
@@ -210,7 +210,7 @@ namespace OpenBveApi.Objects {
 				}
 			}
 			if (length != this.TextureCoordinates.Length) {
-				Array.Resize<Vector2>(ref this.TextureCoordinates, length);
+				Array.Resize<Vector2D>(ref this.TextureCoordinates, length);
 			}
 		}
 		/// <summary>Removes all duplicate and unused normals.</summary>
@@ -257,7 +257,7 @@ namespace OpenBveApi.Objects {
 				}
 			}
 			if (length != this.Normals.Length) {
-				Array.Resize<Vector3>(ref this.Normals, length);
+				Array.Resize<Vector3D>(ref this.Normals, length);
 			}
 		}
 		

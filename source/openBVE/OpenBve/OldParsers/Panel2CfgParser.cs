@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -14,7 +15,7 @@ namespace OpenBve {
 		internal static void ParsePanel2Config(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train) {
 			// read lines
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+			string FileName = Path.CombineFile(TrainPath, "panel2.cfg");
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
 				Lines[i] = Lines[i].Trim();
@@ -50,52 +51,52 @@ namespace OpenBve {
 										string Value = Lines[i].Substring(j + 1).TrimStart();
 										switch (Key.ToLowerInvariant()) {
 											case "resolution":
-												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelResolution)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out PanelResolution)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "left":
-												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelLeft)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out PanelLeft)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line" + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "right":
-												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelRight)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out PanelRight)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "top":
-												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelTop)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out PanelTop)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "bottom":
-												if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out PanelBottom)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out PanelBottom)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "daytimeimage":
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Interface.ContainsInvalidPathChars(Value)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Path.ContainsInvalidPathChars(Value)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
-													PanelDaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													PanelDaytimeImage = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(PanelDaytimeImage)) {
-														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + PanelDaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														PanelDaytimeImage = null;
 													}
 												}
 												break;
 											case "nighttimeimage":
 												if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-												if (Interface.ContainsInvalidPathChars(Value)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Path.ContainsInvalidPathChars(Value)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} else {
-													PanelNighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+													PanelNighttimeImage = Path.CombineFile(TrainPath, Value);
 													if (!System.IO.File.Exists(PanelNighttimeImage)) {
-														Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + PanelNighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														PanelNighttimeImage = null;
 													}
 												}
 												break;
 											case "transparentcolor":
-												if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out PanelTransparentColor)) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out PanelTransparentColor)) {
+													Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												} break;
 											case "center":
 												{
@@ -103,14 +104,14 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out PanelCenterX)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out PanelCenterX)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out PanelCenterY)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out PanelCenterY)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												}
 											case "origin":
@@ -119,14 +120,14 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out PanelOriginX)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out PanelOriginX)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out PanelOriginY)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out PanelOriginY)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												}
 										}
@@ -149,15 +150,15 @@ namespace OpenBve {
 				double x1 = (PanelRight - PanelCenterX) / PanelResolution;
 				double y0 = (PanelCenterY - PanelBottom) / PanelResolution * World.AspectRatio;
 				double y1 = (PanelCenterY - PanelTop) / PanelResolution * World.AspectRatio;
-				World.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				World.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+				World.CameraRestrictionBottomLeft = new Vector3D(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
+				World.CameraRestrictionTopRight = new Vector3D(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Train.Cars[Train.DriverCar].DriverYaw = Math.Atan((PanelCenterX - PanelOriginX) * WorldWidth / PanelResolution);
 				Train.Cars[Train.DriverCar].DriverPitch = Math.Atan((PanelOriginY - PanelCenterY) * WorldWidth / PanelResolution);
 			}
 			// create panel
 			if (PanelDaytimeImage != null) {
 				if (!System.IO.File.Exists(PanelDaytimeImage)) {
-					Interface.AddMessage(Interface.MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
+					Debug.AddMessage(Debug.MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 					PanelDaytimeImage = null;
 				} else {
 					Textures.Texture tday;
@@ -165,7 +166,7 @@ namespace OpenBve {
 					Textures.Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!System.IO.File.Exists(PanelNighttimeImage)) {
-							Interface.AddMessage(Interface.MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
+							Debug.AddMessage(Debug.MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
 							PanelNighttimeImage = null;
 						} else {
 							Textures.RegisterTexture(PanelNighttimeImage, new OpenBveApi.Textures.TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
@@ -211,52 +212,52 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out LocationX)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out LocationX)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out LocationY)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out LocationY)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Path.ContainsInvalidPathChars(Value)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
-															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
 														}
 													}
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Path.ContainsInvalidPathChars(Value)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
-															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
 														}
 													}
 													break;
 												case "transparentcolor":
-													if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out TransparentColor)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out TransparentColor)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !Interface.TryParseIntVb6(Value, out Layer)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseIntVb6(Value, out Layer)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 											}
 										} i++;
 									} i--;
 									if (DaytimeImage == null) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
 									}
 									// create element
 									if (DaytimeImage != null) {
@@ -303,54 +304,54 @@ namespace OpenBve {
 														if (k >= 0) {
 															string a = Value.Substring(0, k).TrimEnd();
 															string b = Value.Substring(k + 1).TrimStart();
-															if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out LocationX)) {
-																Interface.AddMessage(Interface.MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out LocationX)) {
+																Debug.AddMessage(Debug.MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
-															if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out LocationY)) {
-																Interface.AddMessage(Interface.MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out LocationY)) {
+																Debug.AddMessage(Debug.MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
 														} else {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} break;
 												case "radius":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Radius)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Radius)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (Radius == 0.0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Radius = 16.0;
 													} break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Path.ContainsInvalidPathChars(Value)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
-															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
 														}
 													}
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Path.ContainsInvalidPathChars(Value)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
-															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
 														}
 													}
 													break;
 												case "color":
-													if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out Color)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out Color)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "transparentcolor":
-													if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out TransparentColor)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out TransparentColor)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "origin":
 													{
@@ -358,57 +359,57 @@ namespace OpenBve {
 														if (k >= 0) {
 															string a = Value.Substring(0, k).TrimEnd();
 															string b = Value.Substring(k + 1).TrimStart();
-															if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out OriginX)) {
-																Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out OriginX)) {
+																Debug.AddMessage(Debug.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
-															if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out OriginY)) {
-																Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out OriginY)) {
+																Debug.AddMessage(Debug.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 																OriginX = -OriginX;
 															}
 															OriginDefined = true;
 														} else {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} break;
 												case "initialangle":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out InitialAngle)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out InitialAngle)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "lastangle":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out LastAngle)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out LastAngle)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "minimum":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Minimum)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Minimum)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "maximum":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Maximum)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Maximum)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "naturalfreq":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out NaturalFrequency)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out NaturalFrequency)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (NaturalFrequency < 0.0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														NaturalFrequency = -NaturalFrequency;
 													} break;
 												case "dampingratio":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out DampingRatio)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out DampingRatio)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (DampingRatio < 0.0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														DampingRatio = -DampingRatio;
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Layer)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Layer)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 											}
 										} i++;
 									} i--;
 									if (DaytimeImage == null) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
 									}
 									// create element
 									if (DaytimeImage != null) {
@@ -430,10 +431,10 @@ namespace OpenBve {
 										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 										double nx = n * w;
 										double ny = n * h;
-										int j = CreateElement(Train, LocationX - ox * nx, LocationY - oy * ny, nx, ny, ox, oy, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, tday, tnight, Color, false);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3(0.0, 0.0, -1.0);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3(1.0, 0.0, 0.0);
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
+										int j = CreateElement(Train, LocationX - ox * nx, LocationY - oy * ny, nx, ny, ox, oy, Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, tday, tnight, Color, false);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection = new Vector3D(0.0, 0.0, -1.0);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection = new Vector3D(1.0, 0.0, 0.0);
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateYDirection = Vector3D.Cross(Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateZDirection, Train.Cars[Train.DriverCar].CarSections[0].Elements[j].RotateXDirection);
 										string f;
 										switch (Subject.ToLowerInvariant()) {
 											case "hour":
@@ -482,61 +483,61 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out LocationX)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out LocationX)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out LocationY)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out LocationY)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Top is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "daytimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Path.ContainsInvalidPathChars(Value)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														DaytimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														DaytimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(DaytimeImage)) {
-															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + DaytimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															DaytimeImage = null;
 														}
 													}
 													break;
 												case "nighttimeimage":
 													if (!System.IO.Path.HasExtension(Value)) Value += ".bmp";
-													if (Interface.ContainsInvalidPathChars(Value)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Path.ContainsInvalidPathChars(Value)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "FileName contains illegal characters in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														NighttimeImage = OpenBveApi.Path.CombineFile(TrainPath, Value);
+														NighttimeImage = Path.CombineFile(TrainPath, Value);
 														if (!System.IO.File.Exists(NighttimeImage)) {
-															Interface.AddMessage(Interface.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+															Debug.AddMessage(Debug.MessageType.Error, true, "FileName " + NighttimeImage + " could not be found in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															NighttimeImage = null;
 														}
 													}
 													break;
 												case "transparentcolor":
-													if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out TransparentColor)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out TransparentColor)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "interval":
-													if (Value.Length != 0 && !Interface.TryParseIntVb6(Value, out Interval)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Height is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseIntVb6(Value, out Interval)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Height is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (Interval <= 0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Height is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Height is expected to be non-negative in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Layer)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Layer)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 											}
 										} i++;
 									} i--;
 									if (DaytimeImage == null) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "DaytimeImage is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Interval <= 0) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Interval is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Interval is required to be specified in " + Section + " in " + FileName);
 									}
 									// create element
 									if (DaytimeImage != null & Interval > 0) {
@@ -569,7 +570,7 @@ namespace OpenBve {
 											}
 											int j = -1;
 											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(Train, LocationX, LocationY, (double)wday, (double)Interval, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, tday[k], tnight[k], new Color32(255, 255, 255, 255), k != 0);
+												int l = CreateElement(Train, LocationX, LocationY, (double)wday, (double)Interval, 0.5, 0.5, Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, tday[k], tnight[k], new Color32(255, 255, 255, 255), k != 0);
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -602,66 +603,66 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out LocationX)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out LocationX)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out LocationY)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out LocationY)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "CenterY is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "radius":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Radius)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Radius)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (Radius == 0.0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is expected to be non-zero in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Radius = 16.0;
 													} break;
 												case "color":
-													if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out Color)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out Color)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "initialangle":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out InitialAngle)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out InitialAngle)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														InitialAngle *= 0.0174532925199433;
 													} break;
 												case "lastangle":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out LastAngle)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out LastAngle)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
 														LastAngle *= 0.0174532925199433;
 													} break;
 												case "minimum":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Minimum)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Minimum)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "maximum":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Maximum)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Maximum)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "step":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Step)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Step)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !Interface.TryParseIntVb6(Value, out Layer)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseIntVb6(Value, out Layer)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 											}
 										} i++;
 									} i--;
 									if (Radius == 0.0) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Radius is required to be non-zero in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Radius is required to be non-zero in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 									}
 									if (Minimum == Maximum) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Minimum and Maximum must not be equal in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Minimum and Maximum must not be equal in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										Radius = 0.0;
 									}
 									if (Math.Abs(InitialAngle - LastAngle) > 6.28318531) {
-										Interface.AddMessage(Interface.MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Warning, false, "The absolute difference between InitialAngle and LastAngle exceeds 360 degrees in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 									}
 									if (Radius != 0.0) {
 										// create element
@@ -695,12 +696,12 @@ namespace OpenBve {
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDInitialAngle = InitialAngle;
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDLastAngle = LastAngle;
-										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDVectors = new Vector3[] {
-											new Vector3(x0, y0, z0),
-											new Vector3(x1, y1, z1),
-											new Vector3(x2, y2, z2),
-											new Vector3(x3, y3, z3),
-											new Vector3(cx, cy, cz)
+										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDVectors = new Vector3D[] {
+											new Vector3D(x0, y0, z0),
+											new Vector3D(x1, y1, z1),
+											new Vector3D(x2, y2, z2),
+											new Vector3D(x3, y3, z3),
+											new Vector3D(cx, cy, cz)
 										};
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
@@ -715,7 +716,7 @@ namespace OpenBve {
 										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].LEDFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(f);
 									} else {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Radius is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Radius is required to be specified in " + Section + " in " + FileName);
 									}
 								} break;
 								// timetable
@@ -736,47 +737,47 @@ namespace OpenBve {
 													if (k >= 0) {
 														string a = Value.Substring(0, k).TrimEnd();
 														string b = Value.Substring(k + 1).TrimStart();
-														if (a.Length != 0 && !Interface.TryParseDoubleVb6(a, out LocationX)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (a.Length != 0 && !Conversions.TryParseDoubleVb6(a, out LocationX)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
-														if (b.Length != 0 && !Interface.TryParseDoubleVb6(b, out LocationY)) {
-															Interface.AddMessage(Interface.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														if (b.Length != 0 && !Conversions.TryParseDoubleVb6(b, out LocationY)) {
+															Debug.AddMessage(Debug.MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
 													} else {
-														Interface.AddMessage(Interface.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "Two arguments are expected in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "width":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Width)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Width)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (Width <= 0.0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "height":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Height)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Height)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else if (Height <= 0.0) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "ValueInPixels is required to be positive in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "transparentcolor":
-													if (Value.Length != 0 && !Interface.TryParseHexColor(Value, out TransparentColor)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseHexColor(Value, out TransparentColor)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "HexColor is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 												case "layer":
-													if (Value.Length != 0 && !Interface.TryParseDoubleVb6(Value, out Layer)) {
-														Interface.AddMessage(Interface.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+													if (Value.Length != 0 && !Conversions.TryParseDoubleVb6(Value, out Layer)) {
+														Debug.AddMessage(Debug.MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} break;
 											}
 										} i++;
 									} i--;
 									// create element
 									if (Width <= 0.0) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Width is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Width is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Height <= 0.0) {
-										Interface.AddMessage(Interface.MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
+										Debug.AddMessage(Debug.MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Width > 0.0 & Height > 0.0) {
-										int j = CreateElement(Train, LocationX, LocationY, Width, Height, 0.5, 0.5, (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, null, null, new Color32(255, 255, 255, 255), false);
+										int j = CreateElement(Train, LocationX, LocationY, Width, Height, 0.5, 0.5, Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelBitmapWidth, PanelBitmapHeight, PanelCenterX, PanelCenterY, PanelOriginX, PanelOriginY, DriverX, DriverY, DriverZ, null, null, new Color32(255, 255, 255, 255), false);
 										Train.Cars[Train.DriverCar].CarSections[0].Elements[j].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation("timetable");
 										Timetable.AddObjectForCustomTimetable(Train.Cars[Train.DriverCar].CarSections[0].Elements[j]);
 									}
@@ -914,7 +915,7 @@ namespace OpenBve {
 							}
 						}
 						if (unsupported) {
-							Interface.AddMessage(Interface.MessageType.Error, false, "Invalid subject " + Subject + " encountered in " + ErrorLocation);
+							Debug.AddMessage(Debug.MessageType.Error, false, "Invalid subject " + Subject + " encountered in " + ErrorLocation);
 						}
 					} break;
 			}
@@ -946,15 +947,15 @@ namespace OpenBve {
 			y1 = (y1 - 0.5) * WorldHeight;
 			double xm = x0 * (1.0 - RelativeRotationCenterX) + x1 * RelativeRotationCenterX;
 			double ym = y0 * (1.0 - RelativeRotationCenterY) + y1 * RelativeRotationCenterY;
-			Vector3[] v = new Vector3[4];
-			v[0] = new Vector3(x0 - xm, y1 - ym, 0);
-			v[1] = new Vector3(x0 - xm, y0 - ym, 0);
-			v[2] = new Vector3(x1 - xm, y0 - ym, 0);
-			v[3] = new Vector3(x1 - xm, y1 - ym, 0);
-			World.Vertex t0 = new World.Vertex(v[0], new World.Vector2Df(0.0f, 1.0f));
-			World.Vertex t1 = new World.Vertex(v[1], new World.Vector2Df(0.0f, 0.0f));
-			World.Vertex t2 = new World.Vertex(v[2], new World.Vector2Df(1.0f, 0.0f));
-			World.Vertex t3 = new World.Vertex(v[3], new World.Vector2Df(1.0f, 1.0f));
+			Vector3D[] v = new Vector3D[4];
+			v[0] = new Vector3D(x0 - xm, y1 - ym, 0);
+			v[1] = new Vector3D(x0 - xm, y0 - ym, 0);
+			v[2] = new Vector3D(x1 - xm, y0 - ym, 0);
+			v[3] = new Vector3D(x1 - xm, y1 - ym, 0);
+			World.Vertex t0 = new World.Vertex(v[0], new Vector2f(0.0f, 1.0f));
+			World.Vertex t1 = new World.Vertex(v[1], new Vector2f(0.0f, 0.0f));
+			World.Vertex t2 = new World.Vertex(v[2], new Vector2f(1.0f, 0.0f));
+			World.Vertex t3 = new World.Vertex(v[3], new Vector2f(1.0f, 1.0f));
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Vertices = new World.Vertex[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new World.MeshFace[] { new World.MeshFace(new int[] { 0, 1, 2, 3 }) };
@@ -966,7 +967,7 @@ namespace OpenBve {
 			Object.Mesh.Materials[0].NighttimeTexture = NighttimeTexture;
 			Object.Dynamic = true;
 			// calculate offset
-			Vector3 o;
+			Vector3D o;
 			o.X = xm + DriverX;
 			o.Y = ym + DriverY;
 			o.Z = EyeDistance - Distance + DriverZ;

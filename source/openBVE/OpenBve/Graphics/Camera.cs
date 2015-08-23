@@ -1,5 +1,8 @@
-﻿using System;
-using Tao.OpenGl;
+﻿// DO NOT COMPILE
+// not ported to OpenTK
+/*
+using System;
+using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
 	internal class Camera {
@@ -57,3 +60,4 @@ namespace OpenBve {
 		
 	}
 }
+*/

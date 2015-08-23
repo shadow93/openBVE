@@ -24,7 +24,7 @@ namespace OpenBve {
 					if (t == "bve1220000") {
 						ver1220000 = true;
 					} else if (t != "bve2000000" & t != "openbve") {
-						Interface.AddMessage(Interface.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat"));
+						Debug.AddMessage(Debug.MessageType.Error, false, "The train.dat format " + Lines[0].ToLowerInvariant() + " is not supported in " + OpenBveApi.Path.CombineFile(TrainPath, "train.dat"));
 					}
 					break;
 				}
@@ -95,33 +95,33 @@ namespace OpenBve {
 								if (j == -1) break;
 								string s = t.Substring(0, j).Trim();
 								t = t.Substring(j + 1);
-								double a; if (Interface.TryParseDoubleVb6(s, out a)) {
+								double a; if (Conversions.TryParseDoubleVb6(s, out a)) {
 									switch (m) {
 										case 0:
 											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "a0 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "a0 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageZeroAcceleration = a * 0.277777777777778;
 											} break;
 										case 1:
 											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "a1 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "a1 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageOneAcceleration = a * 0.277777777777778;
 											} break;
 										case 2:
 											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "v1 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "v1 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageOneSpeed = a * 0.277777777777778;
 											} break;
 										case 3:
 											if (a < 0.0) {
-												Interface.AddMessage(Interface.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											} else {
 												AccelerationCurves[n].StageTwoSpeed = a * 0.277777777777778;
 												if (AccelerationCurves[n].StageTwoSpeed < AccelerationCurves[n].StageOneSpeed) {
-													Interface.AddMessage(Interface.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than or equal to v1 at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													Debug.AddMessage(Debug.MessageType.Error, false, "v2 in section #ACCELERATION is expected to be greater than or equal to v1 at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													AccelerationCurves[n].StageTwoSpeed = AccelerationCurves[n].StageOneSpeed;
 												}
 											} break;
@@ -130,7 +130,7 @@ namespace OpenBve {
 												if (ver1220000) {
 													if (a <= 0.0) {
 														AccelerationCurves[n].StageTwoExponent = 1.0;
-														Interface.AddMessage(Interface.MessageType.Error, false, "e in section #ACCELERATION is expected to be positive at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														Debug.AddMessage(Debug.MessageType.Error, false, "e in section #ACCELERATION is expected to be positive at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} else {
 														const double c = 4.439346232277577;
 														AccelerationCurves[n].StageTwoExponent = 1.0 - Math.Log(a) * AccelerationCurves[n].StageTwoSpeed * c;
@@ -154,29 +154,29 @@ namespace OpenBve {
 					case "#performance":
 					case "#deceleration":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeDeceleration is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "BrakeDeceleration is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakeDeceleration = a * 0.277777777777778;
 										} break;
 									case 1:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "CoefficientOfStaticFriction is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CoefficientOfStaticFriction = a;
 										} break;
 									case 3:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "CoefficientOfRollingResistance is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "CoefficientOfRollingResistance is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CoefficientOfRollingResistance = a;
 										} break;
 									case 4:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "AerodynamicDragCoefficient is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "AerodynamicDragCoefficient is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											AerodynamicDragCoefficient = a;
 										} break;
@@ -185,7 +185,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#delay":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: Train.Specs.DelayPowerUp = a; break;
 										case 1: Train.Specs.DelayPowerDown = a; break;
@@ -196,7 +196,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#move":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: JerkPowerUp = 0.01 * a; break;
 										case 1: JerkPowerDown = 0.01 * a; break;
@@ -209,7 +209,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#brake":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										{
@@ -217,7 +217,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												BrakeType = (TrainManager.CarBrakeType)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "The setting for BrakeType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												BrakeType = TrainManager.CarBrakeType.ElectromagneticStraightAirBrake;
 											}
 										} break;
@@ -227,7 +227,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												ElectropneumaticType = (TrainManager.EletropneumaticBrakeType)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "The setting for ElectropneumaticType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "The setting for ElectropneumaticType is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 												ElectropneumaticType = TrainManager.EletropneumaticBrakeType.None;
 											}
 										} break;
@@ -237,35 +237,35 @@ namespace OpenBve {
 						} i--; break;
 					case "#pressure":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderServiceMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "BrakeCylinderServiceMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakeCylinderServiceMaximumPressure = a * 1000.0;
 										} break;
 									case 1:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakeCylinderEmergencyMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "BrakeCylinderEmergencyMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakeCylinderEmergencyMaximumPressure = a * 1000.0;
 										} break;
 									case 2:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "MainReservoirMinimumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "MainReservoirMinimumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MainReservoirMinimumPressure = a * 1000.0;
 										} break;
 									case 3:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "MainReservoirMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "MainReservoirMaximumPressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MainReservoirMaximumPressure = a * 1000.0;
 										} break;
 									case 4:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "BrakePipePressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "BrakePipePressure is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											BrakePipePressure = a * 1000.0;
 										} break;
@@ -274,7 +274,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#handle":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							int a; if (Interface.TryParseIntVb6(Lines[i], out a)) {
+							int a; if (Conversions.TryParseIntVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: Train.Specs.SingleHandle = a == 1; break;
 										case 1: Train.Specs.MaximumPowerNotch = a; break;
@@ -286,7 +286,7 @@ namespace OpenBve {
 					case "#cockpit":
 					case "#cab":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 										case 0: DriverX = 0.001 * a; break;
 										case 1: DriverY = 0.001 * a; break;
@@ -297,37 +297,37 @@ namespace OpenBve {
 						} i--; break;
 					case "#car":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "MotorCarMass is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "MotorCarMass is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MotorCarMass = a * 1000.0;
 										} break;
 									case 1:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfMotorCars is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "NumberOfMotorCars is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											MotorCars = (int)Math.Round(a);
 										} break;
 										case 2: TrailerCarMass = a * 1000.0; break;
 									case 3:
 										if (a < 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "NumberOfTrailerCars is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "NumberOfTrailerCars is expected to be non-negative at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											TrailerCars = (int)Math.Round(a);
 										} break;
 									case 4:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "LengthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "LengthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarLength = a;
 										} break;
 										case 5: FrontCarIsMotorCar = a == 1.0; break;
 									case 6:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "WidthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "WidthOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarWidth = a;
 											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
@@ -335,7 +335,7 @@ namespace OpenBve {
 										} break;
 									case 7:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "HeightOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "HeightOfACar is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarHeight = a;
 											CarExposedFrontalArea = 0.65 * CarWidth * CarHeight;
@@ -344,7 +344,7 @@ namespace OpenBve {
 										case 8: CenterOfGravityHeight = a; break;
 									case 9:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "ExposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "ExposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarExposedFrontalArea = a;
 											CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
@@ -352,7 +352,7 @@ namespace OpenBve {
 										} break;
 									case 10:
 										if (a <= 0.0) {
-											Interface.AddMessage(Interface.MessageType.Error, false, "UnexposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											Debug.AddMessage(Debug.MessageType.Error, false, "UnexposedFrontalArea is expected to be positive at line " + (i + 1).ToString(Culture) + " in " + FileName);
 										} else {
 											CarExposedFrontalArea = a;
 										} break;
@@ -361,7 +361,7 @@ namespace OpenBve {
 						} i--; break;
 					case "#device":
 						i++; while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-							double a; if (Interface.TryParseDoubleVb6(Lines[i], out a)) {
+							double a; if (Conversions.TryParseDoubleVb6(Lines[i], out a)) {
 								switch (n) {
 									case 0:
 										if (a == 0.0) {
@@ -393,7 +393,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												Train.Specs.PassAlarm = (TrainManager.PassAlarmType)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 									case 8:
@@ -402,7 +402,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												Train.Specs.DoorOpenMode = (TrainManager.DoorMode)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DoorOpenMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "DoorOpenMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 									case 9:
@@ -411,7 +411,7 @@ namespace OpenBve {
 											if (b >= 0 & b <= 2) {
 												Train.Specs.DoorCloseMode = (TrainManager.DoorMode)b;
 											} else {
-												Interface.AddMessage(Interface.MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
+												Debug.AddMessage(Debug.MessageType.Error, false, "DoorCloseMode is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
 										}
 								}
@@ -446,7 +446,7 @@ namespace OpenBve {
 									string s = t.Substring(0, j).Trim();
 									t = t.Substring(j + 1);
 									double a;
-									if (Interface.TryParseDoubleVb6(s, out a)) {
+									if (Conversions.TryParseDoubleVb6(s, out a)) {
 										switch (m) {
 											case 0:
 												Tables[msi].Entries[n].SoundIndex = (int)Math.Round(a);
@@ -469,7 +469,7 @@ namespace OpenBve {
 				}
 			}
 			if (TrailerCars > 0 & TrailerCarMass <= 0.0) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
+				Debug.AddMessage(Debug.MessageType.Error, false, "TrailerCarMass is expected to be positive in " + FileName);
 				TrailerCarMass = 1.0;
 			}
 			if (Train.Specs.MaximumPowerNotch <= 0) Train.Specs.MaximumPowerNotch = 8;
@@ -482,7 +482,7 @@ namespace OpenBve {
 			Train.Cars = new TrainManager.Car[Cars];
 			double DistanceBetweenTheCars = 0.3;
 			if (DriverCar < 0 | DriverCar >= Cars) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
+				Debug.AddMessage(Debug.MessageType.Error, false, "DriverCar must point to an existing car in " + FileName);
 				DriverCar = 0;
 			}
 			// brake system
@@ -534,7 +534,7 @@ namespace OpenBve {
 					errors = true;
 				}
 				if (errors) {
-					Interface.AddMessage(Interface.MessageType.Error, false, "Entry " + (i + 1).ToString(Culture) + " in the #ACCELERATION section is missing or invalid in " + FileName);
+					Debug.AddMessage(Debug.MessageType.Error, false, "Entry " + (i + 1).ToString(Culture) + " in the #ACCELERATION section is missing or invalid in " + FileName);
 				}
 				if (AccelerationCurves[i].StageZeroAcceleration > MaximumAcceleration) {
 					MaximumAcceleration = AccelerationCurves[i].StageZeroAcceleration;

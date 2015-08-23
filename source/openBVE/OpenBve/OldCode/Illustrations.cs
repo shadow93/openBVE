@@ -251,7 +251,7 @@ namespace OpenBve {
 							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
 							if (Game.Stations[e.StationIndex].Name != string.Empty) {
 								bool stop = Game.PlayerStopsAtStation(e.StationIndex);
-								if (Interface.IsJapanese(Game.Stations[e.StationIndex].Name)) {
+								if (Strings.IsJapanese(Game.Stations[e.StationIndex].Name)) {
 									m.Alignment = StringAlignment.Near;
 									m.LineAlignment = StringAlignment.Near;
 									double x = ox + w * (double)(i - n0) * nd;

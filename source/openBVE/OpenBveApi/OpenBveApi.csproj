@@ -17,6 +17,8 @@
     <DocumentationFile>bin\Release\OpenBveApi.xml</DocumentationFile>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,10 +71,19 @@
     <Compile Include="Textures.Functions.cs">
       <DependentUpon>Textures.cs</DependentUpon>
     </Compile>
-    <Compile Include="Vector2.cs">
+    <Compile Include="Vector3f.cs">
       <DependentUpon>Math.cs</DependentUpon>
     </Compile>
-    <Compile Include="Vector3.cs">
+    <Compile Include="Vector2f.cs">
+      <DependentUpon>Math.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Orientation3f.cs">
+      <DependentUpon>Math.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vector3D.cs">
+      <DependentUpon>Math.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Vector2D.cs">
       <DependentUpon>Math.cs</DependentUpon>
     </Compile>
   </ItemGroup>

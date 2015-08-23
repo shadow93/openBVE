@@ -16,8 +16,8 @@ namespace OpenBve {
 				List<Dependency> results = new List<Dependency>();
 				foreach (Version package in packages) {
 					foreach (Dependency suggestion in package.Suggestions) {
-						if (!packages.Exists((Version item) => { return item.Name.Equals(suggestion.Name, StringComparison.OrdinalIgnoreCase); })) {
-							Dependency find = results.Find((Dependency item) => { return item.Name.Equals(suggestion.Name, StringComparison.OrdinalIgnoreCase); });
+						if (!packages.Exists(item => item.Name.Equals(suggestion.Name, StringComparison.OrdinalIgnoreCase))) {
+							Dependency find = results.Find(item => item.Name.Equals(suggestion.Name, StringComparison.OrdinalIgnoreCase));
 							if (find.Name != null) {
 								if (CompareVersions(suggestion.Version, find.Version) > 0) {
 									find.Version = suggestion.Version;
@@ -43,7 +43,7 @@ namespace OpenBve {
 				 * */
 				for (int i = 0; i < packages.Count; i++) {
 					foreach (Dependency dependency in packages[i].Dependencies) {
-						Version find = packages.Find((Version item) => { return item.Name.Equals(dependency.Name, StringComparison.OrdinalIgnoreCase); });
+						Version find = packages.Find(item => item.Name.Equals(dependency.Name, StringComparison.OrdinalIgnoreCase));
 						if (find != null) {
 							if (CompareVersions(dependency.Version, find.Number) > 0) {
 								Version version = Dereference(dependency.Name, dependency.Version);
@@ -116,7 +116,7 @@ namespace OpenBve {
 									byte[] md5 = (new MD5CryptoServiceProvider()).ComputeHash(bytes);
 									bool add = true;
 									for (int k = 0; k < 16; k++) {
-										if (md5[k] != sources[i].Md5[k]) {
+										if (md5[k] != sources[i].MD5[k]) {
 											add = false;
 											break;
 										}

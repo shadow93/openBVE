@@ -19,7 +19,8 @@ namespace OpenBve {
 				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7",
 				"Mozilla/5.0 (Windows NT 5.1; rv:9.0.1) Gecko/20100101 Firefox/9.0.1",
 				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7",
-				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.75 Safari/535.7"
+				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.75 Safari/535.7",
+				"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0"
 			};
 			int index = Program.RandomNumberGenerator.Next(0, agents.Length);
 			UserAgent = agents[index];
@@ -31,10 +32,20 @@ namespace OpenBve {
 		private static void AddWebClientHeaders(WebClient client, string url) {
 			try {
 				client.Headers.Add(HttpRequestHeader.UserAgent, UserAgent);
-			} catch { }
-			if (url.StartsWith("http://")) {
+			} catch {
+				Debug.AddMessage(Debug.MessageType.Warning,false,"Malfolmed HTTP user agent (code error)");
+			}
+			if (url.StartsWith("http://",StringComparison.InvariantCultureIgnoreCase)) {
 				int index = url.IndexOf('/', 7);
 				if (index >= 7) {
+					string referer = url.Substring(0, index + 1);
+					try {
+						client.Headers.Add(HttpRequestHeader.Referer, referer);
+					} catch { }
+				}
+			} else if(url.StartsWith("https://",StringComparison.InvariantCultureIgnoreCase)){
+				int index = url.IndexOf('/', 8);
+				if (index >= 8) {
 					string referer = url.Substring(0, index + 1);
 					try {
 						client.Headers.Add(HttpRequestHeader.Referer, referer);
@@ -46,9 +57,9 @@ namespace OpenBve {
 		/// <summary>Adds the user-specified proxy server to the client.</summary>
 		/// <param name="client">The web client.</param>
 		private static void AddWebClientProxy(WebClient client) {
-			if (Interface.CurrentOptions.ProxyUrl.Length != 0) {
-				WebProxy proxy = new WebProxy(Interface.CurrentOptions.ProxyUrl);
-				proxy.Credentials = new NetworkCredential(Interface.CurrentOptions.ProxyUserName, Interface.CurrentOptions.ProxyPassword);
+			if (Options.Current.ProxyUrl.Length != 0) {
+				WebProxy proxy = new WebProxy(Options.Current.ProxyUrl);
+				proxy.Credentials = new NetworkCredential(Options.Current.ProxyUserName, Options.Current.ProxyPassword);
 				client.Proxy = proxy;
 			}
 		}
@@ -79,22 +90,19 @@ namespace OpenBve {
 					AddWebClientProxy(client);
 					using (Stream stream = client.OpenRead(url)) {
 						const int chunkSize = 65536;
-						bytes = new byte[chunkSize];
-						while (true) {
-							if (count + chunkSize >= bytes.Length) {
-								Array.Resize<byte>(ref bytes, bytes.Length << 1);
+						int contentLength = Int32.Parse(client.ResponseHeaders["Content-Length"]);
+						bytes = new byte[contentLength];
+						int now;
+						do {
+							int remain = contentLength - count < chunkSize ? contentLength - count : chunkSize;
+							now = stream.Read(bytes, count, remain);
+							if (now != 0) {
+								count += now;
+								Interlocked.Add(ref size, now);
 							}
-							int read = stream.Read(bytes, count, chunkSize);
-							if (read != 0) {
-								count += read;
-								Interlocked.Add(ref size, read);
-							} else {
-								break;
-							}
-						}
+						} while (contentLength < count);
 					}
 				}
-				Array.Resize<byte>(ref bytes, count);
 				return true;
 			} catch {
 				Interlocked.Add(ref size, -count);
@@ -130,7 +138,9 @@ namespace OpenBve {
 							try {
 								Directory.CreateDirectory(directory);
 								File.WriteAllBytes(file, bytes);
-							} catch { }
+							} catch (Exception ex) {
+								Debug.AddMessage(Debug.MessageType.Warning, false, "Error writing file " + file + ": " + ex.Message);
+							}
 							if (callback != null) {
 								callback.Invoke(file);
 							}

@@ -1,14 +1,15 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using OpenBveApi.Colors;
-using Tao.OpenGl;
+using OpenTK.Graphics.OpenGL;
+using System;
 
 namespace OpenBve {
 	internal static partial class Renderer {
 		
 		// --- structures ---
-		
+
 		/// <summary>Represents the alignment of a text compared to a reference coordinate.</summary>
+		[Flags]
 		private enum TextAlignment {
 			/// <summary>The reference coordinate represents the top-left corner.</summary>
 			TopLeft = 1,
@@ -70,7 +71,7 @@ namespace OpenBve {
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
 		/// <param name="location">The location.</param>
-		/// <param name="orientation">The orientation.</param>
+		/// <param name="alignment">The alignment.</param>
 		/// <param name="color">The color.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
 		private static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
@@ -120,62 +121,62 @@ namespace OpenBve {
 			/*
 			 * Render the string.
 			 * */
-			Gl.glEnable(Gl.GL_TEXTURE_2D);
+			GL.Enable(EnableCap.Texture2D);
 			for (int i = 0; i < text.Length; i++) {
 				Textures.Texture texture;
 				Fonts.OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
 				if (Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
-					Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+					GL.BindTexture(TextureTarget.Texture2D,texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
 					int x = left - (data.PhysicalSize.Width - data.TypographicSize.Width) / 2;
 					int y = top - (data.PhysicalSize.Height - data.TypographicSize.Height) / 2;
 					/*
 					 * In the first pass, mask off the background with pure black.
 					 * */
-					Gl.glBlendFunc(Gl.GL_ZERO, Gl.GL_ONE_MINUS_SRC_COLOR);
-					Gl.glBegin(Gl.GL_POLYGON);
-					Gl.glColor4f(color.A, color.A, color.A, 1.0f);
-					Gl.glTexCoord2f(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
-					Gl.glVertex2f(x, y);
-					Gl.glColor4f(color.A, color.A, color.A, 1.0f);
-					Gl.glTexCoord2f(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
-					Gl.glVertex2f(x + data.PhysicalSize.Width, y);
-					Gl.glColor4f(color.A, color.A, color.A, 1.0f);
-					Gl.glTexCoord2f(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
-					Gl.glVertex2f(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
-					Gl.glColor4f(color.A, color.A, color.A, 1.0f);
-					Gl.glTexCoord2f(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
-					Gl.glVertex2f(x, y + data.PhysicalSize.Height);
-					Gl.glEnd();
+					GL.BlendFunc(BlendingFactorSrc.Zero,BlendingFactorDest.OneMinusSrcColor);
+					GL.Begin(PrimitiveType.Polygon);
+					GL.Color4(color.A, color.A, color.A, 1.0f);
+					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
+					GL.Vertex2(x, y);
+					GL.Color4(color.A, color.A, color.A, 1.0f);
+					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
+					GL.Vertex2(x + data.PhysicalSize.Width, y);
+					GL.Color4(color.A, color.A, color.A, 1.0f);
+					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
+					GL.Vertex2(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
+					GL.Color4(color.A, color.A, color.A, 1.0f);
+					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
+					GL.Vertex2(x, y + data.PhysicalSize.Height);
+					GL.End();
 					/*
 					 * In the second pass, add the character onto the background.
 					 * */
-					Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE);
-					Gl.glBegin(Gl.GL_POLYGON);
-					Gl.glColor4f(color.R, color.G, color.B, color.A);
-					Gl.glTexCoord2f(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
-					Gl.glVertex2f(x, y);
-					Gl.glColor4f(color.R, color.G, color.B, color.A);
-					Gl.glTexCoord2f(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
-					Gl.glVertex2f(x + data.PhysicalSize.Width, y);
-					Gl.glColor4f(color.R, color.G, color.B, color.A);
-					Gl.glTexCoord2f(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
-					Gl.glVertex2f(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
-					Gl.glColor4f(color.R, color.G, color.B, color.A);
-					Gl.glTexCoord2f(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
-					Gl.glVertex2f(x, y + data.PhysicalSize.Height);
-					Gl.glEnd();
+					GL.BlendFunc(BlendingFactorSrc.SrcAlpha,BlendingFactorDest.One);
+					GL.Begin(PrimitiveType.Polygon);
+					GL.Color4(color.R, color.G, color.B, color.A);
+					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Top);
+					GL.Vertex2(x, y);
+					GL.Color4(color.R, color.G, color.B, color.A);
+					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Top);
+					GL.Vertex2(x + data.PhysicalSize.Width, y);
+					GL.Color4(color.R, color.G, color.B, color.A);
+					GL.TexCoord2(data.TextureCoordinates.Right, data.TextureCoordinates.Bottom);
+					GL.Vertex2(x + data.PhysicalSize.Width, y + data.PhysicalSize.Height);
+					GL.Color4(color.R, color.G, color.B, color.A);
+					GL.TexCoord2(data.TextureCoordinates.Left, data.TextureCoordinates.Bottom);
+					GL.Vertex2(x, y + data.PhysicalSize.Height);
+					GL.End();
 				}
 				left += data.TypographicSize.Width;
 			}
-			Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA); // HACK //
+			GL.BlendFunc(BlendingFactorSrc.SrcAlpha,BlendingFactorDest.OneMinusSrcAlpha); // HACK //
 		}
 		
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
 		/// <param name="location">The location.</param>
-		/// <param name="orientation">The orientation.</param>
+		/// <param name="alignment">The alignment.</param>
 		/// <param name="color">The color.</param>
 		/// <param name="shadow">Whether to draw a shadow.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>

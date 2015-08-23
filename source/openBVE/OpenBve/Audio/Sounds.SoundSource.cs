@@ -27,7 +27,7 @@ namespace OpenBve {
 			/// <summary>The volume change factor.</summary>
 			internal double Volume;
 			/// <summary>The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</summary>
-			internal OpenBveApi.Math.Vector3 Position;
+			internal OpenBveApi.Math.Vector3D Position;
 			/// <summary>The train this sound is attached to, or a null reference.</summary>
 			internal TrainManager.Train Train;
 			/// <summary>The car this sound is attached to, or a null reference.</summary>
@@ -48,7 +48,7 @@ namespace OpenBve {
 			/// <param name="train">The train this sound source is attached to, or a null reference.</param>
 			/// <param name="car">The car this sound source is attached to, or a null reference.</param>
 			/// <param name="looped">Whether this sound source plays in a loop.</param>
-			internal SoundSource(SoundBuffer buffer, double radius, double pitch, double volume, OpenBveApi.Math.Vector3 position, TrainManager.Train train, int car, bool looped) {
+			internal SoundSource(SoundBuffer buffer, double radius, double pitch, double volume, OpenBveApi.Math.Vector3D position, TrainManager.Train train, int car, bool looped) {
 				this.Buffer = buffer;
 				this.Radius = radius;
 				this.Pitch = pitch;

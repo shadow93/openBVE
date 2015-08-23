@@ -6,12 +6,12 @@ namespace OpenBve {
 	internal static class Tar {
 		
 		/// <summary>Extracts the tar data into a specified directory.</summary>
-		/// <param name="data">The tar data to extract.</param>
+		/// <param name="bytes">The tar data to extract.</param>
 		/// <param name="directory">The directory to extract the content to.</param>
 		/// <param name="prefix">The directory prefix that is trimmed off all the paths encountered in this archive, or a null reference.</param>
 		internal static void Unpack(byte[] bytes, string directory, string prefix) {
-			System.Text.ASCIIEncoding ascii = new ASCIIEncoding();
-			System.Text.UTF8Encoding utf8 = new UTF8Encoding();
+			ASCIIEncoding ascii = new ASCIIEncoding();
+			UTF8Encoding utf8 = new UTF8Encoding();
 			int position = 0;
 			string longLink = null;
 			while (position < bytes.Length) {
@@ -34,11 +34,8 @@ namespace OpenBve {
 					string sizeString = ascii.GetString(bytes, position + 124, 12).Trim('\0', ' ');
 					int size = Convert.ToInt32(sizeString, 8);
 					int mode;
-					if (name[name.Length - 1] == '/') {
-						mode = 53;
-					} else {
-						mode = (int)bytes[position + 156];
-					}
+					mode = name[name.Length - 1] == '/' ?   53 : (int)bytes[position + 156];
+
 					if (bytes[position + 257] == 0x75 && bytes[position + 258] == 0x73 && bytes[position + 259] == 0x74 && bytes[position + 260] == 0x61 && bytes[position + 261] == 0x72 && bytes[position + 262] == 0x00) {
 						/*
 						 * This is a POSIX ustar archive.
@@ -79,7 +76,7 @@ namespace OpenBve {
 						try {
 							Directory.CreateDirectory(Path.Combine(directory, name));
 						} catch { }
-					} else if (mode < 49 | mode > 54) {
+					} else if (mode < 49 || mode > 54) {
 						/*
 						 * This is a normal file.
 						 * */

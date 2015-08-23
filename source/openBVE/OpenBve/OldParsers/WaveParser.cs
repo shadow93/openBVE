@@ -229,10 +229,9 @@ namespace OpenBve {
 											channelData[j].bPredictor = (int)reader.ReadByte();
 											if (channelData[j].bPredictor >= adpcmData.Coefficients.Length) {
 												throw new InvalidDataException("Invalid bPredictor in " + fileTitle);
-											} else {
-												channelData[j].iCoef1 = (int)adpcmData.Coefficients[channelData[j].bPredictor][0];
-												channelData[j].iCoef2 = (int)adpcmData.Coefficients[channelData[j].bPredictor][1];
 											}
+											channelData[j].iCoef1 = (int)adpcmData.Coefficients[channelData[j].bPredictor][0];
+											channelData[j].iCoef2 = (int)adpcmData.Coefficients[channelData[j].bPredictor][1];
 										}
 										for (int j = 0; j < format.Channels; j++) {
 											channelData[j].iDelta = (short)ReadUInt16(reader, endianness);
@@ -309,11 +308,9 @@ namespace OpenBve {
 						}
 					}
 					// finalize
-					if (dataBytes == null) {
+					if (dataBytes == null)
 						throw new InvalidDataException("No data chunk before the end of the file in " + fileTitle);
-					} else {
-						return new WaveData(format, dataBytes);
-					}
+					return new WaveData(format, dataBytes);
 				}
 			}
 		}
@@ -331,9 +328,8 @@ namespace OpenBve {
 				unchecked {
 					return (value << 24) | (value & ((uint)0xFF00 << 8)) | ((value & (uint)0xFF0000) >> 8) | (value >> 24);
 				}
-			} else {
-				return value;
 			}
+			return value;
 		}
 		
 		/// <summary>Reads a System.UInt16 from a binary reader with the specified endianness.</summary>
@@ -349,9 +345,8 @@ namespace OpenBve {
 				unchecked {
 					return (ushort)(((uint)value << 8) | ((uint)value >> 8));
 				}
-			} else {
-				return value;
 			}
+			return value;
 		}
 		
 		/// <summary>Converts the specified wave data to 8-bit or 16-bit mono.</summary>

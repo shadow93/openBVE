@@ -1,23 +1,24 @@
 ﻿using System;
-using Tao.Sdl;
-
+using System.Diagnostics;
 namespace OpenBve {
 	internal static class Timers {
 
 		// members
-		private static double SdlTime = 0.0;
-
+		private static Stopwatch timer;
+		private static long last;
 		// initialize
 		internal static void Initialize() {
-			SdlTime = 0.001 * (double)Sdl.SDL_GetTicks();
+			timer = new Stopwatch();
+			timer.Start();
+			last = timer.ElapsedMilliseconds;
 		}
 
 		// get elapsed time
 		internal static double GetElapsedTime() {
-			double a = 0.001 * (double)Sdl.SDL_GetTicks();
-			double d = a - SdlTime;
-			SdlTime = a;
-			return d;
+			long actual = timer.ElapsedMilliseconds;
+			long timespan = actual - last;
+			last = actual;
+			return timespan*0.001;
 		}
 
 	}

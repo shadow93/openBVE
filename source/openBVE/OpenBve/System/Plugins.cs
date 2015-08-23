@@ -19,44 +19,50 @@ namespace OpenBve {
 			/// <summary>The plugin title.</summary>
 			internal string Title;
 			/// <summary>The interface to load textures as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Textures.TextureInterface Texture;
+			internal OpenBveApi.Textures.TextureInterface[] TextureLoaders;
 			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Sounds.SoundInterface Sound;
+			internal OpenBveApi.Sounds.SoundInterface[] SoundLoaders;
 			/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Objects.ObjectInterface Object;
+			internal OpenBveApi.Objects.ObjectInterface[] ObjectLoaders;
 			// --- constructors ---
 			/// <summary>Creates a new instance of this class.</summary>
 			/// <param name="file">The plugin file.</param>
 			internal Plugin(string file) {
 				this.File = file;
 				this.Title = Path.GetFileName(file);
-				this.Texture = null;
-				this.Sound = null;
-				this.Object = null;
+				this.TextureLoaders = null;
+				this.SoundLoaders = null;
+				this.ObjectLoaders = null;
 			}
 			// --- functions ---
 			/// <summary>Loads all interfaces this plugin supports.</summary>
 			internal void Load() {
-				if (this.Texture != null) {
-					this.Texture.Load(Program.CurrentHost);
+				if (this.TextureLoaders != null) {
+					foreach(var iface in this.TextureLoaders)
+						iface.Load(Program.CurrentHost);
 				}
-				if (this.Sound != null) {
-					this.Sound.Load(Program.CurrentHost);
+				if (this.SoundLoaders != null) {
+					foreach(var iface in this.SoundLoaders)
+						iface.Load(Program.CurrentHost);
 				}
-				if (this.Object != null) {
-					this.Object.Load(Program.CurrentHost);
+				if (this.ObjectLoaders != null) {
+					foreach(var iface in this.ObjectLoaders)
+						iface.Load(Program.CurrentHost);
 				}
 			}
 			/// <summary>Unloads all interfaces this plugin supports.</summary>
 			internal void Unload() {
-				if (this.Texture != null) {
-					this.Texture.Unload();
+				if (this.TextureLoaders != null) {
+					for(int i = 0; i < this.TextureLoaders.Length; i++)
+						this.TextureLoaders[i].Unload();
 				}
-				if (this.Sound != null) {
-					this.Sound.Unload();
+				if (this.SoundLoaders != null) {
+					for(int i = 0; i < this.SoundLoaders.Length; i++)
+						this.SoundLoaders[i].Unload();
 				}
-				if (this.Object != null) {
-					this.Object.Unload();
+				if (this.ObjectLoaders != null) {
+					for(int i = 0; i < this.ObjectLoaders.Length; i++)
+						this.ObjectLoaders[i].Unload();
 				}
 			}
 		}
@@ -87,21 +93,25 @@ namespace OpenBve {
 						Assembly assembly = Assembly.LoadFile(file);
 						Type[] types = assembly.GetTypes();
 						bool iruntime = false;
+					var textures = new List<OpenBveApi.Textures.TextureInterface>();
+					var sounds = new List<OpenBveApi.Sounds.SoundInterface>();
+					var objects = new List<OpenBveApi.Objects.ObjectInterface>();
 						foreach (Type type in types) {
 							if (type.IsSubclassOf(typeof(OpenBveApi.Textures.TextureInterface))) {
-								plugin.Texture = (OpenBveApi.Textures.TextureInterface)assembly.CreateInstance(type.FullName);
+								textures.Add((OpenBveApi.Textures.TextureInterface)assembly.CreateInstance(type.FullName));
 							}
 							if (type.IsSubclassOf(typeof(OpenBveApi.Sounds.SoundInterface))) {
-								plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);
+								sounds.Add((OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName));
 							}
 							if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface))) {
-								plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
+								objects.Add((OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName));
 							}
-							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
-								iruntime = true;
-							}
+							iruntime |= typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type);
 						}
-						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
+					plugin.TextureLoaders = textures.ToArray();
+					plugin.SoundLoaders = sounds.ToArray();
+					plugin.ObjectLoaders = objects.ToArray();
+					if (plugin.TextureLoaders.Length > 0 || plugin.SoundLoaders.Length > 0 || plugin.ObjectLoaders.Length > 0) {
 							plugin.Load();
 							list.Add(plugin);
 						} else if (!iruntime) {
@@ -118,11 +128,10 @@ namespace OpenBve {
 			}
 			LoadedPlugins = list.ToArray();
 			string message = builder.ToString().Trim();
-			if (message.Length != 0) {
-				return MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) == DialogResult.OK;
-			} else {
-				return true;
-			}
+			if (message.Length != 0)
+				return MessageBox.Show(message + "Do you want to continue loading?", Application.ProductName, 
+					MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+			return true;
 		}
 		
 		/// <summary>Unloads all non-runtime plugins.</summary>

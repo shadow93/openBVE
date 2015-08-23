@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34743421-2EB8-4F68-9600-AEAE79AECFA5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -21,6 +21,7 @@
     <RunSourceAnalysis>False</RunSourceAnalysis>
     <ApplicationIcon>..\icon.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <StartupObject>OpenBve.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +32,11 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
@@ -40,7 +46,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
+    <StartAction>Project</StartAction>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -60,21 +70,14 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="Tao.OpenAl">
-      <HintPath>..\Tao.OpenAl.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\..\lib\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.OpenGl">
-      <HintPath>..\Tao.OpenGl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>..\Tao.Sdl.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SDL2-CS">
+      <HintPath>..\..\..\lib\SDL2-CS.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Graphics\Camera.cs" />
     <Compile Include="Audio\Sounds.Convert.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
@@ -102,7 +105,6 @@
     <Compile Include="Graphics\Renderer.Strings.cs">
       <DependentUpon>Renderer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="Graphics\Textures.Texture.cs">
       <DependentUpon>Textures.cs</DependentUpon>
@@ -116,9 +118,6 @@
     <Compile Include="OldCode\formImage.Designer.cs">
       <DependentUpon>formImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldCode\formMain.AddOns.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
-    </Compile>
     <Compile Include="OldCode\formMain.Controls.cs">
       <DependentUpon>formMain.cs</DependentUpon>
     </Compile>
@@ -126,6 +125,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="OldCode\formMain.Designer.cs">
+      <DependentUpon>formMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OldCode\formMain.GetAddOns.cs">
       <DependentUpon>formMain.cs</DependentUpon>
     </Compile>
     <Compile Include="OldCode\formMain.Options.cs">
@@ -140,7 +142,6 @@
     <Compile Include="OldCode\FunctionScripts.cs" />
     <Compile Include="OldCode\Game.cs" />
     <Compile Include="OldCode\Illustrations.cs" />
-    <Compile Include="OldCode\Interface.cs" />
     <Compile Include="OldCode\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
@@ -167,10 +168,25 @@
     <Compile Include="OldParsers\XObjectParser.cs" />
     <Compile Include="OldParsers\PanelCfgParser.cs" />
     <Compile Include="System\FileSystem.cs" />
+    <Compile Include="System\Internet.cs" />
     <Compile Include="System\ManagedContent.cs" />
+    <Compile Include="System\Gzip.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Joysticks.cs" />
+    <Compile Include="System\ManagedContent.Functions.cs">
+      <DependentUpon>ManagedContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="System\ManagedContent.Install.cs">
+      <DependentUpon>ManagedContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="System\ManagedContent.Remove.cs">
+      <DependentUpon>ManagedContent.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Plugins.cs" />
+    <Compile Include="System\Tar.cs" />
+    <Compile Include="System\ManagedContent.Versions.cs">
+      <DependentUpon>ManagedContent.cs</DependentUpon>
+    </Compile>
     <Compile Include="System\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="OldCode\formImage.resx">
@@ -182,18 +198,15 @@
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="OldParsers\TrainDatParser.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Graphics" />
-    <Folder Include="Audio" />
-    <Folder Include="OldCode" />
-    <Folder Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
-      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
-      <Name>OpenBveApi</Name>
-    </ProjectReference>
+    <Compile Include="Graphics\Screen.cs" />
+    <Compile Include="System\Configuration.cs" />
+    <Compile Include="Interface\Debug.cs" />
+    <Compile Include="Interface\Options.cs" />
+    <Compile Include="Interface\BlackBox.cs" />
+    <Compile Include="Interface\Controls.cs" />
+    <Compile Include="Interface\Hud.cs" />
+    <Compile Include="Interface\Conversions.cs" />
+    <Compile Include="Interface\Strings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -203,4 +216,13 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interface\" />
+  </ItemGroup>
 </Project>

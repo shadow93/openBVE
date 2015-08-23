@@ -1,0 +1,4 @@
+This program, along with all documentation provided, is dedicated
+to the public. I do not pose any restrictions on how this material
+can be used, and explicitly encourage redistribution and
+modification for any purpose.
