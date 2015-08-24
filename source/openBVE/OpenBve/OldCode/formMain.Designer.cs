@@ -128,8 +128,6 @@
         	this.updownWindowWidth = new System.Windows.Forms.NumericUpDown();
         	this.labelWindowWidth = new System.Windows.Forms.Label();
         	this.groupboxFullscreen = new System.Windows.Forms.GroupBox();
-        	this.comboboxFullscreenBits = new System.Windows.Forms.ComboBox();
-        	this.labelFullscreenBits = new System.Windows.Forms.Label();
         	this.updownFullscreenHeight = new System.Windows.Forms.NumericUpDown();
         	this.labelFullscreenHeight = new System.Windows.Forms.Label();
         	this.updownFullscreenWidth = new System.Windows.Forms.NumericUpDown();
@@ -1686,8 +1684,6 @@
         	// 
         	this.groupboxFullscreen.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	this.groupboxFullscreen.Controls.Add(this.comboboxFullscreenBits);
-        	this.groupboxFullscreen.Controls.Add(this.labelFullscreenBits);
         	this.groupboxFullscreen.Controls.Add(this.updownFullscreenHeight);
         	this.groupboxFullscreen.Controls.Add(this.labelFullscreenHeight);
         	this.groupboxFullscreen.Controls.Add(this.updownFullscreenWidth);
@@ -1695,32 +1691,10 @@
         	this.groupboxFullscreen.ForeColor = System.Drawing.Color.Black;
         	this.groupboxFullscreen.Location = new System.Drawing.Point(0, 200);
         	this.groupboxFullscreen.Name = "groupboxFullscreen";
-        	this.groupboxFullscreen.Size = new System.Drawing.Size(316, 104);
+        	this.groupboxFullscreen.Size = new System.Drawing.Size(316, 84);
         	this.groupboxFullscreen.TabIndex = 6;
         	this.groupboxFullscreen.TabStop = false;
         	this.groupboxFullscreen.Text = "Fullscreen mode";
-        	// 
-        	// comboboxFullscreenBits
-        	// 
-        	this.comboboxFullscreenBits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-        	this.comboboxFullscreenBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        	this.comboboxFullscreenBits.FormattingEnabled = true;
-        	this.comboboxFullscreenBits.Location = new System.Drawing.Point(156, 72);
-        	this.comboboxFullscreenBits.Name = "comboboxFullscreenBits";
-        	this.comboboxFullscreenBits.Size = new System.Drawing.Size(152, 21);
-        	this.comboboxFullscreenBits.TabIndex = 5;
-        	// 
-        	// labelFullscreenBits
-        	// 
-        	this.labelFullscreenBits.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	this.labelFullscreenBits.AutoEllipsis = true;
-        	this.labelFullscreenBits.Location = new System.Drawing.Point(8, 72);
-        	this.labelFullscreenBits.Name = "labelFullscreenBits";
-        	this.labelFullscreenBits.Size = new System.Drawing.Size(148, 16);
-        	this.labelFullscreenBits.TabIndex = 4;
-        	this.labelFullscreenBits.Text = "Bits per pixel:";
-        	this.labelFullscreenBits.TextAlign = System.Drawing.ContentAlignment.TopRight;
         	// 
         	// updownFullscreenHeight
         	// 
@@ -1807,7 +1781,7 @@
         	this.groupboxInterpolation.Controls.Add(this.labelInterpolation);
         	this.groupboxInterpolation.Controls.Add(this.trackbarTransparency);
         	this.groupboxInterpolation.ForeColor = System.Drawing.Color.Black;
-        	this.groupboxInterpolation.Location = new System.Drawing.Point(0, 312);
+        	this.groupboxInterpolation.Location = new System.Drawing.Point(0, 292);
         	this.groupboxInterpolation.Name = "groupboxInterpolation";
         	this.groupboxInterpolation.Size = new System.Drawing.Size(316, 160);
         	this.groupboxInterpolation.TabIndex = 7;
@@ -3605,8 +3579,6 @@
         private System.Windows.Forms.TextBox textboxTrainEncodingPreview;
         private System.Windows.Forms.ComboBox comboboxTrainEncoding;
         private System.Windows.Forms.Label labelTrainEncoding;
-        private System.Windows.Forms.ComboBox comboboxFullscreenBits;
-        private System.Windows.Forms.Label labelFullscreenBits;
         private System.Windows.Forms.NumericUpDown updownFullscreenHeight;
         private System.Windows.Forms.Label labelFullscreenHeight;
         private System.Windows.Forms.NumericUpDown updownFullscreenWidth;

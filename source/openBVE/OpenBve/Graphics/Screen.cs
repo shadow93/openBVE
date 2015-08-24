@@ -59,15 +59,13 @@ namespace OpenBve {
 			Width = Options.Current.FullscreenMode ? Options.Current.FullscreenWidth : Options.Current.WindowWidth;
 			Height = Options.Current.FullscreenMode ? Options.Current.FullscreenHeight : Options.Current.WindowHeight;
 			Fullscreen = Options.Current.FullscreenMode;
-			//int bits = Options.Current.FullscreenMode ? Options.Current.FullscreenBits : 32;
 			SDL.SDL_WindowFlags flags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL/*| SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE*/
 			                             | SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
 			if (Fullscreen) {
-				flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP;
+				flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
 			}
 			SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_VSYNC, "true");
 			SDL.SDL_SetHint(SDL.SDL_HINT_VIDEO_ALLOW_SCREENSAVER, "false");
-			//IntPtr video = Sdl.SDL_SetVideoMode(Width, Height, bits, flags);
 			Window = SDL.SDL_CreateWindow(Application.ProductName, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, Width, Height, flags);
 			if (Window == IntPtr.Zero) {
 				// --- not successful ---
@@ -145,7 +143,7 @@ namespace OpenBve {
 			Textures.UnloadAllTextures();
 			if (Fullscreen) {
 				SDL.SDL_SetWindowSize(Window,Options.Current.FullscreenWidth,Options.Current.FullscreenHeight);
-				SDL.SDL_SetWindowFullscreen(Window,(uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
+				SDL.SDL_SetWindowFullscreen(Window,(uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
 				Width = Options.Current.FullscreenWidth;
 				Height = Options.Current.FullscreenHeight;
 			} else {

@@ -36,7 +36,6 @@ namespace OpenBve
 		internal int WindowHeight;
 		internal int FullscreenWidth;
 		internal int FullscreenHeight;
-		internal int FullscreenBits;
 		internal string UserInterfaceFolder;
 		internal InterpolationMode Interpolation;
 		internal Renderer.TransparencyMode TransparencyMode;
@@ -84,7 +83,6 @@ namespace OpenBve
 			this.WindowHeight = 600;
 			this.FullscreenWidth = 1024;
 			this.FullscreenHeight = 768;
-			this.FullscreenBits = 32;
 			this.UserInterfaceFolder = "Default";
 			this.Interpolation = InterpolationMode.BilinearMipmapped;
 			this.TransparencyMode = Renderer.TransparencyMode.Quality;
@@ -201,14 +199,6 @@ namespace OpenBve
 												a = 768;
 											}
 											Current.FullscreenHeight = a;
-										} break;
-									case "fullscreenbits":
-										{
-											int a;
-											if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
-												a = 32;
-											}
-											Current.FullscreenBits = a;
 										} break;
 									case "mainmenuwidth":
 										{
@@ -484,7 +474,6 @@ namespace OpenBve
 		Builder.AppendLine("windowHeight = " + Current.WindowHeight.ToString(Culture));
 		Builder.AppendLine("fullscreenWidth = " + Current.FullscreenWidth.ToString(Culture));
 		Builder.AppendLine("fullscreenHeight = " + Current.FullscreenHeight.ToString(Culture));
-		Builder.AppendLine("fullscreenBits = " + Current.FullscreenBits.ToString(Culture));
 		Builder.AppendLine("mainmenuWidth = " + Current.MainMenuWidth.ToString(Culture));
 		Builder.AppendLine("mainmenuHeight = " + Current.MainMenuHeight.ToString(Culture));
 		Builder.AppendLine("disableDisplayLists = " + (Current.DisableDisplayLists ? "true" : "false"));

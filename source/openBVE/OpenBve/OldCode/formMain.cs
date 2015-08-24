@@ -283,10 +283,6 @@ namespace OpenBve {
 			updownWindowHeight.Value = (decimal)Options.Current.WindowHeight;
 			updownFullscreenWidth.Value = (decimal)Options.Current.FullscreenWidth;
 			updownFullscreenHeight.Value = (decimal)Options.Current.FullscreenHeight;
-			comboboxFullscreenBits.Items.Clear();
-			comboboxFullscreenBits.Items.Add("16");
-			comboboxFullscreenBits.Items.Add("32");
-			comboboxFullscreenBits.SelectedIndex = Options.Current.FullscreenBits == 16 ? 0 : 1;
 			comboboxInterpolation.Items.Clear();
 			comboboxInterpolation.Items.AddRange(new string[] { "", "", "", "", "", "" });
 			if ((int)Options.Current.Interpolation >= 0 & (int)Options.Current.Interpolation < comboboxInterpolation.Items.Count) {
@@ -413,7 +409,6 @@ namespace OpenBve {
 			groupboxFullscreen.Text = Strings.GetInterfaceString("options_display_fullscreen");
 			labelFullscreenWidth.Text = Strings.GetInterfaceString("options_display_fullscreen_width");
 			labelFullscreenHeight.Text = Strings.GetInterfaceString("options_display_fullscreen_height");
-			labelFullscreenBits.Text = Strings.GetInterfaceString("options_display_fullscreen_bits");
 			groupboxInterpolation.Text = Strings.GetInterfaceString("options_quality_interpolation");
 			labelInterpolation.Text = Strings.GetInterfaceString("options_quality_interpolation_mode");
 			comboboxInterpolation.Items[0] = Strings.GetInterfaceString("options_quality_interpolation_mode_nearest");
@@ -611,7 +606,6 @@ namespace OpenBve {
 			Options.Current.WindowHeight = (int)Math.Round(updownWindowHeight.Value);
 			Options.Current.FullscreenWidth = (int)Math.Round(updownFullscreenWidth.Value);
 			Options.Current.FullscreenHeight = (int)Math.Round(updownFullscreenHeight.Value);
-			Options.Current.FullscreenBits = comboboxFullscreenBits.SelectedIndex == 0 ? 16 : 32;
 			Options.Current.Interpolation = (Options.InterpolationMode)comboboxInterpolation.SelectedIndex;
 			Options.Current.AnisotropicFilteringLevel = (int)Math.Round(updownAnisotropic.Value);
 			Options.Current.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
