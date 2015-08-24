@@ -16,25 +16,21 @@ namespace OpenBve {
 		internal static bool Quit = false;
 		private static int TimeFactor = 1;
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
-		private static Thread loadingScreen;
 		// --------------------------------
 
 		internal static void StartLoopEx(formMain.MainDialogResult result) {
 			Screen.Show();
+			jobs = new Queue<ThreadStart>(10);
+			locks = new Queue<object>(10);
 			Renderer.Initialize();
 			Renderer.InitializeLighting();
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
 			MainLoop.InitializeMotionBlur();
 			ProcessEvents();
 			Timers.Initialize();
-			loadingScreen = new Thread(Renderer.DrawLoadingScreenLoop);
-			loadingScreen.Start();
-			Loading.LoadSynchronously(result.RouteFile, result.RouteEncoding, result.TrainFolder, result.TrainEncoding);
-			Renderer.DrawLoad = false;
-			loadingScreen.Join();
-			Screen.MakeCurrent();
-			if (Quit)
-				return;
+			Loading.LoadAsynchronously(result.RouteFile, result.RouteEncoding, result.TrainFolder, result.TrainEncoding);
+			// --- loading screen code ---
+			LoadingScreenLoop();
 			Renderer.InitializeLighting();
 			Timetable.CreateTimetable();
 			foreach (var message in Debug.Messages) {
@@ -48,7 +44,74 @@ namespace OpenBve {
 			Game.LogDateTime = DateTime.Now;
 			StartLoop();
 		}
-		
+		private static void LoadingScreenLoop(){
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.PushMatrix();
+			GL.LoadIdentity();
+			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
+			SDL.SDL_Event ev;
+			while (!Loading.Complete) {
+				Timers.GetElapsedTime();
+				GL.Viewport(0, 0, Screen.Width, Screen.Height);
+				Renderer.DrawLoadingScreen();
+				Screen.SwapBuffers();
+				while (SDL.SDL_PollEvent(out ev) != 0) {
+					switch (ev.type) {
+						case SDL.SDL_EventType.SDL_QUIT:
+							Loading.Cancel = true;
+							Quit = true;
+							SDL.SDL_Quit();
+							return;
+						case SDL.SDL_EventType.SDL_WINDOWEVENT:
+							if (ev.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED) {
+								Screen.Width = ev.window.data1;
+								Screen.Height = ev.window.data2;
+								GL.MatrixMode(MatrixMode.Projection);
+								GL.LoadIdentity();
+								GL.Ortho(0.0, (double)ev.window.data1, (double)ev.window.data2, 0.0, -1.0, 1.0);
+							}
+							break;
+					}
+				}
+				if (JobAvailable) {
+					ThreadStart job;
+					object locker;
+					while (jobs.Count > 0) {
+						lock (jobLock) {
+							job = jobs.Dequeue();
+							locker = locks.Dequeue();
+							job();
+							lock (locker) {
+								Monitor.Pulse(locker);
+							}
+						}
+					}
+					JobAvailable = false;
+				}
+				double time = Timers.GetElapsedTime();
+				double wait = 1000.0 / 60.0 - time*1000 - 50;
+				if (wait > 0)
+					Thread.Sleep((int)(wait));
+			}
+			GL.PopMatrix();
+			GL.MatrixMode(MatrixMode.Projection);
+		}
+		private static bool JobAvailable = false;
+		private static object jobLock = new object();
+		private static Queue<ThreadStart> jobs;
+		private static Queue<object> locks;
+		internal static void RunInRenderThread(ThreadStart job){
+			object locker = new object();
+			lock (jobLock) {
+				JobAvailable = true;
+				jobs.Enqueue(job);
+				locks.Enqueue(locker);
+			}
+			lock (locker) {
+				Monitor.Wait(locker);
+			}
+		}
+
 		// start loop
 		private static void StartLoop() {
 			// load in advance

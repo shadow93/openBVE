@@ -13,7 +13,7 @@ namespace OpenBve {
 		internal static double TrainProgress;
 		internal static bool Cancel;
 		internal static bool Complete;
-//		private static Thread Loader = null;
+		private static Thread Loader = null;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
 		private static string CurrentTrainFolder;
@@ -23,7 +23,7 @@ namespace OpenBve {
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
-		internal static void LoadSynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
+		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
 			// members
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
@@ -35,10 +35,10 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
-//			Loader = new Thread(new ThreadStart(LoadThreaded));
-//			Loader.IsBackground = true;
-//			Loader.Start();
-			LoadThreaded();
+			Loader = new Thread(new ThreadStart(LoadThreaded));
+			Loader.IsBackground = true;
+			Loader.Start();
+//			LoadThreaded();
 			return;
 		}
 

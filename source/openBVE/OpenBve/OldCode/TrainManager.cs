@@ -476,8 +476,7 @@ namespace OpenBve {
 				World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
 			} else {
 				File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
-				lock (Renderer.LoadingLock) {
-					Screen.MakeCurrent();
+				MainLoop.RunInRenderThread(() => {
 					if (System.IO.File.Exists(File)) {
 						Panel2CfgParser.ParsePanel2Config(TrainPath, Encoding, Train);
 						World.CameraRestriction = World.CameraRestrictionMode.On;
@@ -490,8 +489,7 @@ namespace OpenBve {
 							World.CameraRestriction = World.CameraRestrictionMode.NotAvailable;
 						}
 					}
-					Renderer.LoadingRemakeCurrent = true;
-				}
+				});
 			}
 		}
 

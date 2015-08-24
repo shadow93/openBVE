@@ -211,7 +211,6 @@ namespace OpenBve {
 			// opengl
 			//GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			//GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			GL.MatrixMode(MatrixMode.Modelview);
 			//GL.PushMatrix();
 			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
 			GL.MatrixMode(MatrixMode.Modelview);
@@ -220,7 +219,10 @@ namespace OpenBve {
 			// prepare rendering logo
 			GL.BlendFunc(BlendingFactorSrc.SrcAlpha,BlendingFactorDest.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Blend); BlendEnabled = true;
-			GL.Disable(EnableCap.Lighting); LightingEnabled = false;/*
+			GL.Disable(EnableCap.Lighting); LightingEnabled = false;
+			GL.Disable(EnableCap.Fog);
+
+			/*
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();

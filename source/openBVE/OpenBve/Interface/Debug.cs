@@ -20,7 +20,7 @@ namespace OpenBve
 			internal readonly bool FileNotFound;
 			internal readonly string Text;
 		}
-		internal static LinkedList<Message> Messages = new LinkedList<Message>();
+		internal static List<Message> Messages = new List<Message>();
 		internal static int MessageCount {
 			get{
 				return Messages != null ? Messages.Count : 0;
@@ -30,7 +30,7 @@ namespace OpenBve
 			if (Type == MessageType.Warning & !Options.Current.ShowWarningMessages) return;
 			if (Type == MessageType.Error & !Options.Current.ShowErrorMessages) return;
 			Message msg = new Message(Type,FileNotFound,Text);
-			Messages.AddLast(msg);
+			Messages.Add(msg);
 
 			Program.AppendToLogFile(Text);
 		}
