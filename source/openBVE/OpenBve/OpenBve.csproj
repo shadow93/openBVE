@@ -19,7 +19,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <RunSourceAnalysis>False</RunSourceAnalysis>
-    <ApplicationIcon>..\icon.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <StartupObject>OpenBve.Program</StartupObject>
   </PropertyGroup>
@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="OldCode\formMain.Controls.cs">
       <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OldCode\formMain.cs">
       <SubType>Form</SubType>
@@ -129,15 +130,19 @@
     </Compile>
     <Compile Include="OldCode\formMain.GetAddOns.cs">
       <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OldCode\formMain.Options.cs">
       <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OldCode\formMain.Review.cs">
       <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OldCode\formMain.Start.cs">
       <DependentUpon>formMain.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OldCode\FunctionScripts.cs" />
     <Compile Include="OldCode\Game.cs" />
@@ -222,7 +227,8 @@
       <Name>OpenBveApi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Interface\" />
+    <Content Include="icon.ico" />
   </ItemGroup>
 </Project>
