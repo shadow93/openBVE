@@ -1,26 +1,39 @@
 ﻿using System;
-using Tao.Sdl;
+using SDL2;
+using System.Collections.Generic;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	/// <summary>Provides functions for dealing with joysticks.</summary>
-	internal static class Joysticks {
+	internal static class Joysticks
+	{
 		
 		// --- structures ---
 		
 		/// <summary>Represents a joystick.</summary>
-		internal struct Joystick {
+		internal class Joystick
+		{
 			// --- members ---
 			/// <summary>The textual representation of the joystick.</summary>
-			internal string Name;
+			internal string Name {
+				get{ return SDL.SDL_JoystickName(Handle); }
+			}
+
 			/// <summary>The SDL handle to the joystick.</summary>
-			internal IntPtr SdlHandle;
+			internal IntPtr Handle;
+			internal readonly int Index;
+			/// <summary>The SDL GUID of this joystick.</summary>
+			internal Guid GUID {
+				get{ return SDL.SDL_JoystickGetGUID(Handle); }
+			}
 			// --- constructors ---
 			/// <summary>Creates a new joystick.</summary>
-			/// <param name="name">The textual representation of the joystick.</param>
 			/// <param name="sdlHandle">The SDL handle to the joystick.</param>
-			internal Joystick(string name, IntPtr sdlHandle) {
-				this.Name = name;
-				this.SdlHandle = sdlHandle;
+			/// <param name="index">The SDL index of the joystick.</param>
+			internal Joystick(IntPtr sdlHandle, int index)
+			{
+				this.Handle = sdlHandle;
+				this.Index = index;
 			}
 		}
 		
@@ -31,60 +44,40 @@ namespace OpenBve {
 		private static bool Initialized = false;
 		
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>
-		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
+		internal static LinkedList<Joystick> AttachedJoysticks = new LinkedList<Joystick>();
 		
 		
 		// --- functions ---
 		
 		/// <summary>Initializes joysticks. A call to SDL_Init must have been made before calling this function. A call to Deinitialize must be made when terminating the program.</summary>
 		/// <returns>Whether initializing joysticks was successful.</returns>
-		internal static bool Initialize() {
-			if (!Initialized) {
-				if (Sdl.SDL_Init(Sdl.SDL_INIT_JOYSTICK) != 0) {
-					return false;
-				} else {
-					int count = Sdl.SDL_NumJoysticks();
-					AttachedJoysticks = new Joystick[count];
-					for (int i = 0; i < count; i++) {
-						string name = Sdl.SDL_JoystickName(i);
-						/* Due to an apparent bug in Tao or SDL, the joystick
-						 * name returned is actually ASCII packed in UTF-16. */
-						char[] characters = new char[2 * name.Length];
-						for (int j = 0; j < name.Length; j++) {
-							int value = (int)name[j];
-							characters[2 * j + 0] = (char)(value & 0xFF);
-							characters[2 * j + 1] = (char)(value >> 8);
-						}
-						AttachedJoysticks[i].Name = null;
-						for (int j = 0; j < characters.Length; j++) {
-							if (characters[j] == '\0') {
-								AttachedJoysticks[i].Name = new string(characters, 0, j);
-							}
-						}
-						if (AttachedJoysticks[i].Name == null) {
-							AttachedJoysticks[i].Name = new string(characters);
-						}
-						AttachedJoysticks[i].SdlHandle = Sdl.SDL_JoystickOpen(i);
-					}
-					Initialized = true;
-					return true;
-				}
-			} else {
+		internal static bool Initialize()
+		{
+			if (Initialized)
 				return true;
+			if (SDL.SDL_InitSubSystem(SDL.SDL_INIT_JOYSTICK) != 0)
+				return false;
+			int count = SDL.SDL_NumJoysticks();
+			for (int i = 0; i < count; i++) {
+				IntPtr handle = SDL.SDL_JoystickOpen(i);
+				AttachedJoysticks.AddLast(new Joystick(handle, i));
 			}
+			Initialized = true;
+			return true;
 		}
-		
+
 		/// <summary>Deinitializes joysticks.</summary>
-		internal static void Deinitialize() {
+		internal static void Deinitialize()
+		{
 			if (Initialized) {
-				for (int i = 0; i < AttachedJoysticks.Length; i++) {
-					Sdl.SDL_JoystickClose(AttachedJoysticks[i].SdlHandle);
+				foreach(var joy in AttachedJoysticks) {
+					SDL.SDL_JoystickClose(joy.Handle);
 				}
-				AttachedJoysticks = new Joystick[] { };
-				Sdl.SDL_QuitSubSystem(Sdl.SDL_INIT_JOYSTICK);
+				AttachedJoysticks.Clear();
+				SDL.SDL_QuitSubSystem(SDL.SDL_INIT_JOYSTICK);
 				Initialized = false;
 			}
 		}
-		
+
 	}
 }

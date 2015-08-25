@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Tao.Sdl;
-
+using System.Globalization;
+using SDL2;
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
 	internal static partial class Program {
 
 		// --- members ---
-
+		/// <summary>The invariant culture.</summary>
+		internal static readonly CultureInfo InvariantCulture = CultureInfo.InvariantCulture;
 		/// <summary>Whether the program is currently running on Mono. This is of interest for the Windows Forms main menu which behaves differently on Mono than on Microsoft .NET.</summary>
 		internal static bool CurrentlyRunningOnMono = false;
-		
+
 		/// <summary>Whether the program is currently running on Microsoft Windows or compatible. This is of interest for whether running Win32 plugins is possible.</summary>
 		internal static bool CurrentlyRunningOnWindows = false;
 
@@ -32,7 +30,7 @@ namespace OpenBve {
 		/// <summary>The random number generator used by this program.</summary>
 		internal static Random RandomNumberGenerator = new Random();
 
-		
+
 		// --- functions ---
 		
 		/// <summary>Is executed when the program starts.</summary>
@@ -43,7 +41,7 @@ namespace OpenBve {
 			Application.SetCompatibleTextRenderingDefault(false);
 			// --- determine the running environment ---
 			CurrentlyRunningOnMono = Type.GetType("Mono.Runtime") != null;
-			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S | Environment.OSVersion.Platform == PlatformID.Win32Windows | Environment.OSVersion.Platform == PlatformID.Win32NT;
+			CurrentlyRunningOnWindows = Environment.OSVersion.Platform == PlatformID.Win32S || Environment.OSVersion.Platform == PlatformID.Win32Windows || Environment.OSVersion.Platform == PlatformID.Win32NT;
 			CurrentHost = new Host();
 			try {
 				FileSystem = FileSystem.FromCommandLineArgs(args);
@@ -55,23 +53,23 @@ namespace OpenBve {
 			// --- set up packages ---
 			SetPackageLookupDirectories();
 			// --- load options and controls ---
-			Interface.LoadOptions();
-			Interface.LoadControls(null, out Interface.CurrentControls);
+			Options.LoadOptions();
+			Controls.LoadControls(null, out Controls.CurrentControls);
 			{
 				string folder = Program.FileSystem.GetDataFolder("Controls");
 				string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
-				Interface.Control[] controls;
-				Interface.LoadControls(file, out controls);
-				Interface.AddControls(ref Interface.CurrentControls, controls);
+				Controls.Control[] controls;
+				Controls.LoadControls(file, out controls);
+				Controls.AddControls(ref Controls.CurrentControls, controls);
 			}
 			// --- load language ---
 			{
 				string folder = Program.FileSystem.GetDataFolder("Languages");
-				string file = OpenBveApi.Path.CombineFile(folder, Interface.CurrentOptions.LanguageCode + ".cfg");
+				string file = OpenBveApi.Path.CombineFile(folder, Options.Current.LanguageCode + ".cfg");
 				if (!System.IO.File.Exists(file)) {
 					file = OpenBveApi.Path.CombineFile(folder, "en-US.cfg");
 				}
-				Interface.LoadLanguage(file);
+				Strings.LoadLanguage(file);
 			}
 			// --- check the command-line arguments for route and train ---
 			formMain.MainDialogResult result = new formMain.MainDialogResult();
@@ -79,18 +77,18 @@ namespace OpenBve {
 				if (args[i].StartsWith("/route=", StringComparison.OrdinalIgnoreCase)) {
 					result.RouteFile = args[i].Substring(7);
 					result.RouteEncoding = System.Text.Encoding.UTF8;
-					for (int j = 0; j < Interface.CurrentOptions.RouteEncodings.Length; j++) {
-						if (string.Compare(Interface.CurrentOptions.RouteEncodings[j].Value, result.RouteFile, StringComparison.InvariantCultureIgnoreCase) == 0) {
-							result.RouteEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.RouteEncodings[j].Codepage);
+					for (int j = 0; j < Options.Current.RouteEncodings.Length; j++) {
+						if (string.Compare(Options.Current.RouteEncodings[j].Value, result.RouteFile, StringComparison.InvariantCultureIgnoreCase) == 0) {
+							result.RouteEncoding = System.Text.Encoding.GetEncoding(Options.Current.RouteEncodings[j].Codepage);
 							break;
 						}
 					}
 				} else if (args[i].StartsWith("/train=", StringComparison.OrdinalIgnoreCase)) {
 					result.TrainFolder = args[i].Substring(7);
 					result.TrainEncoding = System.Text.Encoding.UTF8;
-					for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
-						if (string.Compare(Interface.CurrentOptions.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
-							result.TrainEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.TrainEncodings[j].Codepage);
+					for (int j = 0; j < Options.Current.TrainEncodings.Length; j++) {
+						if (string.Compare(Options.Current.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
+							result.TrainEncoding = System.Text.Encoding.GetEncoding(Options.Current.TrainEncodings[j].Codepage);
 							break;
 						}
 					}
@@ -108,7 +106,7 @@ namespace OpenBve {
 				}
 			}
 			// --- if a route was provided but no train, try to use the route default ---
-			if (result.RouteFile != null & result.TrainFolder == null) {
+			if (result.RouteFile != null && result.TrainFolder == null) {
 				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, true);
 				if (Game.TrainName != null && Game.TrainName.Length != 0) {
@@ -122,9 +120,9 @@ namespace OpenBve {
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;
-									for (int j = 0; j < Interface.CurrentOptions.TrainEncodings.Length; j++) {
-										if (string.Compare(Interface.CurrentOptions.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
-											result.TrainEncoding = System.Text.Encoding.GetEncoding(Interface.CurrentOptions.TrainEncodings[j].Codepage);
+									for (int j = 0; j < Options.Current.TrainEncodings.Length; j++) {
+										if (string.Compare(Options.Current.TrainEncodings[j].Value, result.TrainFolder, StringComparison.InvariantCultureIgnoreCase) == 0) {
+											result.TrainEncoding = System.Text.Encoding.GetEncoding(Options.Current.TrainEncodings[j].Codepage);
 											break;
 										}
 									}
@@ -142,9 +140,12 @@ namespace OpenBve {
 				}
 				Game.Reset(false);
 			}
+			SDL.SDL_Init(0);
 			// --- show the main menu if necessary ---
-			if (result.RouteFile == null | result.TrainFolder == null) {
+			if (result.RouteFile == null || result.TrainFolder == null) {
 				// begin HACK //
+				if (SDL.SDL_InitSubSystem(SDL.SDL_INIT_VIDEO) != 0)
+					MessageBox.Show("Cannot initialize SDL!","openBVE");
 				if (!Joysticks.Initialize()) {
 					MessageBox.Show("SDL failed to initialize the joystick subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					return;
@@ -184,7 +185,7 @@ namespace OpenBve {
 			// --- restart the program if necessary ---
 			if (RestartArguments != null) {
 				string arguments;
-				if (FileSystem.RestartArguments.Length != 0 & RestartArguments.Length != 0) {
+				if (FileSystem.RestartArguments.Length != 0 && RestartArguments.Length != 0) {
 					arguments = FileSystem.RestartArguments + " " + RestartArguments;
 				} else {
 					arguments = FileSystem.RestartArguments + RestartArguments;
@@ -196,7 +197,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		
+
 		/// <summary>Initializes the program. A matching call to deinitialize must be made when the program is terminated.</summary>
 		/// <returns>Whether the initialization was successful.</returns>
 		private static bool Initialize() {
@@ -218,23 +219,23 @@ namespace OpenBve {
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
 			World.ExtraViewingDistance = 50.0;
-			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			World.ForwardViewingDistance = (double)Options.Current.ViewingDistance;
 			World.BackwardViewingDistance = 0.0;
-			World.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			World.BackgroundImageDistance = (double)Options.Current.ViewingDistance;
 			// end HACK //
 			ClearLogFile();
 			return true;
 		}
-		
+
 		/// <summary>Deinitializes the program.</summary>
 		private static void Deinitialize() {
 			Plugins.UnloadPlugins();
 			Sounds.Deinitialize();
 			Joysticks.Deinitialize();
 			Screen.Deinitialize();
-			Sdl.SDL_Quit();
+			SDL.SDL_Quit();
 		}
-		
+
 		/// <summary>Provides the API with lookup directories for all installed packages.</summary>
 		internal static void SetPackageLookupDirectories() {
 			int size = 16;
@@ -259,7 +260,7 @@ namespace OpenBve {
 			Array.Resize<string>(ref directories, count);
 			SetPackageLookupDirectoriesAuthentication = OpenBveApi.Path.SetPackageLookupDirectories(names, directories, SetPackageLookupDirectoriesAuthentication);
 		}
-		
+
 		/// <summary>Clears the log file.</summary>
 		internal static void ClearLogFile() {
 			try {
@@ -267,7 +268,7 @@ namespace OpenBve {
 				System.IO.File.WriteAllText(file, string.Empty, new System.Text.UTF8Encoding(true));
 			} catch { }
 		}
-		
+
 		/// <summary>Appends the specified text to the log file.</summary>
 		/// <param name="text">The text.</param>
 		internal static void AppendToLogFile(string text) {
@@ -276,6 +277,5 @@ namespace OpenBve {
 				System.IO.File.AppendAllText(file, text + "\n", new System.Text.UTF8Encoding(false));
 			} catch { }
 		}
-
 	}
 }

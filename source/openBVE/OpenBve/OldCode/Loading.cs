@@ -13,7 +13,7 @@ namespace OpenBve {
 		internal static double TrainProgress;
 		internal static bool Cancel;
 		internal static bool Complete;
-//		private static Thread Loader = null;
+		private static Thread Loader = null;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
 		private static string CurrentTrainFolder;
@@ -23,7 +23,7 @@ namespace OpenBve {
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
-		internal static void LoadSynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
+		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
 			// members
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
@@ -35,10 +35,10 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
-//			Loader = new Thread(new ThreadStart(LoadThreaded));
-//			Loader.IsBackground = true;
-//			Loader.Start();
-			LoadThreaded();
+			Loader = new Thread(new ThreadStart(LoadThreaded));
+			Loader.IsBackground = true;
+			Loader.Start();
+//			LoadThreaded();
 			return;
 		}
 
@@ -71,12 +71,12 @@ namespace OpenBve {
 				for (int i = 0; i < TrainManager.Trains.Length; i++) {
 					if (TrainManager.Trains[i] != null && TrainManager.Trains[i].Plugin != null) {
 						if (TrainManager.Trains[i].Plugin.LastException != null) {
-							Interface.AddMessage(Interface.MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
+							Debug.AddMessage(Debug.MessageType.Critical, false, "The train plugin " + TrainManager.Trains[i].Plugin.PluginTitle + " caused a critical error in the route and train loader: " + TrainManager.Trains[i].Plugin.LastException.Message);
 							return;
 						}
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
+				Debug.AddMessage(Debug.MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 			}
 			#endif
 			Complete = true;
@@ -84,7 +84,7 @@ namespace OpenBve {
 		private static void LoadEverythingThreaded() {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 //			if (RailwayFolder == null) {
-//				Interface.AddMessage(Interface.MessageType.Critical, false, "The Railway folder could not be found. Please check your folder structure.");
+//				Debug.AddMessage(Debug.MessageType.Critical, false, "The Railway folder could not be found. Please check your folder structure.");
 //				return;
 //			}
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
@@ -100,7 +100,7 @@ namespace OpenBve {
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			Thread.Sleep(1); if (Cancel) return;
 			Game.CalculateSeaLevelConstants();
 			if (Game.BogusPretrainInstructions.Length != 0) {
 				double t = Game.BogusPretrainInstructions[0].Time;
@@ -122,7 +122,7 @@ namespace OpenBve {
 			}
 			RouteProgress = 1.0;
 			// initialize trains
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
 				TrainManager.Trains[k] = new TrainManager.Train();
@@ -140,10 +140,10 @@ namespace OpenBve {
 				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
 					// bogus train
 					string Folder = Program.FileSystem.GetDataFolder("Compatibility", "PreTrain");
-					TrainDatParser.ParseTrainData(Folder, System.Text.Encoding.UTF8, TrainManager.Trains[k]);
-					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					TrainDatParser.ParseTrainData(Folder, Encoding.UTF8, TrainManager.Trains[k]);
+					Thread.Sleep(1); if (Cancel) return;
 					SoundCfgParser.LoadNoSound(TrainManager.Trains[k]);
-					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					Thread.Sleep(1); if (Cancel) return;
 					TrainProgressCurrentWeight = 0.3 / TrainProgressMaximum;
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 				} else {
@@ -151,11 +151,11 @@ namespace OpenBve {
 					TrainProgressCurrentWeight = 0.1 / TrainProgressMaximum;
 					TrainDatParser.ParseTrainData(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
-					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					Thread.Sleep(1); if (Cancel) return;
 					TrainProgressCurrentWeight = 0.2 / TrainProgressMaximum;
 					SoundCfgParser.ParseSoundConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
-					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					Thread.Sleep(1); if (Cancel) return;
 					// door open/close speed
 					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
 						if (TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency <= 0.0) {
@@ -223,18 +223,18 @@ namespace OpenBve {
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
 					TrainManager.ParsePanelConfig(CurrentTrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
-					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					Thread.Sleep(1); if (Cancel) return;
 				}
 				// add exterior section
 				if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus) {
 					ObjectManager.UnifiedObject[] CarObjects;
 					ExtensionsCfgParser.ParseExtensionsConfig(CurrentTrainFolder, CurrentTrainEncoding, out CarObjects, TrainManager.Trains[k]);
-					System.Threading.Thread.Sleep(1); if (Cancel) return;
+					Thread.Sleep(1); if (Cancel) return;
 					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
 						if (CarObjects[i] == null) {
 							// load default exterior object
 							string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
+							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, Encoding.UTF8, ObjectManager.ObjectLoadMode.Normal, false, false, false);
 							if (so == null) {
 								CarObjects[i] = null;
 							} else {
@@ -254,7 +254,7 @@ namespace OpenBve {
 								TrainManager.Trains[k].Cars[i].CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
 								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0] = new ObjectManager.AnimatedObject();
 								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States = new ObjectManager.AnimatedObjectState[1];
-								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States[0].Position = new Vector3(0.0, 0.0, 0.0);
+								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States[0].Position = new Vector3D(0.0, 0.0, 0.0);
 								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].States[0].Object = s;
 								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].CurrentState = 0;
 								TrainManager.Trains[k].Cars[i].CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
@@ -294,7 +294,7 @@ namespace OpenBve {
 			}
 			TrainProgress = 1.0;
 			// finished created objects
-			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			Thread.Sleep(1); if (Cancel) return;
 			ObjectManager.FinishCreatingObjects();
 			// update sections
 			if (Game.Sections.Length > 0) {

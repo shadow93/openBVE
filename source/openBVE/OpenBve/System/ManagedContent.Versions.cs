@@ -32,11 +32,10 @@ namespace OpenBve {
 			for (int i = 0; i < length; i++) {
 				int digitA = i < digitsA.Length ? digitsA[i] : 0;
 				int digitB = i < digitsB.Length ? digitsB[i] : 0;
-				if (digitA < digitB) {
+				if (digitA < digitB)
 					return -1;
-				} else if (digitA > digitB) {
+				if (digitA > digitB)
 					return 1;
-				}
 			}
 			return Math.Sign(string.Compare(suffixA, suffixB, StringComparison.OrdinalIgnoreCase));
 		}
@@ -66,11 +65,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			if (start < version.Length) {
-				suffix = version.Substring(start);
-			} else {
-				suffix = string.Empty;
-			}
+			suffix = start < version.Length ? version.Substring(start) : string.Empty;
 			Array.Resize<int>(ref digits, digitCount);
 		}
 		

@@ -14,10 +14,10 @@ namespace OpenBve {
 		private void buttonScoreExport_Click(object sender, EventArgs e) {
 			SaveFileDialog Dialog = new SaveFileDialog();
 			Dialog.OverwritePrompt = true;
-			Dialog.Filter = Interface.GetInterfaceString("dialog_textfiles") + "|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
+			Dialog.Filter = Strings.GetInterfaceString("dialog_textfiles") + "|*.txt|" + Strings.GetInterfaceString("dialog_allfiles") + "|*";
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
-					Interface.ExportScore(Dialog.FileName);
+					BlackBox.ExportScore(Dialog.FileName);
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
@@ -34,13 +34,13 @@ namespace OpenBve {
 			SaveFileDialog Dialog = new SaveFileDialog();
 			Dialog.OverwritePrompt = true;
 			if (comboboxBlackBoxFormat.SelectedIndex == 0) {
-				Dialog.Filter = Interface.GetInterfaceString("dialog_csvfiles") + "|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
+				Dialog.Filter = Strings.GetInterfaceString("dialog_csvfiles") + "|*.txt|" + Strings.GetInterfaceString("dialog_allfiles") + "|*";
 			} else {
-				Dialog.Filter = Interface.GetInterfaceString("dialog_textfiles") + "|*.txt|" + Interface.GetInterfaceString("dialog_allfiles") + "|*";
+				Dialog.Filter = Strings.GetInterfaceString("dialog_textfiles") + "|*.txt|" + Strings.GetInterfaceString("dialog_allfiles") + "|*";
 			}
 			if (Dialog.ShowDialog() == DialogResult.OK) {
 				try {
-					Interface.ExportBlackBox(Dialog.FileName, (Interface.BlackBoxFormat)comboboxBlackBoxFormat.SelectedIndex);
+					BlackBox.ExportBlackBox(Dialog.FileName, (BlackBox.BlackBoxFormat)comboboxBlackBoxFormat.SelectedIndex);
 				} catch (Exception ex) {
 					MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				}
@@ -66,7 +66,7 @@ namespace OpenBve {
 					Item.SubItems.Add(Game.ScoreLogs[i].Position.ToString("0", Culture));
 					Item.SubItems.Add(Game.ScoreLogs[i].Value.ToString(Culture));
 					Item.SubItems.Add(sum.ToString(Culture));
-					Item.SubItems.Add(Interface.GetScoreText(Game.ScoreLogs[i].TextToken));
+					Item.SubItems.Add(BlackBox.GetScoreText(Game.ScoreLogs[i].TextToken));
 				}
 			}
 			listviewScore.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);

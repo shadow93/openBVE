@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using OpenBveApi.Colors;
-using Tao.OpenGl;
+using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve {
 	internal static partial class Renderer {
@@ -14,32 +14,44 @@ namespace OpenBve {
 		internal static void DrawRectangle(Textures.Texture texture, Point point, Size size, Nullable<Color128> color) {
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
 			if (texture == null || !Textures.LoadTexture(texture, Textures.OpenGlTextureWrapMode.ClampClamp)) {
-				Gl.glDisable(Gl.GL_TEXTURE_2D);
+				GL.Disable(EnableCap.Texture2D);
 				if (color.HasValue) {
-					Gl.glColor4d(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
+					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
 				}
-				Gl.glBegin(Gl.GL_QUADS);
-				Gl.glVertex2d(point.X, point.Y);
-				Gl.glVertex2d(point.X + size.Width, point.Y);
-				Gl.glVertex2d(point.X + size.Width, point.Y + size.Height);
-				Gl.glVertex2d(point.X, point.Y + size.Height);
-				Gl.glEnd();
+				/*
+				// test triangles instead of quads
+				// future todo: indexed vbo
+				GL.Begin(PrimitiveType.Triangles);
+				GL.Vertex2(point.X, point.Y);
+				GL.Vertex2(point.X + size.Width, point.Y);
+				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
+				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
+				GL.Vertex2(point.X, point.Y + size.Height);
+				GL.Vertex2(point.X, point.Y);
+				GL.End();
+				*/
+				GL.Begin(PrimitiveType.Quads); // FIXME immediate rendering! quads!
+				GL.Vertex2(point.X, point.Y);
+				GL.Vertex2(point.X + size.Width, point.Y);
+				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
+				GL.Vertex2(point.X, point.Y + size.Height);
+				GL.End();
 			} else {
-				Gl.glEnable(Gl.GL_TEXTURE_2D);
-				Gl.glBindTexture(Gl.GL_TEXTURE_2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)Textures.OpenGlTextureWrapMode.ClampClamp].Name);
 				if (color.HasValue) {
-					Gl.glColor4d(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
+					GL.Color4(color.Value.R, color.Value.G, color.Value.B, color.Value.A);
 				}
-				Gl.glBegin(Gl.GL_QUADS);
-				Gl.glTexCoord2f(0.0f, 0.0f);
-				Gl.glVertex2d(point.X, point.Y);
-				Gl.glTexCoord2f(1.0f, 0.0f);
-				Gl.glVertex2d(point.X + size.Width, point.Y);
-				Gl.glTexCoord2f(1.0f, 1.0f);
-				Gl.glVertex2d(point.X + size.Width, point.Y + size.Height);
-				Gl.glTexCoord2f(0.0f, 1.0f);
-				Gl.glVertex2d(point.X, point.Y + size.Height);
-				Gl.glEnd();
+				GL.Begin(PrimitiveType.Quads);// FIXME immediate rendering! quads!
+				GL.TexCoord2(0.0f, 0.0f);
+				GL.Vertex2(point.X, point.Y);
+				GL.TexCoord2(1.0f, 0.0f);
+				GL.Vertex2(point.X + size.Width, point.Y);
+				GL.TexCoord2(1.0f, 1.0f);
+				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
+				GL.TexCoord2(0.0f, 1.0f);
+				GL.Vertex2(point.X, point.Y + size.Height);
+				GL.End();
 			}
 		}
 		

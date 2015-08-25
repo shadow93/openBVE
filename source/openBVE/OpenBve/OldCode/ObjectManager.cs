@@ -44,33 +44,33 @@ namespace OpenBve {
 			internal Damping(double NaturalFrequency, double DampingRatio) {
 				if (NaturalFrequency < 0.0) {
 					throw new ArgumentException("NaturalFrequency must be non-negative in the constructor of the Damping class.");
-				} else if (DampingRatio < 0.0) {
-					throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
-				} else {
-					this.NaturalFrequency = NaturalFrequency;
-					this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
-					this.DampingRatio = DampingRatio;
-					if (DampingRatio < 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
-					} else if (DampingRatio == 1.0) {
-						this.NaturalDampingFrequency = NaturalFrequency;
-					} else {
-						this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
-					}
-					this.OriginalAngle = 0.0;
-					this.OriginalDerivative = 0.0;
-					this.TargetAngle = 0.0;
-					this.CurrentAngle = 0.0;
-					this.CurrentValue = 1.0;
-					this.CurrentTimeDelta = 0.0;
 				}
+				if (DampingRatio < 0.0) {
+					throw new ArgumentException("DampingRatio must be non-negative in the constructor of the Damping class.");
+				}
+				this.NaturalFrequency = NaturalFrequency;
+				this.NaturalTime = NaturalFrequency != 0.0 ? 1.0 / NaturalFrequency : 0.0;
+				this.DampingRatio = DampingRatio;
+				if (DampingRatio < 1.0) {
+					this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(1.0 - DampingRatio * DampingRatio);
+				} else if (DampingRatio == 1.0) {
+					this.NaturalDampingFrequency = NaturalFrequency;
+				} else {
+					this.NaturalDampingFrequency = NaturalFrequency * Math.Sqrt(DampingRatio * DampingRatio - 1.0);
+				}
+				this.OriginalAngle = 0.0;
+				this.OriginalDerivative = 0.0;
+				this.TargetAngle = 0.0;
+				this.CurrentAngle = 0.0;
+				this.CurrentValue = 1.0;
+				this.CurrentTimeDelta = 0.0;
 			}
 			internal Damping Clone() {
 				return (Damping)this.MemberwiseClone();
 			}
 		}
 		internal struct AnimatedObjectState {
-			internal Vector3 Position;
+			internal Vector3D Position;
 			internal ObjectManager.StaticObject Object;
 		}
 		internal class AnimatedObject {
@@ -78,30 +78,30 @@ namespace OpenBve {
 			internal AnimatedObjectState[] States;
 			internal FunctionScripts.FunctionScript StateFunction;
 			internal int CurrentState;
-			internal Vector3 TranslateXDirection;
-			internal Vector3 TranslateYDirection;
-			internal Vector3 TranslateZDirection;
+			internal Vector3D TranslateXDirection;
+			internal Vector3D TranslateYDirection;
+			internal Vector3D TranslateZDirection;
 			internal FunctionScripts.FunctionScript TranslateXFunction;
 			internal FunctionScripts.FunctionScript TranslateYFunction;
 			internal FunctionScripts.FunctionScript TranslateZFunction;
-			internal Vector3 RotateXDirection;
-			internal Vector3 RotateYDirection;
-			internal Vector3 RotateZDirection;
+			internal Vector3D RotateXDirection;
+			internal Vector3D RotateYDirection;
+			internal Vector3D RotateZDirection;
 			internal FunctionScripts.FunctionScript RotateXFunction;
 			internal FunctionScripts.FunctionScript RotateYFunction;
 			internal FunctionScripts.FunctionScript RotateZFunction;
 			internal Damping RotateXDamping;
 			internal Damping RotateYDamping;
 			internal Damping RotateZDamping;
-			internal World.Vector2D TextureShiftXDirection;
-			internal World.Vector2D TextureShiftYDirection;
+			internal Vector2D TextureShiftXDirection;
+			internal Vector2D TextureShiftYDirection;
 			internal FunctionScripts.FunctionScript TextureShiftXFunction;
 			internal FunctionScripts.FunctionScript TextureShiftYFunction;
 			internal bool LEDClockwiseWinding;
 			internal double LEDInitialAngle;
 			internal double LEDLastAngle;
 			/// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
-			internal Vector3[] LEDVectors;
+			internal Vector3D[] LEDVectors;
 			internal FunctionScripts.FunctionScript LEDFunction;
 			internal double RefreshRate;
 			internal double CurrentTrackZOffset;
@@ -148,7 +148,7 @@ namespace OpenBve {
 				Result.LEDInitialAngle = this.LEDInitialAngle;
 				Result.LEDLastAngle = this.LEDLastAngle;
 				if (this.LEDVectors != null) {
-					Result.LEDVectors = new Vector3[this.LEDVectors.Length];
+					Result.LEDVectors = new Vector3D[this.LEDVectors.Length];
 					for (int i = 0; i < this.LEDVectors.Length; i++) {
 						Result.LEDVectors[i] = this.LEDVectors[i];
 					}
@@ -205,7 +205,7 @@ namespace OpenBve {
 			}
 		}
 
-		internal static void UpdateAnimatedObject(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed) {
+		internal static void UpdateAnimatedObject(ref AnimatedObject Object, bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3D Position, Vector3D Direction, Vector3D Up, Vector3D Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed) {
 			int s = Object.CurrentState;
 			int i = Object.ObjectIndex;
 			// state change
@@ -388,7 +388,7 @@ namespace OpenBve {
 								double cx = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].X + t * Object.LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Y + t * Object.LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Z + t * Object.LEDVectors[currentEdge].Z;
-								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
+								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3D(cx, cy, cz);
 								v++;
 							}
 							{
@@ -402,7 +402,7 @@ namespace OpenBve {
 								double lx = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].X + t * Object.LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Y + t * Object.LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Z + t * Object.LEDVectors[lastEdge].Z;
-								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
+								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3D(lx, ly, lz);
 								v++;
 							}
 						} else {
@@ -418,7 +418,7 @@ namespace OpenBve {
 								double cx = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].X + t * Object.LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Y + t * Object.LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Z + t * Object.LEDVectors[currentEdge].Z;
-								Object.States[s].Object.Mesh.Vertices[v + 0].Coordinates = new Vector3(cx, cy, cz);
+								Object.States[s].Object.Mesh.Vertices[v + 0].Coordinates = new Vector3D(cx, cy, cz);
 								Object.States[s].Object.Mesh.Vertices[v + 1].Coordinates = Object.LEDVectors[currentEdge];
 								v += 2;
 							}
@@ -441,7 +441,7 @@ namespace OpenBve {
 								double ly = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Y + t * Object.LEDVectors[lastEdge % 4].Y;
 								double lz = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Z + t * Object.LEDVectors[lastEdge % 4].Z;
 								Object.States[s].Object.Mesh.Vertices[v + 0].Coordinates = Object.LEDVectors[(lastEdge + 3) % 4];
-								Object.States[s].Object.Mesh.Vertices[v + 1].Coordinates = new Vector3(lx, ly, lz);
+								Object.States[s].Object.Mesh.Vertices[v + 1].Coordinates = new Vector3D(lx, ly, lz);
 								v += 2;
 							}
 						}
@@ -472,7 +472,7 @@ namespace OpenBve {
 								double lx = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].X + t * Object.LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Y + t * Object.LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Z + t * Object.LEDVectors[lastEdge].Z;
-								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
+								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3D(lx, ly, lz);
 								v++;
 							}
 							{
@@ -487,7 +487,7 @@ namespace OpenBve {
 								double cx = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].X + t * Object.LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Y + t * Object.LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Z + t * Object.LEDVectors[currentEdge].Z;
-								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
+								Object.States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3D(cx, cy, cz);
 								v++;
 							}
 						} else {
@@ -504,7 +504,7 @@ namespace OpenBve {
 								double cy = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Y + t * Object.LEDVectors[currentEdge % 4].Y;
 								double cz = (1.0 - t) * Object.LEDVectors[(currentEdge + 3) % 4].Z + t * Object.LEDVectors[currentEdge % 4].Z;
 								Object.States[s].Object.Mesh.Vertices[v + 0].Coordinates = Object.LEDVectors[(currentEdge + 3) % 4];
-								Object.States[s].Object.Mesh.Vertices[v + 1].Coordinates = new Vector3(cx, cy, cz);
+								Object.States[s].Object.Mesh.Vertices[v + 1].Coordinates = new Vector3D(cx, cy, cz);
 								v += 2;
 							}
 							for (int j = currentEdge - 1; j > lastEdge; j--) {
@@ -525,7 +525,7 @@ namespace OpenBve {
 								double lx = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].X + t * Object.LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Y + t * Object.LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * Object.LEDVectors[(lastEdge + 3) % 4].Z + t * Object.LEDVectors[lastEdge].Z;
-								Object.States[s].Object.Mesh.Vertices[v + 0].Coordinates = new Vector3(lx, ly, lz);
+								Object.States[s].Object.Mesh.Vertices[v + 0].Coordinates = new Vector3D(lx, ly, lz);
 								Object.States[s].Object.Mesh.Vertices[v + 1].Coordinates = Object.LEDVectors[lastEdge % 4];
 								v += 2;
 							}
@@ -576,7 +576,7 @@ namespace OpenBve {
 					ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal = Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
 				}
 				for (int h = 0; h < Object.States[s].Object.Mesh.Faces[k].Vertices.Length; h++) {
-					if (!Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal.IsZero()) {
+					if (!Object.States[s].Object.Mesh.Faces[k].Vertices[h].Normal.IsNullVector()) {
 						if (rotateX) {
 							World.Rotate(ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.X, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Y, ref ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h].Normal.Z, Object.RotateXDirection.X, Object.RotateXDirection.Y, Object.RotateXDirection.Z, cosX, sinX);
 						}
@@ -660,11 +660,11 @@ namespace OpenBve {
 
 		// animated world object
 		internal class AnimatedWorldObject {
-			internal Vector3 Position;
+			internal Vector3D Position;
 			internal double TrackPosition;
-			internal Vector3 Direction;
-			internal Vector3 Up;
-			internal Vector3 Side;
+			internal Vector3D Direction;
+			internal Vector3D Up;
+			internal Vector3D Side;
 			internal AnimatedObject Object;
 			internal int SectionIndex;
 			internal double Radius;
@@ -672,22 +672,22 @@ namespace OpenBve {
 		}
 		internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
 		internal static int AnimatedWorldObjectsUsed = 0;
-		internal static void CreateAnimatedWorldObjects(AnimatedObject[] Prototypes, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
+		internal static void CreateAnimatedWorldObjects(AnimatedObject[] Prototypes, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
 			bool[] free = new bool[Prototypes.Length];
 			bool anyfree = false;
 			for (int i = 0; i < Prototypes.Length; i++) {
 				free[i] = Prototypes[i].IsFreeOfFunctions();
-				if (free[i]) anyfree = true;
+				anyfree |= free[i];
 			}
 			if (anyfree) {
 				for (int i = 0; i < Prototypes.Length; i++) {
 					if (Prototypes[i].States.Length != 0) {
 						if (free[i]) {
-							Vector3 p = Position;
-							World.Transformation t = new OpenBve.World.Transformation(BaseTransformation, AuxTransformation);
-							Vector3 s = t.X;
-							Vector3 u = t.Y;
-							Vector3 d = t.Z;
+							Vector3D p = Position;
+							World.Transformation t = new World.Transformation(BaseTransformation, AuxTransformation);
+							Vector3D s = t.X;
+							Vector3D u = t.Y;
+							Vector3D d = t.Z;
 							p.X += Prototypes[i].States[0].Position.X * s.X + Prototypes[i].States[0].Position.Y * u.X + Prototypes[i].States[0].Position.Z * d.X;
 							p.Y += Prototypes[i].States[0].Position.X * s.Y + Prototypes[i].States[0].Position.Y * u.Y + Prototypes[i].States[0].Position.Z * d.Y;
 							p.Z += Prototypes[i].States[0].Position.X * s.Z + Prototypes[i].States[0].Position.Y * u.Z + Prototypes[i].States[0].Position.Z * d.Z;
@@ -706,7 +706,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal static int CreateAnimatedWorldObject(AnimatedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness) {
+		internal static int CreateAnimatedWorldObject(AnimatedObject Prototype, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness) {
 			int a = AnimatedWorldObjectsUsed;
 			if (a >= AnimatedWorldObjects.Length) {
 				Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
@@ -840,14 +840,14 @@ namespace OpenBve {
 						Result = AnimatedObjectParser.ReadObject(FileName, Encoding, LoadMode);
 						break;
 					default:
-						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
+					Debug.AddMessage(Debug.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
 				}
 				OptimizeObject(Result, PreserveVertices);
 				return Result;
 				#if !DEBUG
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
+				Debug.AddMessage(Debug.MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
 				return null;
 			}
 			#endif
@@ -887,17 +887,17 @@ namespace OpenBve {
 						Result = XObjectParser.ReadObject(FileName, Encoding, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
 						break;
 					case ".animated":
-						Interface.AddMessage(Interface.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
+						Debug.AddMessage(Debug.MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 						return null;
 					default:
-						Interface.AddMessage(Interface.MessageType.Error, false, "The file extension is not supported: " + FileName);
+						Debug.AddMessage(Debug.MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
 				}
 				OptimizeObject(Result, PreserveVertices);
 				return Result;
 				#if !DEBUG
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
+				Debug.AddMessage(Debug.MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
 				return null;
 			}
 			#endif
@@ -922,7 +922,7 @@ namespace OpenBve {
 			int v = Prototype.Mesh.Vertices.Length;
 			int m = Prototype.Mesh.Materials.Length;
 			int f = Prototype.Mesh.Faces.Length;
-			if (f >= Interface.CurrentOptions.ObjectOptimizationBasicThreshold) return;
+			if (f >= Options.Current.ObjectOptimizationBasicThreshold) return;
 			// eliminate invalid faces and reduce incomplete faces
 			for (int i = 0; i < f; i++) {
 				int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
@@ -1056,7 +1056,7 @@ namespace OpenBve {
 				}
 			}
 			// structure optimization
-			if (!PreserveVertices & f < Interface.CurrentOptions.ObjectOptimizationFullThreshold) {
+			if (!PreserveVertices & f < Options.Current.ObjectOptimizationFullThreshold) {
 				// create TRIANGLES and QUADS from POLYGON
 				for (int i = 0; i < f; i++) {
 					int type = Prototype.Mesh.Faces[i].Flags & World.MeshFace.FaceTypeMask;
@@ -1352,10 +1352,11 @@ namespace OpenBve {
 		}
 
 		// join objects
-		internal static void JoinObjects(ref StaticObject Base, StaticObject Add) {
-			if (Base == null & Add == null) {
+		internal static void JoinObjects(ref StaticObject Base, StaticObject Add)
+		{
+			if (Base == null && Add == null)
 				return;
-			} else if (Base == null) {
+			if (Base == null) {
 				Base = CloneObject(Add);
 			} else if (Add != null) {
 				int mf = Base.Mesh.Faces.Length;
@@ -1381,10 +1382,10 @@ namespace OpenBve {
 		}
 
 		// create object
-		internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition) {
+		internal static void CreateObject(UnifiedObject Prototype, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition) {
 			CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
 		}
-		internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
+		internal static void CreateObject(UnifiedObject Prototype, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
 			if (Prototype is StaticObject) {
 				StaticObject s = (StaticObject)Prototype;
 				CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
@@ -1395,10 +1396,10 @@ namespace OpenBve {
 		}
 
 		// create static object
-		internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition) {
+		internal static int CreateStaticObject(StaticObject Prototype, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition) {
 			return CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
 		}
-		internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
+		internal static int CreateStaticObject(StaticObject Prototype, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
 			int a = ObjectsUsed;
 			if (a >= Objects.Length) {
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
@@ -1426,7 +1427,7 @@ namespace OpenBve {
 			ObjectsUsed++;
 			return a;
 		}
-		internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
+		internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3D Position, World.Transformation BaseTransformation, World.Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials) {
 			Object = new StaticObject();
 			Object.StartingDistance = float.MaxValue;
 			Object.EndingDistance = float.MinValue;
@@ -1498,7 +1499,7 @@ namespace OpenBve {
 			}
 			if (BlockLength != 0.0) {
 				checked {
-					Object.GroupIndex = (short)Mod(Math.Floor(Object.StartingDistance / BlockLength), Math.Ceiling(Interface.CurrentOptions.ViewingDistance / BlockLength));
+					Object.GroupIndex = (short)Mod(Math.Floor(Object.StartingDistance / BlockLength), Math.Ceiling(Options.Current.ViewingDistance / BlockLength));
 				}
 			}
 		}
@@ -1524,8 +1525,7 @@ namespace OpenBve {
 
 		// clone object
 		internal static StaticObject CloneObject(StaticObject Prototype) {
-			if (Prototype == null) return null;
-			return CloneObject(Prototype, null, null);
+			return Prototype == null ? null : CloneObject(Prototype, null, null);
 		}
 		/// <summary>Creates a clone of the specified object.</summary>
 		/// <param name="Prototype">The prototype.</param>
@@ -1557,16 +1557,9 @@ namespace OpenBve {
 			Result.Mesh.Materials = new World.MeshMaterial[Prototype.Mesh.Materials.Length];
 			for (int j = 0; j < Prototype.Mesh.Materials.Length; j++) {
 				Result.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-				if (DaytimeTexture != null) {
-					Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
-				} else {
-					Result.Mesh.Materials[j].DaytimeTexture = Prototype.Mesh.Materials[j].DaytimeTexture;
-				}
-				if (DaytimeTexture != null) {
-					Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
-				} else {
-					Result.Mesh.Materials[j].NighttimeTexture = Prototype.Mesh.Materials[j].NighttimeTexture;
-				}
+				Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture ?? Prototype.Mesh.Materials[j].DaytimeTexture;
+				// TODO nighttime texture is used now for null check instead of daytime texture
+				Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture ?? Prototype.Mesh.Materials[j].NighttimeTexture;
 			}
 			return Result;
 		}

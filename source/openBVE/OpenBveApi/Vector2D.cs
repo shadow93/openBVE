@@ -3,8 +3,8 @@
 using System;
 
 namespace OpenBveApi.Math {
-	/// <summary>Represents a two-dimensional vector.</summary>
-	public struct Vector2 {
+	/// <summary>Represents a two-dimensional vector with double precision.</summary>
+	public struct Vector2D {
 		
 		// --- members ---
 		
@@ -20,7 +20,7 @@ namespace OpenBveApi.Math {
 		/// <summary>Creates a new two-dimensional vector.</summary>
 		/// <param name="x">The x-coordinate.</param>
 		/// <param name="y">The y-coordinate.</param>
-		public Vector2(double x, double y) {
+		public Vector2D(double x, double y) {
 			this.X = x;
 			this.Y = y;
 		}
@@ -32,78 +32,78 @@ namespace OpenBveApi.Math {
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The sum of the two vectors.</returns>
-		public static Vector2 operator +(Vector2 a, Vector2 b) {
-			return new Vector2(a.X + b.X, a.Y + b.Y);
+		public static Vector2D operator +(Vector2D a, Vector2D b) {
+			return new Vector2D(a.X + b.X, a.Y + b.Y);
 		}
 		
 		/// <summary>Adds a vector and a scalar.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
 		/// <returns>The sum of the vector and the scalar.</returns>
-		public static Vector2 operator +(Vector2 a, double b) {
-			return new Vector2(a.X + b, a.Y + b);
+		public static Vector2D operator +(Vector2D a, double b) {
+			return new Vector2D(a.X + b, a.Y + b);
 		}
 		
 		/// <summary>Adds a scalar and a vector.</summary>
 		/// <param name="a">The scalar.</param>
 		/// <param name="b">The vector.</param>
 		/// <returns>The sum of the scalar and the vector.</returns>
-		public static Vector2 operator +(double a, Vector2 b) {
-			return new Vector2(a + b.X, a + b.Y);
+		public static Vector2D operator +(double a, Vector2D b) {
+			return new Vector2D(a + b.X, a + b.Y);
 		}
 		
 		/// <summary>Subtracts two vectors.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The difference of the two vectors.</returns>
-		public static Vector2 operator -(Vector2 a, Vector2 b) {
-			return new Vector2(a.X - b.X, a.Y - b.Y);
+		public static Vector2D operator -(Vector2D a, Vector2D b) {
+			return new Vector2D(a.X - b.X, a.Y - b.Y);
 		}
 		
 		/// <summary>Subtracts a scalar from a vector.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
 		/// <returns>The difference of the vector and the scalar.</returns>
-		public static Vector2 operator -(Vector2 a, double b) {
-			return new Vector2(a.X - b, a.Y - b);
+		public static Vector2D operator -(Vector2D a, double b) {
+			return new Vector2D(a.X - b, a.Y - b);
 		}
 		
 		/// <summary>Subtracts a vector from a scalar.</summary>
 		/// <param name="a">The scalar.</param>
 		/// <param name="b">The vector.</param>
 		/// <returns>The difference of the scalar and the vector.</returns>
-		public static Vector2 operator -(double a, Vector2 b) {
-			return new Vector2(a - b.X, a - b.Y);
+		public static Vector2D operator -(double a, Vector2D b) {
+			return new Vector2D(a - b.X, a - b.Y);
 		}
 		
 		/// <summary>Negates a vector.</summary>
 		/// <param name="vector">The vector.</param>
 		/// <returns>The negation of the vector.</returns>
-		public static Vector2 operator -(Vector2 vector) {
-			return new Vector2(-vector.X, -vector.Y);
+		public static Vector2D operator -(Vector2D vector) {
+			return new Vector2D(-vector.X, -vector.Y);
 		}
 		
 		/// <summary>Multiplies two vectors.</summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The product of the two vectors.</returns>
-		public static Vector2 operator *(Vector2 a, Vector2 b) {
-			return new Vector2(a.X * b.X, a.Y * b.Y);
+		public static Vector2D operator *(Vector2D a, Vector2D b) {
+			return new Vector2D(a.X * b.X, a.Y * b.Y);
 		}
 		/// <summary>Multiplies a vector and a scalar.</summary>
 		/// <param name="a">The vector.</param>
 		/// <param name="b">The scalar.</param>
 		/// <returns>The product of the vector and the scalar.</returns>
-		public static Vector2 operator *(Vector2 a, double b) {
-			return new Vector2(a.X * b, a.Y * b);
+		public static Vector2D operator *(Vector2D a, double b) {
+			return new Vector2D(a.X * b, a.Y * b);
 		}
 		
 		/// <summary>Multiplies a scalar and a vector.</summary>
 		/// <param name="a">The scalar.</param>
 		/// <param name="b">The vector.</param>
 		/// <returns>The product of the scalar and the vector.</returns>
-		public static Vector2 operator *(double a, Vector2 b) {
-			return new Vector2(a * b.X, a * b.Y);
+		public static Vector2D operator *(double a, Vector2D b) {
+			return new Vector2D(a * b.X, a * b.Y);
 		}
 		
 		/// <summary>Divides two vectors.</summary>
@@ -111,11 +111,11 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The second vector.</param>
 		/// <returns>The quotient of the two vectors.</returns>
 		/// <exception cref="System.DivideByZeroException">Raised when any member of the second vector is zero.</exception>
-		public static Vector2 operator /(Vector2 a, Vector2 b) {
+		public static Vector2D operator /(Vector2D a, Vector2D b) {
 			if (b.X == 0.0 | b.Y == 0.0) {
 				throw new DivideByZeroException();
 			} else {
-				return new Vector2(a.X / b.X, a.Y / b.Y);
+				return new Vector2D(a.X / b.X, a.Y / b.Y);
 			}
 		}
 		
@@ -124,12 +124,12 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The scalar.</param>
 		/// <returns>The quotient of the vector and the scalar.</returns>
 		/// <exception cref="System.DivideByZeroException">Raised when the scalar is zero.</exception>
-		public static Vector2 operator /(Vector2 a, double b) {
+		public static Vector2D operator /(Vector2D a, double b) {
 			if (b == 0.0) {
 				throw new DivideByZeroException();
 			} else {
 				double factor = 1.0 / b;
-				return new Vector2(a.X * factor, a.Y * factor);
+				return new Vector2D(a.X * factor, a.Y * factor);
 			}
 		}
 		
@@ -138,11 +138,11 @@ namespace OpenBveApi.Math {
 		/// <param name="b">The vector.</param>
 		/// <returns>The quotient of the scalar and the vector.</returns>
 		/// <exception cref="DivideByZeroException">Raised when any member of the vector is zero.</exception>
-		public static Vector2 operator /(double a, Vector2 b) {
+		public static Vector2D operator /(double a, Vector2D b) {
 			if (b.X == 0.0 | b.Y == 0.0) {
 				throw new DivideByZeroException();
 			} else {
-				return new Vector2(a / b.X, a / b.Y);
+				return new Vector2D(a / b.X, a / b.Y);
 			}
 		}
 		
@@ -153,7 +153,7 @@ namespace OpenBveApi.Math {
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>Whether the two vectors are equal.</returns>
-		public static bool operator ==(Vector2 a, Vector2 b) {
+		public static bool operator ==(Vector2D a, Vector2D b) {
 			if (a.X != b.X) return false;
 			if (a.Y != b.Y) return false;
 			return true;
@@ -163,7 +163,7 @@ namespace OpenBveApi.Math {
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>Whether the two vectors are unequal.</returns>
-		public static bool operator !=(Vector2 a, Vector2 b) {
+		public static bool operator !=(Vector2D a, Vector2D b) {
 			if (a.X != b.X) return true;
 			if (a.Y != b.Y) return true;
 			return false;
@@ -187,14 +187,14 @@ namespace OpenBveApi.Math {
 		
 		/// <summary>Translates the vector by a specified offset.</summary>
 		/// <param name="offset">The offset.</param>
-		public void Translate(Vector2 offset) {
+		public void Translate(Vector2D offset) {
 			this.X += offset.X;
 			this.Y += offset.Y;
 		}
 		
 		/// <summary>Scales the vector by a specified factor.</summary>
 		/// <param name="factor">The factor.</param>
-		public void Scale(Vector2 factor) {
+		public void Scale(Vector2D factor) {
 			this.X *= factor.X;
 			this.Y *= factor.Y;
 		}
@@ -205,7 +205,7 @@ namespace OpenBveApi.Math {
 		public void Rotate(double cosineOfAngle, double sineOfAngle) {
 			double x = cosineOfAngle * this.X - sineOfAngle * this.Y;
 			double y = sineOfAngle * this.X + cosineOfAngle * this.Y;
-			this = new Vector2(x, y);
+			this = new Vector2D(x, y);
 		}
 		
 		/// <summary>Checks whether the vector is a null vector.</summary>
@@ -244,7 +244,7 @@ namespace OpenBveApi.Math {
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
 		/// <returns>The dot product of the two vectors.</returns>
-		public static double Dot(Vector2 a, Vector2 b) {
+		public static double Dot(Vector2D a, Vector2D b) {
 			return a.X * b.X + a.Y * b.Y;
 		}
 		
@@ -252,13 +252,13 @@ namespace OpenBveApi.Math {
 		/// <param name="vector">The vector.</param>
 		/// <returns>The normalized vector.</returns>
 		/// <exception cref="System.DivideByZeroException">Raised when the vector is a null vector.</exception>
-		public static Vector2 Normalize(Vector2 vector) {
+		public static Vector2D Normalize(Vector2D vector) {
 			double norm = vector.X * vector.X + vector.Y * vector.Y;
 			if (norm == 0.0) {
 				throw new DivideByZeroException();
 			} else {
 				double factor = 1.0 / System.Math.Sqrt(norm);
-				return new Vector2(vector.X * factor, vector.Y * factor);
+				return new Vector2D(vector.X * factor, vector.Y * factor);
 			}
 		}
 		
@@ -266,20 +266,20 @@ namespace OpenBveApi.Math {
 		/// <param name="vector">The vector.</param>
 		/// <param name="offset">The offset.</param>
 		/// <returns>The translated vector.</returns>
-		public static Vector2 Translate(Vector2 vector, Vector2 offset) {
+		public static Vector2D Translate(Vector2D vector, Vector2D offset) {
 			double x = vector.X + offset.X;
 			double y = vector.Y + offset.Y;
-			return new Vector2(x, y);
+			return new Vector2D(x, y);
 		}
 		
 		/// <summary>Scales a vector by a specified factor.</summary>
 		/// <param name="vector">The vector.</param>
 		/// <param name="factor">The factor.</param>
 		/// <returns>The scaled vector.</returns>
-		public static Vector2 Scale(Vector2 vector, Vector2 factor) {
+		public static Vector2D Scale(Vector2D vector, Vector2D factor) {
 			double x = vector.X * factor.X;
 			double y = vector.Y * factor.Y;
-			return new Vector2(x, y);
+			return new Vector2D(x, y);
 		}
 		
 		/// <summary>Rotates a vector by a specified angle.</summary>
@@ -287,30 +287,30 @@ namespace OpenBveApi.Math {
 		/// <param name="cosineOfAngle">The cosine of the angle.</param>
 		/// <param name="sineOfAngle">The sine of the angle.</param>
 		/// <returns>The rotated vector.</returns>
-		public static Vector2 Rotate(Vector2 vector, double cosineOfAngle, double sineOfAngle) {
+		public static Vector2D Rotate(Vector2D vector, double cosineOfAngle, double sineOfAngle) {
 			double x = cosineOfAngle * vector.X - sineOfAngle * vector.Y;
 			double y = sineOfAngle * vector.X + cosineOfAngle * vector.Y;
-			return new Vector2(x, y);
+			return new Vector2D(x, y);
 
 		}
 		
 		/// <summary>Checks whether a vector is a null vector.</summary>
 		/// <returns>A boolean indicating whether the vector is a null vector.</returns>
-		public static bool IsNullVector(Vector2 vector) {
+		public static bool IsNullVector(Vector2D vector) {
 			return vector.X == 0.0 & vector.Y == 0.0;
 		}
 		
 		/// <summary>Gets the euclidean norm of the specified vector.</summary>
 		/// <param name="vector">The vector.</param>
 		/// <returns>The euclidean norm.</returns>
-		public static double Norm(Vector2 vector) {
+		public static double Norm(Vector2D vector) {
 			return System.Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
 		}
 		
 		/// <summary>Gets the square of the euclidean norm of the specified vector.</summary>
 		/// <param name="vector">The vector.</param>
 		/// <returns>The square of the euclidean norm.</returns>
-		public static double NormSquared(Vector2 vector) {
+		public static double NormSquared(Vector2D vector) {
 			return vector.X * vector.X + vector.Y * vector.Y;
 		}
 		
@@ -318,19 +318,19 @@ namespace OpenBveApi.Math {
 		// --- read-only fields ---
 		
 		/// <summary>Represents a null vector.</summary>
-		public static readonly Vector2 Null = new Vector2(0.0, 0.0);
+		public static readonly Vector2D Null = new Vector2D(0.0, 0.0);
 		
 		/// <summary>Represents a vector pointing left.</summary>
-		public static readonly Vector2 Left = new Vector2(-1.0, 0.0);
+		public static readonly Vector2D Left = new Vector2D(-1.0, 0.0);
 		
 		/// <summary>Represents a vector pointing right.</summary>
-		public static readonly Vector2 Right = new Vector2(1.0, 0.0);
+		public static readonly Vector2D Right = new Vector2D(1.0, 0.0);
 		
 		/// <summary>Represents a vector pointing up.</summary>
-		public static readonly Vector2 Up = new Vector2(0.0, -1.0);
+		public static readonly Vector2D Up = new Vector2D(0.0, -1.0);
 		
 		/// <summary>Represents a vector pointing down.</summary>
-		public static readonly Vector2 Down = new Vector2(0.0, 1.0);
+		public static readonly Vector2D Down = new Vector2D(0.0, 1.0);
 		
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using Tao.OpenGl;
-using Tao.Sdl;
+using SDL2;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics;
+using OpenTK;
 
 namespace OpenBve {
 	internal static class Screen {
@@ -19,81 +21,109 @@ namespace OpenBve {
 		
 		/// <summary>Whether the screen is set to fullscreen mode.</summary>
 		internal static bool Fullscreen = false;
-		
-		
+
+		internal static IntPtr Window{ get; private set;}
+		internal static IntPtr GLContext { get; private set;}
+		private static IntPtr iconSurface = IntPtr.Zero;
+		private static System.Drawing.Imaging.BitmapData iconData = null;
+		private static System.Drawing.Bitmap iconBmp = null;
+		private static GraphicsContext tkContext;
+		internal static System.Drawing.Size Size {
+			get {
+				return new System.Drawing.Size(Width, Height);
+			}
+			set {
+				Width = value.Width;
+				Height = value.Height;
+			}
+		}
 		// --- functions ---
 		
 		/// <summary>Initializes the screen. A call to SDL_Init must have been made before calling this function. A call to Deinitialize must be made when terminating the program.</summary>
 		/// <returns>Whether initializing the screen was successful.</returns>
 		internal static bool Initialize() {
-			if (Sdl.SDL_Init(Sdl.SDL_INIT_VIDEO) != 0) {
+			if (SDL.SDL_InitSubSystem(SDL.SDL_INIT_VIDEO) != 0) {
 				return false;
-			} else {
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_DOUBLEBUFFER, 1);
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_RED_SIZE, 8);
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_GREEN_SIZE, 8);
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_BLUE_SIZE, 8);
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_ALPHA_SIZE, 0);
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_DEPTH_SIZE, 24);
-				Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_SWAP_CONTROL, Interface.CurrentOptions.VerticalSynchronization ? 1 : 0);
-				if (Interface.CurrentOptions.AntiAliasingLevel != 0) {
-					Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_MULTISAMPLESAMPLES, Interface.CurrentOptions.AntiAliasingLevel);
-				}
-				Sdl.SDL_ShowCursor(Sdl.SDL_DISABLE);
-				// --- window caption and icon ---
-				Sdl.SDL_WM_SetCaption(Application.ProductName, null);
-				{
-					string bitmapFile = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "icon.bmp");
-					IntPtr bitmap = Sdl.SDL_LoadBMP(bitmapFile);
-					if (bitmap != null) {
-						string maskFile = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "mask.bin");
-						byte[] mask = System.IO.File.ReadAllBytes(maskFile);
-						Sdl.SDL_WM_SetIcon(bitmap, mask);
-					}
-				}
-				// --- video mode ---
-				Width = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth;
-				Height = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight;
-				Fullscreen = Interface.CurrentOptions.FullscreenMode;
-				int bits = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenBits : 32;
-				int flags = Sdl.SDL_OPENGL | Sdl.SDL_HWSURFACE | Sdl.SDL_ANYFORMAT | Sdl.SDL_DOUBLEBUF;
-				if (Fullscreen) {
-					flags |= Sdl.SDL_FULLSCREEN;
-				}
-				IntPtr video = Sdl.SDL_SetVideoMode(Width, Height, bits, flags);
-				if (video == IntPtr.Zero) {
-					// --- not successful ---
-					Sdl.SDL_QuitSubSystem(Sdl.SDL_INIT_VIDEO);
-					return false;
-				} else {
-					// --- set up anisotropic filtering ---
-					Interface.CurrentOptions.AnisotropicFilteringMaximum = 0;
-					string[] extensions = Gl.glGetString(Gl.GL_EXTENSIONS).Split(new char[] { ' ' });
-					for (int i = 0; i < extensions.Length; i++) {
-						if (extensions[i] == "GL_EXT_texture_filter_anisotropic") {
-							float n;
-							Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, out n);
-							int m = (int)Math.Round(n);
-							Interface.CurrentOptions.AnisotropicFilteringMaximum = Math.Max(0, m);
-							break;
-						}
-					}
-					if (Interface.CurrentOptions.AnisotropicFilteringLevel <= 0) {
-						Interface.CurrentOptions.AnisotropicFilteringLevel = Interface.CurrentOptions.AnisotropicFilteringMaximum;
-					} else if (Interface.CurrentOptions.AnisotropicFilteringLevel > Interface.CurrentOptions.AnisotropicFilteringMaximum) {
-						Interface.CurrentOptions.AnisotropicFilteringLevel = Interface.CurrentOptions.AnisotropicFilteringMaximum;
-					}
-					// --- done ---
-					Initialized = true;
-					return true;
+			}
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DOUBLEBUFFER, 1);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_RED_SIZE, 8);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_GREEN_SIZE, 8);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_BLUE_SIZE, 8);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_ALPHA_SIZE, 0);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DEPTH_SIZE, 24);
+			SDL.SDL_GL_SetSwapInterval(Options.Current.VerticalSynchronization ? 1 : 0);
+			if (Options.Current.AntiAliasingLevel != 0) {
+				SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_MULTISAMPLESAMPLES, Options.Current.AntiAliasingLevel);
+			}
+			// --- video mode ---
+			Width = Options.Current.FullscreenMode ? Options.Current.FullscreenWidth : Options.Current.WindowWidth;
+			Height = Options.Current.FullscreenMode ? Options.Current.FullscreenHeight : Options.Current.WindowHeight;
+			Fullscreen = Options.Current.FullscreenMode;
+			SDL.SDL_WindowFlags flags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL/*| SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE*/
+			                             | SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
+			if (Fullscreen) {
+				flags |= SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;
+			}
+			SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_VSYNC, "true");
+			SDL.SDL_SetHint(SDL.SDL_HINT_VIDEO_ALLOW_SCREENSAVER, "false");
+			Window = SDL.SDL_CreateWindow(Application.ProductName, SDL.SDL_WINDOWPOS_CENTERED, SDL.SDL_WINDOWPOS_CENTERED, Width, Height, flags);
+			if (Window == IntPtr.Zero) {
+				// --- not successful ---
+				SDL.SDL_QuitSubSystem(SDL.SDL_INIT_VIDEO);
+				return false;
+			}
+			GLContext = SDL.SDL_GL_CreateContext(Window);
+			// --- set up OpenTK context
+			tkContext = new GraphicsContext(new ContextHandle(GLContext),
+				                        SDL.SDL_GL_GetProcAddress, 
+				() => new ContextHandle(SDL.SDL_GL_GetCurrentContext()));
+			// --- set up icon ---
+			string bitmapFile = OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "icon.png");
+			if (System.IO.File.Exists(bitmapFile)) {
+				iconBmp = new System.Drawing.Bitmap(bitmapFile); // load file
+				iconData = iconBmp.LockBits(new System.Drawing.Rectangle(0, 0, iconBmp.Width, iconBmp.Height),
+					System.Drawing.Imaging.ImageLockMode.ReadOnly,
+					System.Drawing.Imaging.PixelFormat.Format32bppArgb); // lock data
+				iconSurface = SDL.SDL_CreateRGBSurfaceFrom(iconData.Scan0, iconBmp.Width, iconBmp.Height, 32, iconData.Stride,
+					0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000); // upload to sdl
+				SDL.SDL_SetWindowIcon(Window, iconSurface); // use icon
+				// free in Deinitialize()
+			}
+			// --- set up anisotropic filtering ---
+			Options.Current.AnisotropicFilteringMaximum = 0;
+			string[] extensions = GL.GetString(StringName.Extensions).Split(new []{ ' ' });
+			for (int i = 0; i < extensions.Length; i++) {
+				if (extensions[i] == "GL_EXT_texture_filter_anisotropic") {
+					float n;
+					GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out n);
+					int m = (int)Math.Round(n);
+					Options.Current.AnisotropicFilteringMaximum = Math.Max(0, m);
+					break;
 				}
 			}
+			if (Options.Current.AnisotropicFilteringLevel <= 0) {
+				Options.Current.AnisotropicFilteringLevel = Options.Current.AnisotropicFilteringMaximum;
+			} else if (Options.Current.AnisotropicFilteringLevel > Options.Current.AnisotropicFilteringMaximum) {
+				Options.Current.AnisotropicFilteringLevel = Options.Current.AnisotropicFilteringMaximum;
+			}
+			// --- done ---
+			Initialized = true;
+			return true;
 		}
 		
 		/// <summary>Deinitializes the screen.</summary>
 		internal static void Deinitialize() {
 			if (Initialized) {
-				Sdl.SDL_QuitSubSystem(Sdl.SDL_INIT_VIDEO);
+				if (iconSurface != IntPtr.Zero)
+					SDL.SDL_FreeSurface(iconSurface); // free surface
+				if (iconBmp != null && iconData != null) {
+					iconBmp.UnlockBits(iconData); // free pixels
+					iconBmp.Dispose();
+				}
+				tkContext.Dispose();
+				SDL.SDL_GL_DeleteContext(GLContext);
+				SDL.SDL_DestroyWindow(Window);
+				SDL.SDL_QuitSubSystem(SDL.SDL_INIT_VIDEO);
 				Initialized = false;
 			}
 		}
@@ -104,21 +134,23 @@ namespace OpenBve {
 			// begin HACK //
 			Renderer.ClearDisplayLists();
 			if (World.MouseGrabEnabled) {
-				Sdl.SDL_WM_GrabInput(Sdl.SDL_GRAB_OFF);
+				SDL.SDL_SetRelativeMouseMode(SDL.SDL_bool.SDL_FALSE);
 			}
-			Gl.glDisable(Gl.GL_FOG);
+			GL.Disable(EnableCap.Fog);
 			Renderer.FogEnabled = false;
-			Gl.glDisable(Gl.GL_LIGHTING);
+			GL.Disable(EnableCap.Lighting);
 			Renderer.LightingEnabled = false;
 			Textures.UnloadAllTextures();
 			if (Fullscreen) {
-				Sdl.SDL_SetVideoMode(Interface.CurrentOptions.FullscreenWidth, Interface.CurrentOptions.FullscreenHeight, Interface.CurrentOptions.FullscreenBits, Sdl.SDL_OPENGL | Sdl.SDL_DOUBLEBUF | Sdl.SDL_FULLSCREEN);
-				Width = Interface.CurrentOptions.FullscreenWidth;
-				Height = Interface.CurrentOptions.FullscreenHeight;
+				SDL.SDL_SetWindowSize(Window,Options.Current.FullscreenWidth,Options.Current.FullscreenHeight);
+				SDL.SDL_SetWindowFullscreen(Window,(uint)SDL.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
+				Width = Options.Current.FullscreenWidth;
+				Height = Options.Current.FullscreenHeight;
 			} else {
-				Sdl.SDL_SetVideoMode(Interface.CurrentOptions.WindowWidth, Interface.CurrentOptions.WindowHeight, 32, Sdl.SDL_OPENGL | Sdl.SDL_DOUBLEBUF);
-				Width = Interface.CurrentOptions.WindowWidth;
-				Height = Interface.CurrentOptions.WindowHeight;
+				SDL.SDL_SetWindowSize(Window,Options.Current.WindowWidth,Options.Current.WindowHeight);
+				SDL.SDL_SetWindowFullscreen(Window,0);
+				Width = Options.Current.WindowWidth;
+				Height = Options.Current.WindowHeight;
 			}
 			Renderer.InitializeLighting();
 			MainLoop.UpdateViewport(MainLoop.ViewPortChangeMode.NoChange);
@@ -126,19 +158,35 @@ namespace OpenBve {
 			Timetable.CreateTimetable();
 			Timetable.UpdateCustomTimetable(null, null);
 			if (World.MouseGrabEnabled) {
-				Sdl.SDL_WM_GrabInput(Sdl.SDL_GRAB_ON);
+				SDL.SDL_SetRelativeMouseMode(SDL.SDL_bool.SDL_TRUE);
 			}
-			World.MouseGrabTarget = new World.Vector2D(0.0, 0.0);
+			World.MouseGrabTarget = new OpenBveApi.Math.Vector2D(0.0, 0.0);
 			World.MouseGrabIgnoreOnce = true;
 			World.InitializeCameraRestriction();
 			if (Renderer.OptionBackfaceCulling) {
-				Gl.glEnable(Gl.GL_CULL_FACE);
+				GL.Enable(EnableCap.CullFace);
 			} else {
-				Gl.glDisable(Gl.GL_CULL_FACE);
+				GL.Disable(EnableCap.CullFace);
 			}
 			Renderer.ReAddObjects();
 			// end HACK //
 		}
-		
+		internal static void SwapBuffers(){
+			SDL.SDL_GL_SwapWindow(Window);
+		}
+		private static Object makeCurrentLock = null;
+		internal static void MakeCurrent(){
+			if (makeCurrentLock == null)
+				makeCurrentLock = new object();
+			lock (makeCurrentLock) {
+				SDL.SDL_GL_MakeCurrent(Window,GLContext);
+			}
+		}
+		internal static void Show(){
+			SDL.SDL_ShowWindow(Window);
+		}
+		internal static void Hide(){
+			SDL.SDL_HideWindow(Window);
+		}
 	}
 }

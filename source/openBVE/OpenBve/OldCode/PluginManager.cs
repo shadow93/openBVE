@@ -3,7 +3,7 @@ using System.Reflection;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
-	internal static partial class PluginManager {
+	internal static class PluginManager {
 		
 		/// <summary>Represents an abstract plugin.</summary>
 		internal abstract class Plugin {
@@ -367,7 +367,7 @@ namespace OpenBve {
 				}
 			}
 			/// <summary>Is called when the aspect in the current or any of the upcoming sections changes.</summary>
-			/// <param name="data">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
+			/// <param name="signal">Signal information per section. In the array, index 0 is the current section, index 1 the upcoming section, and so on.</param>
 			/// <remarks>This function should not be called directly. Call UpdateSignal instead.</remarks>
 			internal abstract void SetSignal(SignalData[] signal);
 			/// <summary>Called when the train passes a beacon.</summary>
@@ -402,22 +402,20 @@ namespace OpenBve {
 				}
 			}
 			/// <summary>Called when the train passes a beacon.</summary>
-			/// <param name="data">The beacon data.</param>
+			/// <param name="beacon">The beacon data.</param>
 			/// <remarks>This function should not be called directly. Call UpdateBeacon instead.</remarks>
 			internal abstract void SetBeacon(BeaconData beacon);
 			/// <summary>Updates the AI.</summary>
 			/// <returns>The AI response.</returns>
 			internal AIResponse UpdateAI() {
-				if (this.SupportsAI) {
-					AIData data = new AIData(GetHandles());
-					this.PerformAI(data);
-					if (data.Response != AIResponse.None) {
-						SetHandles(data.Handles, false);
-					}
-					return data.Response;
-				} else {
+				if (!this.SupportsAI)
 					return AIResponse.None;
+				AIData data = new AIData(GetHandles());
+				this.PerformAI(data);
+				if (data.Response != AIResponse.None) {
+					SetHandles(data.Handles, false);
 				}
+				return data.Response;
 			}
 			/// <summary>Called when the AI should be performed.</summary>
 			/// <param name="data">The AI data.</param>
@@ -443,7 +441,7 @@ namespace OpenBve {
 			string file = OpenBveApi.Path.CombineFile(trainFolder, lines[0]);
 			string title = System.IO.Path.GetFileName(file);
 			if (!System.IO.File.Exists(file)) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
+				Debug.AddMessage(Debug.MessageType.Error, true, "The train plugin " + title + " could not be found in " + config);
 				return false;
 			}
 			return LoadPlugin(train, file, trainFolder);
@@ -468,10 +466,11 @@ namespace OpenBve {
 		/// <param name="pluginFile">The file to the plugin.</param>
 		/// <param name="trainFolder">The train folder.</param>
 		/// <returns>Whether the plugin was loaded successfully.</returns>
-		private static bool LoadPlugin(TrainManager.Train train, string pluginFile, string trainFolder) {
+		private static bool LoadPlugin(TrainManager.Train train, string pluginFile, string trainFolder)
+		{
 			string pluginTitle = System.IO.Path.GetFileName(pluginFile);
 			if (!System.IO.File.Exists(pluginFile)) {
-				Interface.AddMessage(Interface.MessageType.Error, true, "The train plugin " + pluginTitle + " could not be found.");
+				Debug.AddMessage(Debug.MessageType.Error, true, "The train plugin " + pluginTitle + " could not be found.");
 				return false;
 			}
 			/*
@@ -508,7 +507,7 @@ namespace OpenBve {
 			} catch (BadImageFormatException) {
 				assembly = null;
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " could not be loaded due to the following exception: " + ex.Message);
+				Debug.AddMessage(Debug.MessageType.Error, false, "The train plugin " + pluginTitle + " could not be loaded due to the following exception: " + ex.Message);
 				return false;
 			}
 			if (assembly != null) {
@@ -517,7 +516,7 @@ namespace OpenBve {
 					types = assembly.GetTypes();
 				} catch (ReflectionTypeLoadException ex) {
 					foreach (Exception e in ex.LoaderExceptions) {
-						Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " raised an exception on loading: " + e.Message);
+						Debug.AddMessage(Debug.MessageType.Error, false, "The train plugin " + pluginTitle + " raised an exception on loading: " + e.Message);
 					}
 					return false;
 				}
@@ -527,13 +526,12 @@ namespace OpenBve {
 						train.Plugin = new NetPlugin(pluginFile, trainFolder, api, train);
 						if (train.Plugin.Load(specs, mode)) {
 							return true;
-						} else {
-							train.Plugin = null;
-							return false;
 						}
+						train.Plugin = null;
+						return false;
 					}
 				}
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
+				Debug.AddMessage(Debug.MessageType.Error, false, "The train plugin " + pluginTitle + " does not export a train interface and therefore cannot be used with openBVE.");
 				return false;
 			}
 			/*
@@ -541,24 +539,23 @@ namespace OpenBve {
 			 * */
 			try {
 				if (!CheckWin32Header(pluginFile)) {
-					Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
+					Debug.AddMessage(Debug.MessageType.Error, false, "The train plugin " + pluginTitle + " is of an unsupported binary format and therefore cannot be used with openBVE.");
 					return false;
 				}
 			} catch (Exception ex) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + pluginTitle + " could not be read due to the following reason: " + ex.Message);
+				Debug.AddMessage(Debug.MessageType.Error, false, "The train plugin " + pluginTitle + " could not be read due to the following reason: " + ex.Message);
 				return false;
 			}
 			if (!Program.CurrentlyRunningOnWindows | IntPtr.Size != 4) {
-				Interface.AddMessage(Interface.MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
+				Debug.AddMessage(Debug.MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
 				return false;
 			}
 			train.Plugin = new Win32Plugin(pluginFile, train);
 			if (train.Plugin.Load(specs, mode)) {
 				return true;
-			} else {
-				train.Plugin = null;
-				return false;
 			}
+			train.Plugin = null;
+			return false;
 		}
 		
 		/// <summary>Checks whether a specified file is a valid Win32 plugin.</summary>

@@ -6,6 +6,7 @@ namespace OpenBve {
 		
 		// The bulk of the renderer is contained in the old Renderer.cs file.
 		// The new renderer will be gradually implemented here.
+		// FIXME immediate rendering
 		
 	}
 }

@@ -56,7 +56,7 @@ namespace OpenBve {
 		/// <summary>Updates the Get add-ons screen when entered.</summary>
 		private void EnterGetAddOns() {
 			if (!IsBusy()) {
-				labelDownloading.Text = Interface.GetInterfaceString("getaddons_connect");
+				labelDownloading.Text = Strings.GetInterfaceString("getaddons_connect");
 				progressbarDownloading.Style = ProgressBarStyle.Marquee;
 				panelPackages.Enabled = false;
 				CurrentDatabase = null;
@@ -102,7 +102,7 @@ namespace OpenBve {
 				for (int i = 0; i < urls.Length; i++) {
 					this.Invoke(new ThreadStart(
 						() => {
-							labelDownloading.Text = Interface.GetInterfaceString("getaddons_connect") + "\n" + names[i];
+							labelDownloading.Text = Strings.GetInterfaceString("getaddons_connect") + "\n" + names[i];
 						}
 					));
 					int size = 0;
@@ -146,8 +146,8 @@ namespace OpenBve {
 							timerFilter.Enabled = false;
 							ShowDatabase(true);
 							TreeviewPackagesAfterSelect(null, null);
-							labelDownloading.Text = Interface.GetInterfaceString("getaddons_updates");
-							if (MessageBox.Show(Interface.GetInterfaceString("getaddons_updates_install"), Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+							labelDownloading.Text = Strings.GetInterfaceString("getaddons_updates");
+							if (MessageBox.Show(Strings.GetInterfaceString("getaddons_updates_install"), Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
 								ButtonPackageInstallClick(updates, null);
 							} else {
 								checkboxFilterLibraries.Checked = false;
@@ -160,9 +160,9 @@ namespace OpenBve {
 							ShowDatabase(false);
 						}
 					} else if (error != null) {
-						labelDownloading.Text = Interface.GetInterfaceString("getaddons_connect_error") + "\n" + error;
+						labelDownloading.Text = Strings.GetInterfaceString("getaddons_connect_error") + "\n" + error;
 					} else {
-						labelDownloading.Text = Interface.GetInterfaceString("getaddons_connect_failure");
+						labelDownloading.Text = Strings.GetInterfaceString("getaddons_connect_failure");
 					}
 				}
 			));
@@ -221,9 +221,9 @@ namespace OpenBve {
 				 * */
 				treeviewPackages.BeginUpdate();
 				treeviewPackages.Nodes.Clear();
-				string otherCountries = Interface.GetInterfaceString("getaddons_other_countries");
-				string otherCities = Interface.GetInterfaceString("getaddons_other_cities");
-				string otherOperators = Interface.GetInterfaceString("getaddons_other_operators");
+				string otherCountries = Strings.GetInterfaceString("getaddons_other_countries");
+				string otherCities = Strings.GetInterfaceString("getaddons_other_cities");
+				string otherOperators = Strings.GetInterfaceString("getaddons_other_operators");
 				foreach (ManagedContent.Version package in packages) {
 					string type = package.GetMetadata("type", null, string.Empty);
 					if (string.Equals(type, "shared library", StringComparison.OrdinalIgnoreCase)) {
@@ -523,30 +523,30 @@ namespace OpenBve {
 					builder.AppendLine(caption);
 				}
 				if (country != null) {
-					builder.Append(Interface.GetInterfaceString("getaddons_package_country"));
+					builder.Append(Strings.GetInterfaceString("getaddons_package_country"));
 					builder.AppendLine(country);
 				}
 				if (city != null) {
-					builder.Append(Interface.GetInterfaceString("getaddons_package_city"));
+					builder.Append(Strings.GetInterfaceString("getaddons_package_city"));
 					builder.AppendLine(city);
 				}
 				if (operatorx != null) {
-					builder.Append(Interface.GetInterfaceString("getaddons_package_operator"));
+					builder.Append(Strings.GetInterfaceString("getaddons_package_operator"));
 					builder.AppendLine(operatorx);
 				}
 				if (fictional) {
-					builder.AppendLine(Interface.GetInterfaceString("getaddons_package_fictional"));
+					builder.AppendLine(Strings.GetInterfaceString("getaddons_package_fictional"));
 				}
 				builder.AppendLine();
 				builder.AppendLine(version.Name);
 				if (author != null) {
-					builder.Append(Interface.GetInterfaceString("getaddons_package_author"));
+					builder.Append(Strings.GetInterfaceString("getaddons_package_author"));
 					builder.AppendLine(author);
 				}
-				builder.Append(Interface.GetInterfaceString("getaddons_package_version_latest"));
+				builder.Append(Strings.GetInterfaceString("getaddons_package_version_latest"));
 				builder.AppendLine(version.Number);
 				if (currentVersion != null) {
-					builder.Append(Interface.GetInterfaceString("getaddons_package_version_installed"));
+					builder.Append(Strings.GetInterfaceString("getaddons_package_version_installed"));
 					builder.AppendLine(currentVersion);
 				}
 				labelPackageInformation.Text = builder.ToString().Trim();
@@ -734,7 +734,7 @@ namespace OpenBve {
 							}
 							builder.AppendLine();
 						}
-						switch (MessageBox.Show(Interface.GetInterfaceString("getaddons_suggest_1") + "\n\n" + builder.ToString() + Interface.GetInterfaceString("getaddons_suggest_2"), Interface.GetInterfaceString("getaddons_package_install"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+						switch (MessageBox.Show(Strings.GetInterfaceString("getaddons_suggest_1") + "\n\n" + builder.ToString() + Strings.GetInterfaceString("getaddons_suggest_2"), Strings.GetInterfaceString("getaddons_package_install"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 							case DialogResult.Yes:
 								foreach (ManagedContent.Dependency suggestion in suggestions) {
 									ManagedContent.Version version = CurrentDatabase.Dereference(suggestion.Name, suggestion.Version);
@@ -752,7 +752,7 @@ namespace OpenBve {
 					 * their dependencies.
 					 * */
 					if (!CurrentDatabase.AddDependencies(packages)) {
-						if (MessageBox.Show("Some dependencies were not found. This indicates a bug the server that compiled the list of add-ons.", Interface.GetInterfaceString("getaddons_package_install"), MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.Cancel) {
+						if (MessageBox.Show("Some dependencies were not found. This indicates a bug the server that compiled the list of add-ons.", Strings.GetInterfaceString("getaddons_package_install"), MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.Cancel) {
 							return;
 						}
 					}
@@ -772,7 +772,7 @@ namespace OpenBve {
 					/*
 					 * Ask for final confirmation.
 					 * */
-					if (MessageBox.Show(Interface.GetInterfaceString("getaddons_confirmation").Replace("[size]", GetStringFromSize(CurrentDownloadTotalSize)), Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) {
+					if (MessageBox.Show(Strings.GetInterfaceString("getaddons_confirmation").Replace("[size]", GetStringFromSize(CurrentDownloadTotalSize)), Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) {
 						return;
 					}
 					/*
@@ -818,7 +818,7 @@ namespace OpenBve {
 										if (unsuccessful.Count == 0) {
 											labelDownloading.Text = string.Empty;
 										} else {
-											labelDownloading.Text = Interface.GetInterfaceString("getaddons_package_install_failure") + "\n" + string.Join(", ", unsuccessful.ToArray());
+											labelDownloading.Text = Strings.GetInterfaceString("getaddons_package_install_failure") + "\n" + string.Join(", ", unsuccessful.ToArray());
 										}
 										panelPackages.Enabled = true;
 										CurrentInstallThreads = null;
@@ -833,7 +833,7 @@ namespace OpenBve {
 										}
 										ShowDatabase(false);
 										if (noMoreUpdates && unsuccessful.Count == 0) {
-											labelDownloading.Text = Interface.GetInterfaceString("getaddons_updates_nomore");
+											labelDownloading.Text = Strings.GetInterfaceString("getaddons_updates_nomore");
 										}
 										TextboxRouteFilterTextChanged(null, null);
 										TextboxTrainFilterTextChanged(null, null);
@@ -847,7 +847,7 @@ namespace OpenBve {
 					 * Start asynchronous download.
 					 * */
 					const int numberOfParallelDownloads = 2;
-					labelDownloading.Text = Interface.GetInterfaceString("getaddons_package_install_progress");
+					labelDownloading.Text = Strings.GetInterfaceString("getaddons_package_install_progress");
 					progressbarDownloading.Style = ProgressBarStyle.Continuous;
 					panelPackages.Enabled = false;
 					timerInstall.Enabled = true;
@@ -896,7 +896,7 @@ namespace OpenBve {
 							}
 							builder.AppendLine();
 						}
-						switch (MessageBox.Show(Interface.GetInterfaceString("getaddons_redundant_1") + "\n\n" + builder.ToString() + Interface.GetInterfaceString("getaddons_redundant_2"), Interface.GetInterfaceString("getaddons_remove"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
+						switch (MessageBox.Show(Strings.GetInterfaceString("getaddons_redundant_1") + "\n\n" + builder.ToString() + Strings.GetInterfaceString("getaddons_redundant_2"), Strings.GetInterfaceString("getaddons_remove"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)) {
 							case DialogResult.Yes:
 								packages.AddRange(results);
 								break;
@@ -907,7 +907,7 @@ namespace OpenBve {
 					/*
 					 * Remove the packages.
 					 * */
-					labelDownloading.Text = Interface.GetInterfaceString("getaddons_package_remove_progress");
+					labelDownloading.Text = Strings.GetInterfaceString("getaddons_package_remove_progress");
 					progressbarDownloading.Style = ProgressBarStyle.Marquee;
 					panelPackages.Enabled = false;
 					CurrentRemoveThread = new Thread(
@@ -923,7 +923,7 @@ namespace OpenBve {
 									if (unsuccessful.Count == 0) {
 										labelDownloading.Text = string.Empty;
 									} else {
-										labelDownloading.Text = Interface.GetInterfaceString("getaddons_package_remove_failure") + "\n" + string.Join(", ", unsuccessful.ToArray());
+										labelDownloading.Text = Strings.GetInterfaceString("getaddons_package_remove_failure") + "\n" + string.Join(", ", unsuccessful.ToArray());
 									}
 									progressbarDownloading.Style = ProgressBarStyle.Blocks;
 									panelPackages.Enabled = true;
@@ -974,10 +974,10 @@ namespace OpenBve {
 				if (fraction < 0.0) fraction = 0.0;
 				if (fraction > 1.0) fraction = 1.0;
 				progressbarDownloading.Value = progressbarDownloading.Minimum + (int)Math.Floor(fraction * (progressbarDownloading.Maximum - progressbarDownloading.Minimum));
-				labelDownloading.Text = Interface.GetInterfaceString("getaddons_package_install_download") + "\n" + GetStringFromSize(CurrentDownloadCurrentSize) + " / " + GetStringFromSize(CurrentDownloadTotalSize);
+				labelDownloading.Text = Strings.GetInterfaceString("getaddons_package_install_download") + "\n" + GetStringFromSize(CurrentDownloadCurrentSize) + " / " + GetStringFromSize(CurrentDownloadTotalSize);
 			} else {
 				progressbarDownloading.Value = progressbarDownloading.Maximum;
-				labelDownloading.Text = Interface.GetInterfaceString("getaddons_package_install_progress");
+				labelDownloading.Text = Strings.GetInterfaceString("getaddons_package_install_progress");
 			}
 		}
 		

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenBveApi.Sounds;
 
 namespace OpenBve {
@@ -10,13 +9,13 @@ namespace OpenBve {
 		/// <returns>The mono mix in the same format as the original.</returns>
 		/// <exception cref="System.NotSupportedException">Raised when the bits per sample are not supported.</exception>
 		private static byte[] GetMonoMix(Sound sound) {
+			if (sound.Bytes.Length == 1 || sound.Bytes[0].Length == 0)
+				return sound.Bytes[0];
 			/*
 			 * Convert integer samples to floating-point samples.
 			 */
 			float[][] samples;
-			if (sound.Bytes.Length == 1 || sound.Bytes[0].Length == 0) {
-				return sound.Bytes[0];
-			} else if (sound.BitsPerSample == 8) {
+			if (sound.BitsPerSample == 8) {
 				samples = new float[sound.Bytes.Length][];
 				for (int i = 0; i < sound.Bytes.Length; i++) {
 					samples[i] = new float[sound.Bytes[i].Length];
@@ -97,9 +96,9 @@ namespace OpenBve {
 					remainingSamplesUsed++;
 				}
 			}
-			if (remainingSamplesUsed == 1) {
+			if (remainingSamplesUsed == 1)
 				return remainingSamples[0];
-			} else if (remainingSamplesUsed == 0) {
+			if (remainingSamplesUsed == 0) {
 				remainingSamples = samples;
 				remainingSamplesUsed = samples.Length;
 			} else {

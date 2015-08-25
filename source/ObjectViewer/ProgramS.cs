@@ -7,8 +7,13 @@
 
 using System;
 using System.Windows.Forms;
-using Tao.Sdl;
-using Tao.OpenGl;
+using SDL2;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using Stopwatch = System.Diagnostics.Stopwatch;
+using System.Drawing;
+
 
 namespace OpenBve {
 	internal static class Program {
@@ -20,11 +25,13 @@ namespace OpenBve {
 		internal static FileSystem FileSystem = null;
 		internal enum ProgramType { OpenBve, ObjectViewer, RouteViewer, Other }
 		internal const ProgramType CurrentProgramType = ProgramType.ObjectViewer;
+		internal static IntPtr SDLWindow{ get; private set; }
+		internal static IntPtr GLContext{ get; private set; }
 
 		// members
 		private static bool Quit = false;
 		private static string[] Files = new string[] { };
-		private static int LastTicks = 0;
+		private static long LastTicks = 0;
 		private static bool ReducedMode = true;
 		private static int ReducedModeEnteringTime = 0;
 		private static int RotateX = 0;
@@ -40,6 +47,9 @@ namespace OpenBve {
 		internal static int LightingTarget = 1;
 		internal static double LightingRelative = 1.0;
 		private static bool ShiftPressed = false;
+		private static IntPtr iconSurface = IntPtr.Zero;
+		private static System.Drawing.Imaging.BitmapData iconData = null;
+		private static Bitmap iconBmp = null;
 
 		// mouse
 		internal static short MouseCenterX = 0;
@@ -56,13 +66,13 @@ namespace OpenBve {
 			// platform and mono
 			int p = (int)Environment.OSVersion.Platform;
 			if (p == 4 | p == 128) {
-				/// general Unix
+				// general Unix
 				CurrentPlatform = Platform.Linux;
 			} else if (p == 6) {
-				/// Mac
+				// Mac
 				CurrentPlatform = Platform.Mac;
 			} else {
-				/// non-Unix
+				// non-Unix
 				CurrentPlatform = Platform.Windows;
 			}
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
@@ -102,49 +112,65 @@ namespace OpenBve {
 			// application
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			if (Sdl.SDL_Init(Sdl.SDL_INIT_VIDEO) != 0) {
+			if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) != 0) {
 				MessageBox.Show("SDL failed to initialize the video subsystem.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// initialize sdl window
-			Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_DOUBLEBUFFER, 1);
-			Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_DEPTH_SIZE, 16);
-			Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_RED_SIZE, 8);
-			Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_GREEN_SIZE, 8);
-			Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_BLUE_SIZE, 8);
-			Sdl.SDL_GL_SetAttribute(Sdl.SDL_GL_ALPHA_SIZE, 8);
-			Sdl.SDL_ShowCursor(Sdl.SDL_ENABLE);
-			// icon
-			{
-				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.bmp");
-				if (System.IO.File.Exists(File)) {
-					IntPtr Bitmap = Sdl.SDL_LoadBMP(File);
-					if (Bitmap != null) {
-						Sdl.SDL_Surface Surface = (Sdl.SDL_Surface)System.Runtime.InteropServices.Marshal.PtrToStructure(Bitmap, typeof(Sdl.SDL_Surface));
-						int ColorKey = Sdl.SDL_MapRGB(Surface.format, 0, 0, 255);
-						Sdl.SDL_SetColorKey(Bitmap, Sdl.SDL_SRCCOLORKEY, ColorKey);
-						Sdl.SDL_WM_SetIcon(Bitmap, null);
-					}
-				}
-			}
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DOUBLEBUFFER, 1);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_DEPTH_SIZE, 16);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_RED_SIZE, 8);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_GREEN_SIZE, 8);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_BLUE_SIZE, 8);
+			SDL.SDL_GL_SetAttribute(SDL.SDL_GLattr.SDL_GL_ALPHA_SIZE, 8);
+			SDL.SDL_ShowCursor(1);
 			// initialize camera
 			ResetCamera();
 			// create window
 			Renderer.ScreenWidth = 960;
 			Renderer.ScreenHeight = 600;
 			int Bits = 32;
-			IntPtr video = Sdl.SDL_SetVideoMode(Renderer.ScreenWidth, Renderer.ScreenHeight, Bits, Sdl.SDL_OPENGL | Sdl.SDL_DOUBLEBUF);
-			if (video != IntPtr.Zero) {
+			//Sdl.SDL_SetVideoMode(Renderer.ScreenWidth, Renderer.ScreenHeight, Bits, Sdl.SDL_OPENGL | Sdl.SDL_DOUBLEBUF);
+			SDLWindow = SDL.SDL_CreateWindow(Application.ProductName,
+				SDL.SDL_WINDOWPOS_UNDEFINED,SDL.SDL_WINDOWPOS_UNDEFINED,
+				Renderer.ScreenWidth,Renderer.ScreenHeight,
+				SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+			if (SDLWindow != IntPtr.Zero) {
 				// create window
-				Sdl.SDL_WM_SetCaption(Application.ProductName, null);
+				string File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.png");
+				if (System.IO.File.Exists(File)) {
+					// set up icon
+					iconBmp = new Bitmap(File); // load file
+					iconData = iconBmp.LockBits(new Rectangle(0,0,iconBmp.Width,iconBmp.Height),
+						System.Drawing.Imaging.ImageLockMode.ReadOnly,
+						System.Drawing.Imaging.PixelFormat.Format32bppArgb); // lock data
+					iconSurface = SDL.SDL_CreateRGBSurfaceFrom(iconData.Scan0,iconBmp.Width,iconBmp.Height,32,iconData.Stride,
+						0x00FF0000,0x0000FF00,0x000000FF,0xFF000000); // upload to sdl
+					SDL.SDL_SetWindowIcon(SDLWindow,iconSurface); // use icon
+					// free is on the end of the program
+					/*
+					IntPtr bitmap = SDL.SDL_LoadBMP(File);
+					if (bitmap != IntPtr.Zero) {
+						SDL.SDL_Surface Surface = (SDL.SDL_Surface)System.Runtime.InteropServices.Marshal.PtrToStructure(bitmap, typeof(SDL.SDL_Surface));
+						uint ColorKey = SDL.SDL_MapRGB(Surface.format, 0, 0, 255);
+						SDL.SDL_SetColorKey(bitmap, 1, ColorKey);
+						SDL.SDL_SetWindowIcon(SDLWindow,bitmap);
+					}
+					*/
+				}
+				GLContext = SDL.SDL_GL_CreateContext(SDLWindow);
+				GraphicsContext tkContext = new GraphicsContext(new ContextHandle(GLContext),
+					                            SDL.SDL_GL_GetProcAddress,
+					                            () => new ContextHandle(SDL.SDL_GL_GetCurrentContext()));
 				// anisotropic filtering
-				string[] Extensions = Gl.glGetString(Gl.GL_EXTENSIONS).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+				string[] extensions = GL.GetString(StringName.Extensions).Split(new []{' '},StringSplitOptions.RemoveEmptyEntries);
 				Interface.CurrentOptions.AnisotropicFilteringMaximum = 0;
-				for (int i = 0; i < Extensions.Length; i++) {
-					if (string.Compare(Extensions[i], "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0) {
-						float n; Gl.glGetFloatv(Gl.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, out n);
+				for (int i = 0; i < extensions.Length; i++) {
+					if (extensions[i] == "GL_EXT_texture_filter_anisotropic") {
+						float n;
+						GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out n);
 						Interface.CurrentOptions.AnisotropicFilteringMaximum = (int)Math.Round((double)n);
 						break;
 					}
@@ -160,7 +186,7 @@ namespace OpenBve {
 				// module initialization
 				Renderer.Initialize();
 				Renderer.InitializeLighting();
-				Sdl.SDL_GL_SwapBuffers();
+				SDL.SDL_GL_SwapWindow(SDLWindow);
 				Fonts.Initialize();
 				UpdateViewport();
 				// command line arguments
@@ -181,10 +207,12 @@ namespace OpenBve {
 				ObjectManager.UpdateVisibility(0.0, true);
 				ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 				UpdateCaption();
-				LastTicks = Sdl.SDL_GetTicks();
+				Stopwatch timer = new Stopwatch();
+				timer.Start();
+				LastTicks = timer.ElapsedMilliseconds;
 				// loop
 				while (!Quit) {
-					int ticks = Sdl.SDL_GetTicks();
+					long ticks = timer.ElapsedMilliseconds;
 					double timeElapsed = 0.001 * (double)(ticks - LastTicks);
 					if (timeElapsed < 0.0001) {
 						timeElapsed = 0.0001;
@@ -346,10 +374,10 @@ namespace OpenBve {
 					}
 					// continue
 					if (ReducedMode) {
-						ReducedModeEnteringTime = ticks + 3000;
+						ReducedModeEnteringTime = (int)(ticks + 3000);
 					} else {
 						if (keep) {
-							ReducedModeEnteringTime = ticks + 3000;
+							ReducedModeEnteringTime = (int)(ticks + 3000);
 						} else if (ticks > ReducedModeEnteringTime) {
 							ReducedMode = true;
 							World.AbsoluteCameraSide.Y = 0.0;
@@ -368,11 +396,19 @@ namespace OpenBve {
 						Renderer.InitializeLighting();
 					}
 					Renderer.RenderScene();
-					Sdl.SDL_GL_SwapBuffers();
+					SDL.SDL_GL_SwapWindow(SDLWindow);
 				}
 				// quit
 				TextureManager.UnuseAllTextures();
-				Sdl.SDL_Quit();
+				if (iconSurface != IntPtr.Zero)
+					SDL.SDL_FreeSurface(iconSurface); // free surface
+				if (iconBmp != null && iconData != null) {
+					iconBmp.UnlockBits(iconData); // free pixels
+					iconBmp.Dispose();
+				}
+				SDL.SDL_GL_DeleteContext(GLContext);
+				SDL.SDL_DestroyWindow(SDLWindow);
+				SDL.SDL_Quit();
 			} else {
 				MessageBox.Show("SDL failed to create the window.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}
@@ -393,47 +429,49 @@ namespace OpenBve {
 
 		// update viewport
 		internal static void UpdateViewport() {
-			Gl.glViewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
+			GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
 			World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			Gl.glMatrixMode(Gl.GL_PROJECTION);
-			Gl.glLoadIdentity();
-			const double invdeg = 57.295779513082320877;
-			Glu.gluPerspective(World.VerticalViewingAngle * invdeg, -World.AspectRatio, 0.2, 1000.0);
-			Gl.glMatrixMode(Gl.GL_MODELVIEW);
-			Gl.glLoadIdentity();
+			GL.MatrixMode(MatrixMode.Projection);
+			Matrix4d persp = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle,World.AspectRatio, 0.2, 1000.0);
+			GL.LoadMatrix(ref persp);
+			GL.Scale(-1,1,1);
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.LoadIdentity();
 		}
 
 		// process events
 		private static void ProcessEvents() {
-			Sdl.SDL_Event Event;
-			while (Sdl.SDL_PollEvent(out Event) != 0) {
+			SDL.SDL_Event Event;
+			while (SDL.SDL_PollEvent(out Event) != 0) {
 				switch (Event.type) {
 						// quit
-					case Sdl.SDL_QUIT:
+					case SDL.SDL_EventType.SDL_QUIT:
 						Quit = true;
 						return;
 						// resize
-					case Sdl.SDL_VIDEORESIZE:
-						Renderer.ScreenWidth = Event.resize.w;
-						Renderer.ScreenHeight = Event.resize.h;
-						UpdateViewport();
+					case SDL.SDL_EventType.SDL_WINDOWEVENT:
+						if (Event.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED) {
+							Renderer.ScreenWidth = Event.window.data1;
+							Renderer.ScreenHeight = Event.window.data2;
+							UpdateViewport();
+						}
 						break;
 						// mouse
-					case Sdl.SDL_MOUSEBUTTONDOWN:
-						MouseCenterX = Event.button.x;
-						MouseCenterY = Event.button.y;
+					case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
+						MouseCenterX = (short)Event.button.x;
+						MouseCenterY = (short)Event.button.y;
 						MouseCameraPosition = World.AbsoluteCameraPosition;
 						MouseCameraDirection = World.AbsoluteCameraDirection;
 						MouseCameraUp = World.AbsoluteCameraUp;
 						MouseCameraSide = World.AbsoluteCameraSide;
 						MouseButton = Event.button.button;
 						break;
-					case Sdl.SDL_MOUSEBUTTONUP:
+					case SDL.SDL_EventType.SDL_MOUSEBUTTONUP:
 						MouseButton = 0;
 						break;
-					case Sdl.SDL_MOUSEMOTION:
-						if (MouseButton == Sdl.SDL_BUTTON_LEFT) {
+					case SDL.SDL_EventType.SDL_MOUSEMOTION:
+						if (MouseButton == SDL.SDL_BUTTON_LEFT) {
 							World.AbsoluteCameraDirection = MouseCameraDirection;
 							World.AbsoluteCameraUp = MouseCameraUp;
 							World.AbsoluteCameraSide = MouseCameraSide;
@@ -453,7 +491,7 @@ namespace OpenBve {
 								World.Rotate(ref World.AbsoluteCameraUp.X, ref World.AbsoluteCameraUp.Y, ref World.AbsoluteCameraUp.Z, World.AbsoluteCameraSide.X, World.AbsoluteCameraSide.Y, World.AbsoluteCameraSide.Z, cosa, sina);
 							}
 							ReducedMode = false;
-						} else if (MouseButton == Sdl.SDL_BUTTON_RIGHT) {
+						} else if (MouseButton == SDL.SDL_BUTTON_RIGHT) {
 							World.AbsoluteCameraPosition = MouseCameraPosition;
 							double dx = -0.025 * (double)(Event.motion.x - MouseCenterX);
 							World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraSide.X;
@@ -464,7 +502,7 @@ namespace OpenBve {
 							World.AbsoluteCameraPosition.Y += dy * World.AbsoluteCameraUp.Y;
 							World.AbsoluteCameraPosition.Z += dy * World.AbsoluteCameraUp.Z;
 							ReducedMode = false;
-						} else if (MouseButton == Sdl.SDL_BUTTON_MIDDLE) {
+						} else if (MouseButton == SDL.SDL_BUTTON_MIDDLE) {
 							World.AbsoluteCameraPosition = MouseCameraPosition;
 							double dx = -0.025 * (double)(Event.motion.x - MouseCenterX);
 							World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraSide.X;
@@ -478,13 +516,13 @@ namespace OpenBve {
 						}
 						break;
 						// key down
-					case Sdl.SDL_KEYDOWN:
+					case SDL.SDL_EventType.SDL_KEYDOWN:
 						switch (Event.key.keysym.sym) {
-							case Sdl.SDLK_LSHIFT:
-							case Sdl.SDLK_RSHIFT:
+							case SDL.SDL_Keycode.SDLK_LSHIFT:
+							case SDL.SDL_Keycode.SDLK_RSHIFT:
 								ShiftPressed = true;
 								break;
-							case Sdl.SDLK_F5:
+							case SDL.SDL_Keycode.SDLK_F5:
 								// reset
 								ReducedMode = false;
 								LightingRelative = -1.0;
@@ -508,7 +546,7 @@ namespace OpenBve {
 								ObjectManager.UpdateVisibility(0.0, true);
 								ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 								break;
-							case Sdl.SDLK_F7:
+							case SDL.SDL_Keycode.SDLK_F7:
 								{
 									OpenFileDialog Dialog = new OpenFileDialog();
 									Dialog.CheckFileExists = true;
@@ -546,12 +584,12 @@ namespace OpenBve {
 										ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
 									}
 								} break;
-							case Sdl.SDLK_F9:
+							case SDL.SDL_Keycode.SDLK_F9:
 								if (Interface.MessageCount != 0) {
 									formMessages.ShowMessages();
 								}
 								break;
-							case Sdl.SDLK_DELETE:
+							case SDL.SDL_Keycode.SDLK_DELETE:
 								ReducedMode = false;
 								LightingRelative = -1.0;
 								Game.Reset();
@@ -561,81 +599,81 @@ namespace OpenBve {
 								Files = new string[] { };
 								UpdateCaption();
 								break;
-							case Sdl.SDLK_LEFT:
+							case SDL.SDL_Keycode.SDLK_LEFT:
 								RotateX = -1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_RIGHT:
+							case SDL.SDL_Keycode.SDLK_RIGHT:
 								RotateX = 1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_UP:
+							case SDL.SDL_Keycode.SDLK_UP:
 								RotateY = -1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_DOWN:
+							case SDL.SDL_Keycode.SDLK_DOWN:
 								RotateY = 1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_a:
-							case Sdl.SDLK_KP4:
+							case SDL.SDL_Keycode.SDLK_a:
+							case SDL.SDL_Keycode.SDLK_KP_4:
 								MoveX = -1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_d:
-							case Sdl.SDLK_KP6:
+							case SDL.SDL_Keycode.SDLK_d:
+							case SDL.SDL_Keycode.SDLK_KP_6:
 								MoveX = 1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_KP8:
+							case SDL.SDL_Keycode.SDLK_KP_8:
 								MoveY = 1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_KP2:
+							case SDL.SDL_Keycode.SDLK_KP_2:
 								MoveY = -1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_w:
-							case Sdl.SDLK_KP9:
+							case SDL.SDL_Keycode.SDLK_w:
+							case SDL.SDL_Keycode.SDLK_KP_9:
 								MoveZ = 1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_s:
-							case Sdl.SDLK_KP3:
+							case SDL.SDL_Keycode.SDLK_s:
+							case SDL.SDL_Keycode.SDLK_KP_3:
 								MoveZ = -1;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_KP5:
+							case SDL.SDL_Keycode.SDLK_KP_5:
 								ResetCamera();
 								break;
-							case Sdl.SDLK_f:
-							case Sdl.SDLK_F1:
+							case SDL.SDL_Keycode.SDLK_f:
+							case SDL.SDL_Keycode.SDLK_F1:
 								Renderer.OptionWireframe = !Renderer.OptionWireframe;
 								if (Renderer.OptionWireframe) {
-									Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_LINE);
+									GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 								} else {
-									Gl.glPolygonMode(Gl.GL_FRONT_AND_BACK, Gl.GL_FILL);
+									GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 								} break;
-							case Sdl.SDLK_n:
-							case Sdl.SDLK_F2:
+							case SDL.SDL_Keycode.SDLK_n:
+							case SDL.SDL_Keycode.SDLK_F2:
 								Renderer.OptionNormals = !Renderer.OptionNormals;
 								break;
-							case Sdl.SDLK_l:
-							case Sdl.SDLK_F3:
+							case SDL.SDL_Keycode.SDLK_l:
+							case SDL.SDL_Keycode.SDLK_F3:
 								LightingTarget = 1 - LightingTarget;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_i:
-							case Sdl.SDLK_F4:
+							case SDL.SDL_Keycode.SDLK_i:
+							case SDL.SDL_Keycode.SDLK_F4:
 								Renderer.OptionInterface = !Renderer.OptionInterface;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_g:
-							case Sdl.SDLK_c:
+							case SDL.SDL_Keycode.SDLK_g:
+							case SDL.SDL_Keycode.SDLK_c:
 								Renderer.OptionCoordinateSystem = !Renderer.OptionCoordinateSystem;
 								ReducedMode = false;
 								break;
-							case Sdl.SDLK_b:
+							case SDL.SDL_Keycode.SDLK_b:
 								if (ShiftPressed) {
 									ColorDialog dialog = new ColorDialog();
 									dialog.FullOpen = true;
@@ -654,34 +692,34 @@ namespace OpenBve {
 								break;
 						} break;
 						// key up
-					case Sdl.SDL_KEYUP:
+					case SDL.SDL_EventType.SDL_KEYUP:
 						switch (Event.key.keysym.sym) {
-							case Sdl.SDLK_LSHIFT:
-							case Sdl.SDLK_RSHIFT:
+							case SDL.SDL_Keycode.SDLK_LSHIFT:
+							case SDL.SDL_Keycode.SDLK_RSHIFT:
 								ShiftPressed = false;
 								break;
-							case Sdl.SDLK_LEFT:
-							case Sdl.SDLK_RIGHT:
+							case SDL.SDL_Keycode.SDLK_LEFT:
+							case SDL.SDL_Keycode.SDLK_RIGHT:
 								RotateX = 0;
 								break;
-							case Sdl.SDLK_UP:
-							case Sdl.SDLK_DOWN:
+							case SDL.SDL_Keycode.SDLK_UP:
+							case SDL.SDL_Keycode.SDLK_DOWN:
 								RotateY = 0;
 								break;
-							case Sdl.SDLK_a:
-							case Sdl.SDLK_d:
-							case Sdl.SDLK_KP4:
-							case Sdl.SDLK_KP6:
+							case SDL.SDL_Keycode.SDLK_a:
+							case SDL.SDL_Keycode.SDLK_d:
+							case SDL.SDL_Keycode.SDLK_KP_4:
+							case SDL.SDL_Keycode.SDLK_KP_6:
 								MoveX = 0;
 								break;
-							case Sdl.SDLK_KP8:
-							case Sdl.SDLK_KP2:
+							case SDL.SDL_Keycode.SDLK_KP_8:
+							case SDL.SDL_Keycode.SDLK_KP_2:
 								MoveY = 0;
 								break;
-							case Sdl.SDLK_w:
-							case Sdl.SDLK_s:
-							case Sdl.SDLK_KP9:
-							case Sdl.SDLK_KP3:
+							case SDL.SDL_Keycode.SDLK_w:
+							case SDL.SDL_Keycode.SDLK_s:
+							case SDL.SDL_Keycode.SDLK_KP_9:
+							case SDL.SDL_Keycode.SDLK_KP_3:
 								MoveZ = 0;
 								break;
 						} break;
@@ -697,9 +735,9 @@ namespace OpenBve {
 					if (i != 0) Title += ", ";
 					Title += System.IO.Path.GetFileName(Files[i]);
 				}
-				Sdl.SDL_WM_SetCaption(Title + " - " + Application.ProductName, null);
+				SDL.SDL_SetWindowTitle(SDLWindow,Title + " - " + Application.ProductName);
 			} else {
-				Sdl.SDL_WM_SetCaption(Application.ProductName, null);
+				SDL.SDL_SetWindowTitle(SDLWindow,Application.ProductName);
 			}
 		}
 		

@@ -22,17 +22,17 @@ namespace OpenBveApi.Textures {
 		Alpha = 3
 	}
 
-	/// <summary>Represents a texture.</summary>
+	/// <summary>Represents a RGBA texture with 32 bits per pixel.</summary>
 	public class Texture {
 		// --- members ---
 		/// <summary>The width of the texture in pixels.</summary>
-		private int MyWidth;
+		private readonly int MyWidth;
 		/// <summary>The height of the texture in pixels.</summary>
-		private int MyHeight;
+		private readonly int MyHeight;
 		/// <summary>The number of bits per pixel. Must be 32.</summary>
-		private int MyBitsPerPixel;
+		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
-		private byte[] MyBytes;
+		private readonly byte[] MyBytes;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="width">The width of the texture in pixels.</param>
@@ -43,18 +43,16 @@ namespace OpenBveApi.Textures {
 		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
 		public Texture(int width, int height, int bitsPerPixel, byte[] bytes) {
-			if (bitsPerPixel != 32) {
-				throw new ArgumentException("The number of bits per pixel is supported.");
-			} else if (bytes == null) {
-				throw new ArgumentNullException("The data bytes are a null reference.");
-			} else if (bytes.Length != 4 * width * height) {
-				throw new ArgumentException("The data bytes are not of the expected length.");
-			} else {
-				this.MyWidth = width;
-				this.MyHeight = height;
-				this.MyBitsPerPixel = bitsPerPixel;
-				this.MyBytes = bytes;
-			}
+			if (bitsPerPixel != 32)
+				throw new ArgumentException("The number of bits per pixel is supported.", "bitsPerPixel");
+			if (bytes == null)
+				throw new ArgumentNullException("bytes", "The data bytes are a null reference.");
+			if (bytes.Length != 4 * width * height)
+				throw new ArgumentException("The data bytes are not of the expected length.", "bytes");
+			this.MyWidth = width;
+			this.MyHeight = height;
+			this.MyBitsPerPixel = bitsPerPixel;
+			this.MyBytes = bytes;
 		}
 		// --- properties ---
 		/// <summary>Gets the width of the texture in pixels.</summary>
@@ -134,6 +132,16 @@ namespace OpenBveApi.Textures {
 			}
 			return true;
 		}
+		public override int GetHashCode() {
+			int result = 1;
+			result = 31 * result + MyWidth;
+			result = 31 * result + MyHeight;
+			foreach (byte element in MyBytes) {
+				result = 31 * result + element;
+			}
+			result = 31 * result + MyBitsPerPixel;
+			return result;
+		}
 		// --- functions ---
 		/// <summary>Applies the specified parameters onto this texture.</summary>
 		/// <param name="parameters">The parameters, or a null reference.</param>
@@ -147,7 +155,7 @@ namespace OpenBveApi.Textures {
 		/// <returns>The type of transparency encountered in this texture.</returns>
 		/// <exception cref="System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
 		public TextureTransparencyType GetTransparencyType() {
-			if (this.MyBitsPerPixel == 24) {
+			if (this.MyBitsPerPixel == 24) { // TODO really? constructor denies usage of any non-32bpp value...
 				return TextureTransparencyType.Opaque;
 			} else if (this.MyBitsPerPixel == 32) {
 				for (int i = 3; i < this.MyBytes.Length; i += 4) {
@@ -180,13 +188,13 @@ namespace OpenBveApi.Textures {
 	public class TextureClipRegion {
 		// --- members ---
 		/// <summary>The left coordinate.</summary>
-		private int MyLeft;
+		private readonly int MyLeft;
 		/// <summary>The top coordinate.</summary>
-		private int MyTop;
+		private readonly int MyTop;
 		/// <summary>The width.</summary>
-		private int MyWidth;
+		private readonly int MyWidth;
 		/// <summary>The height.</summary>
-		private int MyHeight;
+		private readonly int MyHeight;
 		// --- properties ---
 		/// <summary>Gets the left coordinate.</summary>
 		public int Left {
@@ -221,16 +229,14 @@ namespace OpenBveApi.Textures {
 		/// <exception cref="System.ArgumentException">Raised when the left or top are negative.</exception>
 		/// <exception cref="System.ArgumentException">Raised when the width or height are non-positive.</exception>
 		public TextureClipRegion(int left, int top, int width, int height) {
-			if (left < 0 | top < 0) {
-				throw new ArgumentException("The left or top coordinates are negative.");
-			} else if (width <= 0 | height <= 0) {
-				throw new ArgumentException("The width or height are non-positive.");
-			} else {
-				this.MyLeft = left;
-				this.MyTop = top;
-				this.MyWidth = width;
-				this.MyHeight = height;
-			}
+			if (left < 0 || top < 0)
+				throw new ArgumentException("The left or top coordinates are negative.","top,left");
+			if (width <= 0 || height <= 0)
+				throw new ArgumentException("The width or height are non-positive.","width,height");
+			this.MyLeft = left;
+			this.MyTop = top;
+			this.MyWidth = width;
+			this.MyHeight = height;
 		}
 		// --- operators ---
 		/// <summary>Checks whether two clip regions are equal.</summary>
@@ -276,6 +282,14 @@ namespace OpenBveApi.Textures {
 			if (this.MyHeight != x.MyHeight) return false;
 			return true;
 		}
+		public override int GetHashCode() {
+			int result = 1;
+			result = 31 * result + MyLeft;
+			result = 31 * result + MyTop;
+			result = 31 * result + MyWidth;
+			result = 31 * result + MyHeight;
+			return result;
+		}
 	}
 	
 	
@@ -285,9 +299,9 @@ namespace OpenBveApi.Textures {
 	public class TextureParameters {
 		// --- members ---
 		/// <summary>The region in the texture to be extracted, or a null reference for the entire texture.</summary>
-		private TextureClipRegion MyClipRegion;
+		private readonly TextureClipRegion MyClipRegion;
 		/// <summary>The color in the texture that should become transparent, or a null reference for no transparent color.</summary>
-		private Nullable<Color24> MyTransparentColor;
+		private readonly Color24? MyTransparentColor;
 		// --- properties ---
 		/// <summary>Gets the region in the texture to be extracted, or a null reference for the entire texture.</summary>
 		public TextureClipRegion ClipRegion {
@@ -305,7 +319,7 @@ namespace OpenBveApi.Textures {
 		/// <summary>Creates new texture parameters.</summary>
 		/// <param name="clipRegion">The region in the texture to be extracted, or a null reference for the entire texture.</param>
 		/// <param name="transparentColor">The color in the texture that should become transparent, or a null reference for no transparent color.</param>
-		public TextureParameters(TextureClipRegion clipRegion, Nullable<Color24> transparentColor) {
+		public TextureParameters(TextureClipRegion clipRegion, Color24? transparentColor) {
 			this.MyClipRegion = clipRegion;
 			this.MyTransparentColor = transparentColor;
 		}
@@ -346,6 +360,12 @@ namespace OpenBveApi.Textures {
 			if (this.MyClipRegion != x.MyClipRegion) return false;
 			if (this.MyTransparentColor != x.MyTransparentColor) return false;
 			return true;
+		}
+		public override int GetHashCode() {
+			int result = MyClipRegion.GetHashCode();
+			if (MyTransparentColor.HasValue)
+				result = 31 * result + MyTransparentColor.Value.GetHashCode();
+			return result;
 		}
 	}
 	

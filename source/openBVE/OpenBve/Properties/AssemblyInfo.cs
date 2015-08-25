@@ -7,13 +7,13 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("openBVE")]
 [assembly: AssemblyCopyright("The openBVE Project")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.4.3.0")]
-[assembly: AssemblyFileVersion("1.4.3.0")]
+[assembly: AssemblyVersion("1.4.3.1")]
+[assembly: AssemblyFileVersion("1.4.3.1")]
 [assembly: CLSCompliant(true)]
 
 namespace OpenBve {
 	internal static partial class Program {
-		internal const bool IsDevelopmentVersion = false;
-		internal const string VersionSuffix = "";
+		internal const bool IsDevelopmentVersion = true;
+		internal const string VersionSuffix = "-dev";
 	}
 }

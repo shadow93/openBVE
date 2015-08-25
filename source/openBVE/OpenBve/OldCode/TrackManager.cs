@@ -152,7 +152,7 @@ namespace OpenBve {
 						int d = Train.DriverCar;
 						Sounds.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
 						if (buffer != null) {
-							OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;
+							Vector3D pos = Train.Cars[d].Sounds.Halt.Position;
 							if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Single) {
 								Train.Cars[d].Sounds.Halt.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, false);
 							} else if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Loop) {
@@ -184,11 +184,7 @@ namespace OpenBve {
 						Train.LastStation = this.StationIndex;
 					}
 				} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
-					if (Direction < 0) {
-						Train.StationRearCar = false;
-					} else {
-						Train.StationRearCar = true;
-					}
+					Train.StationRearCar = Direction >= 0;
 				}
 			}
 		}
@@ -219,13 +215,13 @@ namespace OpenBve {
 						if (Train.Station == StationIndex) {
 							if (Train == TrainManager.PlayerTrain) {
 								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending) {
-									string s = Interface.GetInterfaceString("message_station_passed");
+									string s = Strings.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, Game.MessageColor.Orange, Game.SecondsSinceMidnight + 10.0);
+									Game.AddMessage(s, Game.MessageDependency.None, Options.GameMode.Normal, Game.MessageColor.Orange, Game.SecondsSinceMidnight + 10.0);
 								} else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding) {
-									string s = Interface.GetInterfaceString("message_station_passed_boarding");
+									string s = Strings.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
-									Game.AddMessage(s, Game.MessageDependency.None, Interface.GameMode.Normal, Game.MessageColor.Red, Game.SecondsSinceMidnight + 10.0);
+									Game.AddMessage(s, Game.MessageDependency.None, Options.GameMode.Normal, Game.MessageColor.Red, Game.SecondsSinceMidnight + 10.0);
 								}
 							}
 							Train.Station = -1;
@@ -312,9 +308,9 @@ namespace OpenBve {
 					// messages
 					if (this.NextSectionIndex < 0 || !Game.Sections[this.NextSectionIndex].Invisible) {
 						if (Train.CurrentSectionLimit == 0.0) {
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, Game.MessageColor.Red, double.PositiveInfinity);
+							Game.AddMessage(Strings.GetInterfaceString("message_signal_stop"), Game.MessageDependency.SectionLimit, Options.GameMode.Normal, Game.MessageColor.Red, double.PositiveInfinity);
 						} else if (Train.Specs.CurrentAverageSpeed > Train.CurrentSectionLimit) {
-							Game.AddMessage(Interface.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Interface.GameMode.Normal, Game.MessageColor.Orange, double.PositiveInfinity);
+							Game.AddMessage(Strings.GetInterfaceString("message_signal_overspeed"), Game.MessageDependency.SectionLimit, Options.GameMode.Normal, Game.MessageColor.Orange, double.PositiveInfinity);
 						}
 					}
 				}
@@ -400,7 +396,7 @@ namespace OpenBve {
 						}
 					}
 					if (Train.Plugin != null) {
-						Train.Plugin.UpdateBeacon((int)this.Type, s, this.Data);
+						Train.Plugin.UpdateBeacon(this.Type, s, this.Data);
 					}
 				}
 			}
@@ -445,7 +441,7 @@ namespace OpenBve {
 							Train.CurrentRouteLimit = this.NextSpeedLimit;
 						}
 						if (Train.Specs.CurrentAverageSpeed > this.NextSpeedLimit) {
-							Game.AddMessage(Interface.GetInterfaceString("message_route_overspeed"), Game.MessageDependency.RouteLimit, Interface.GameMode.Normal, Game.MessageColor.Orange, double.PositiveInfinity);
+							Game.AddMessage(Strings.GetInterfaceString("message_route_overspeed"), Game.MessageDependency.RouteLimit, Options.GameMode.Normal, Game.MessageColor.Orange, double.PositiveInfinity);
 						}
 					} else if (TriggerType == EventTriggerType.RearCarRearAxle) {
 						int n = Train.RouteLimits.Length;
@@ -470,10 +466,10 @@ namespace OpenBve {
 			internal bool PlayerTrainOnly;
 			internal bool Once;
 			internal bool Dynamic;
-			internal Vector3 Position;
+			internal Vector3D Position;
 			internal double Speed;
 			/// <param name="SoundBuffer">HACK: Set to a null reference to indicate the train point sound.</param>
-			internal SoundEvent(double TrackPositionDelta, Sounds.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
+			internal SoundEvent(double TrackPositionDelta, Sounds.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3D Position, double Speed) {
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 				this.SoundBuffer = SoundBuffer;
@@ -487,7 +483,7 @@ namespace OpenBve {
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle) {
 					if (!PlayerTrainOnly | Train == TrainManager.PlayerTrain) {
-						Vector3 p = this.Position;
+						Vector3D p = this.Position;
 						double pitch = 1.0;
 						double gain = 1.0;
 						Sounds.SoundBuffer buffer = this.SoundBuffer;
@@ -581,10 +577,10 @@ namespace OpenBve {
 			internal double CurveCantTangent;
 			internal double AdhesionMultiplier;
 			internal double CsvRwAccuracyLevel;
-			internal Vector3 WorldPosition;
-			internal Vector3 WorldDirection;
-			internal Vector3 WorldUp;
-			internal Vector3 WorldSide;
+			internal Vector3D WorldPosition;
+			internal Vector3D WorldDirection;
+			internal Vector3D WorldUp;
+			internal Vector3D WorldSide;
 			internal GeneralEvent[] Events;
 			internal TrackElement(double StartingTrackPosition) {
 				this.StartingTrackPosition = StartingTrackPosition;
@@ -593,10 +589,10 @@ namespace OpenBve {
 				this.CurveCantTangent = 0.0;
 				this.AdhesionMultiplier = 1.0;
 				this.CsvRwAccuracyLevel = 2.0;
-				this.WorldPosition = new Vector3(0.0, 0.0, 0.0);
-				this.WorldDirection = new Vector3(0.0, 0.0, 1.0);
-				this.WorldUp = new Vector3(0.0, 1.0, 0.0);
-				this.WorldSide = new Vector3(1.0, 0.0, 0.0);
+				this.WorldPosition = new Vector3D(0.0, 0.0, 0.0);
+				this.WorldDirection = new Vector3D(0.0, 0.0, 1.0);
+				this.WorldUp = new Vector3D(0.0, 1.0, 0.0);
+				this.WorldSide = new Vector3D(1.0, 0.0, 0.0);
 				this.Events = new GeneralEvent[] { };
 			}
 		}
@@ -611,10 +607,10 @@ namespace OpenBve {
 		internal struct TrackFollower {
 			internal int LastTrackElement;
 			internal double TrackPosition;
-			internal Vector3 WorldPosition;
-			internal Vector3 WorldDirection;
-			internal Vector3 WorldUp;
-			internal Vector3 WorldSide;
+			internal Vector3D WorldPosition;
+			internal Vector3D WorldDirection;
+			internal Vector3D WorldUp;
+			internal Vector3D WorldSide;
 			internal double CurveRadius;
 			internal double CurveCant;
 			internal double CantDueToInaccuracy;
@@ -631,7 +627,7 @@ namespace OpenBve {
 			int i = Follower.LastTrackElement;
 			while (i >= 0 && NewTrackPosition < CurrentTrack.Elements[i].StartingTrackPosition) {
 				double ta = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
-				double tb = -0.01;
+				const double tb = -0.01;
 				CheckEvents(ref Follower, i, -1, ta, tb);
 				i--;
 			}
@@ -661,7 +657,7 @@ namespace OpenBve {
 						double f = 2.0 * r * r * (1.0 - Math.Cos(b));
 						double c = (double)Math.Sign(db) * Math.Sqrt(f >= 0.0 ? f : 0.0);
 						double a = 0.5 * (double)Math.Sign(r) * b;
-						Vector3 D = new Vector3(CurrentTrack.Elements[i].WorldDirection.X, 0.0, CurrentTrack.Elements[i].WorldDirection.Z);
+						Vector3D D = new Vector3D(CurrentTrack.Elements[i].WorldDirection.X, 0.0, CurrentTrack.Elements[i].WorldDirection.Z);
 						World.Normalize(ref D.X, ref D.Y, ref D.Z);
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
@@ -718,11 +714,7 @@ namespace OpenBve {
 				}
 			} else {
 				if (db != 0.0) {
-					if (CurrentTrack.Elements[i].CurveRadius != 0.0) {
-						Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
-					} else {
-						Follower.CurveRadius = 0.0;
-					}
+					Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius/* != 0.0 ? CurrentTrack.Elements[i].CurveRadius : 0.0*/;
 					if (i < CurrentTrack.Elements.Length - 1) {
 						double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
 						if (t < 0.0) {

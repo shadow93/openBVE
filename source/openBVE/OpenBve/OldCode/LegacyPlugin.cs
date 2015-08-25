@@ -168,7 +168,7 @@ namespace OpenBve {
 				throw;
 			}
 			if (version != 131072) {
-				Interface.AddMessage(Interface.MessageType.Error, false, "The train plugin " + base.PluginTitle + " is of an unsupported version.");
+				Debug.AddMessage(Debug.MessageType.Error, false, "The train plugin " + base.PluginTitle + " is of an unsupported version.");
 				try {
 					Win32Dispose();
 				} catch (Exception ex) {

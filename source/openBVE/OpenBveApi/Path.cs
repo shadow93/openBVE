@@ -120,7 +120,36 @@ namespace OpenBveApi {
 			}
 			return absolute;
 		}
-		
+		/// <summary>
+		/// Iteratively combines a platform-specific absolute path with an array of platform-independent relative paths that point to a directory.
+		/// </summary>
+		/// <returns>The platform-specific absolute path.</returns>
+		/// <param name="absolute">The platform-specific absolute path.</param>
+		/// <param name="relatives">The array of platform-independent relative paths.</param>
+		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
+		public static string CombineDirectoryParams(string absolute, params string[] relatives){
+			StringBuilder str = new StringBuilder();
+			foreach (var rel in relatives) {
+				str.Append(rel).Append('/');
+			}
+			return CombineDirectory(absolute,str.ToString());
+		}
+
+		/// <summary>Iteratively combines a platform-specific absolute path with an array of platform-independent relative paths that point to a file.</summary>
+		/// <param name="absolute">The platform-specific absolute path.</param>
+		/// <param name="relatives">The array of platform-independent relative paths.</param>
+		/// <returns>Whether the operation succeeded and the specified file was found.</returns>
+		/// <exception cref="System.Exception">Raised when combining the paths failed, for example due to malformed paths or due to unauthorized access.</exception>
+		public static string CombineFileParams(string absolute, params string[] relatives){
+			StringBuilder str = new StringBuilder();
+			for (int i = 0; i < relatives.Length; i++) {
+				str.Append(relatives[i]);
+				if (i < (relatives.Length - 1))
+					str.Append('/');
+			}
+			return CombineDirectory(absolute,str.ToString());
+		}
+
 		/// <summary>Combines a platform-specific absolute path with a platform-independent relative path that points to a file.</summary>
 		/// <param name="absolute">The platform-specific absolute path.</param>
 		/// <param name="relative">The platform-independent relative path.</param>
@@ -254,6 +283,20 @@ namespace OpenBveApi {
 				}
 			}
 		}
-		
+		/// <summary>
+		/// Checks whether the specified path contains any invalid characters.
+		/// </summary>
+		/// <remarks>Invalid characters are stored in <see cref="InvalidPathChars"/>.</remarks>
+		/// <returns><c>true</c>, if invalid path is invalid, <c>false</c> otherwise.</returns>
+		/// <param name="Expression">The path to check.</param>
+		public static bool ContainsInvalidPathChars(string Expression) {
+			for (int i = 0; i < Expression.Length; i++) {
+				for (int j = 0; j < InvalidPathChars.Length; j++) {
+					if (Expression[i] == InvalidPathChars[j])
+						return true;
+				}
+			}
+			return false;
+		}
 	}
 }

@@ -45,6 +45,24 @@ namespace OpenBveApi.Colors {
 		public static bool operator !=(Color24 a, Color24 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B;
 		}
+		/// <summary>Checks whether this instance is equal to the specified object.</summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>Whether this instance is equal to the specified object.</returns>
+		public override bool Equals(object obj) {
+			if (!(obj is Color24)) return false;
+			Color24 x = (Color24)obj;
+			if (this.R != x.R) return false;
+			if (this.G != x.G) return false;
+			if (this.B != x.B) return false;
+			return true;
+		}
+		public override int GetHashCode() {
+			int result = 1;
+			result = 31 * result + R;
+			result = 31 * result + G;
+			result = 31 * result + B;
+			return result;
+		}
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color24 Black = new Color24(0, 0, 0);
@@ -134,6 +152,26 @@ namespace OpenBveApi.Colors {
 		public static bool operator !=(Color32 a, Color32 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
+		/// <summary>Checks whether this instance is equal to the specified object.</summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>Whether this instance is equal to the specified object.</returns>
+		public override bool Equals(object obj) {
+			if (!(obj is Color32)) return false;
+			Color32 x = (Color32)obj;
+			if (this.R != x.R) return false;
+			if (this.G != x.G) return false;
+			if (this.B != x.B) return false;
+			if (this.A != x.A) return false;
+			return true;
+		}
+		public override int GetHashCode() {
+			int result = 1;
+			result = 31 * result + R;
+			result = 31 * result + G;
+			result = 31 * result + B;
+			result = 31 * result + A;
+			return result;
+		}
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color32 Black = new Color32(0, 0, 0);
@@ -204,6 +242,24 @@ namespace OpenBveApi.Colors {
 		/// <returns>Whether the two colors are unequal.</returns>
 		public static bool operator !=(Color96 a, Color96 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B;
+		}
+		/// <summary>Checks whether this instance is equal to the specified object.</summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>Whether this instance is equal to the specified object.</returns>
+		public override bool Equals(object obj) {
+			if (!(obj is Color96)) return false;
+			Color96 x = (Color96)obj;
+			if (this.R != x.R) return false;
+			if (this.G != x.G) return false;
+			if (this.B != x.B) return false;
+			return true;
+		}
+		public override int GetHashCode() {
+			int result = 1;
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(R),0);
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(G),0);
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(B),0);
+			return result;
 		}
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
@@ -293,6 +349,25 @@ namespace OpenBveApi.Colors {
 		/// <returns>Whether the two colors are unequal.</returns>
 		public static bool operator !=(Color128 a, Color128 b) {
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
+		}
+		/// <summary>Checks whether this instance is equal to the specified object.</summary>
+		/// <param name="obj">The object.</param>
+		/// <returns>Whether this instance is equal to the specified object.</returns>
+		public override bool Equals(object obj) {
+			if (!(obj is Color128)) return false;
+			Color128 x = (Color128)obj;
+			if (this.R != x.R) return false;
+			if (this.G != x.G) return false;
+			if (this.B != x.B) return false;
+			return true;
+		}
+		public override int GetHashCode() {
+			int result = 1;
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(R),0);
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(G),0);
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(B),0);
+			result = 31 * result + BitConverter.ToInt32(BitConverter.GetBytes(A),0);
+			return result;
 		}
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
